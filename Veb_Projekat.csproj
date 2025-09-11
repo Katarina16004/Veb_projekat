@@ -121,12 +121,34 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="DataServices\UserDataService\UserDataService.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Accommodation.cs" />
+    <Compile Include="Models\AccommodationUnit.cs" />
+    <Compile Include="Models\Arrangement.cs" />
+    <Compile Include="Models\Comment.cs" />
+    <Compile Include="Models\Enums\AccommodationTypeEnum.cs" />
+    <Compile Include="Models\Enums\ArrangementTypeEnum.cs" />
+    <Compile Include="Models\Enums\GenderEnum.cs" />
+    <Compile Include="Models\Enums\ReservationStatusEnum.cs" />
+    <Compile Include="Models\Enums\RoleEnum.cs" />
+    <Compile Include="Models\Enums\TransportTypeEnum.cs" />
+    <Compile Include="Models\Reservation.cs" />
+    <Compile Include="Models\User.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="App_Data\Data\Accommodations.txt" />
+    <Content Include="App_Data\Data\AccommodationUnits.txt" />
+    <Content Include="App_Data\Data\Arrangements.txt" />
+    <Content Include="App_Data\Data\Comments.txt" />
+    <Content Include="App_Data\Data\Reservations.txt" />
+    <Content Include="App_Data\Data\Users.txt" />
+    <Content Include="App_Data\Images\beach_holiday.png" />
+    <Content Include="App_Data\Images\city_tour.png" />
+    <Content Include="App_Data\Images\mountain_adventure.png" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
@@ -178,10 +200,7 @@
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="App_Data\" />
-    <Folder Include="Models\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
     <Content Include="Content\bootstrap.rtl.css.map" />

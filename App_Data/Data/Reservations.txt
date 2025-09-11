@@ -1,0 +1,4 @@
+Id;TouristUsername;Status;ArrangementName;AccommodationUnitId
+3f2504e0-4f89-11d3-9a0c-0305e82c3301;tourist1;Active;Beach Holiday;1
+3f2504e0-4f89-11d3-9a0c-0305e82c3302;tourist2;Cancelled;Mountain Adventure;3
+3f2504e0-4f89-11d3-9a0c-0305e82c3303;tourist3;Active;City Tour;5

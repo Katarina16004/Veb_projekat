@@ -1,0 +1,4 @@
+TouristUsername;AccommodationName;Text;Rating
+tourist1;Sunny Beach Resort;Amazing experience, loved the pool!;5
+tourist2;Mountain Lodge;Cozy and quiet, great for hiking.;4
+tourist3;Cozy Villa;Perfect for family vacation, very comfortable.;5

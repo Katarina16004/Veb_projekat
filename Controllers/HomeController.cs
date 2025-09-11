@@ -1,19 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using System.Web.Mvc;
+using Veb_Projekat.DataServices.UserDataService;
 
 namespace Veb_Projekat.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly UserDataService _dataService = new UserDataService();
         public ActionResult Index()
         {
+            var users = _dataService.LoadUsers();
+            var arrangements = _dataService.LoadArrangements(users);
+            var reservations = _dataService.LoadReservations(users, arrangements);
+
+            ViewBag.Users = users;
+            ViewBag.Arrangements = arrangements;
+            ViewBag.Reservations = reservations;
+
             return View();
         }
 
-        public ActionResult About()
+        /*public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
 
@@ -25,6 +31,6 @@ namespace Veb_Projekat.Controllers
             ViewBag.Message = "Your contact page.";
 
             return View();
-        }
+        }*/
     }
 }

@@ -1,33 +1,65 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Home";
+    var users = ViewBag.Users as List<Veb_Projekat.Models.User>;
+    var arrangements = ViewBag.Arrangements as List<Veb_Projekat.Models.Arrangement>;
+    var reservations = ViewBag.Reservations as List<Veb_Projekat.Models.Reservation>;
 }
 
-<main>
-    <section class="row" aria-labelledby="aspnetTitle">
-        <h1 id="title">ASP.NET</h1>
-        <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-        <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-    </section>
+<h2>Users</h2>
+<table border="1">
+    <tr>
+        <th>Username</th>
+        <th>Full Name</th>
+        <th>Email</th>
+        <th>Role</th>
+    </tr>
+    @foreach (var u in users)
+    {
+        <tr>
+            <td>@u.Username</td>
+            <td>@u.FirstName @u.LastName</td>
+            <td>@u.Email</td>
+            <td>@u.UserRole</td>
+        </tr>
+    }
+</table>
 
-    <div class="row">
-        <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-            <h2 id="gettingStartedTitle">Getting started</h2>
-            <p>
-                ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                enables a clean separation of concerns and gives you full control over markup
-                for enjoyable, agile development.
-            </p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="librariesTitle">
-            <h2 id="librariesTitle">Get more libraries</h2>
-            <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-        </section>
-        <section class="col-md-4" aria-labelledby="hostingTitle">
-            <h2 id="hostingTitle">Web Hosting</h2>
-            <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-            <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-        </section>
-    </div>
-</main>
+<h2>Arrangements</h2>
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Type</th>
+        <th>Location</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+    </tr>
+    @foreach (var a in arrangements)
+    {
+        <tr>
+            <td>@a.Name</td>
+            <td>@a.Type</td>
+            <td>@a.Location</td>
+            <td>@a.StartDate.ToString("dd/MM/yyyy")</td>
+            <td>@a.EndDate.ToString("dd/MM/yyyy")</td>
+        </tr>
+    }
+</table>
+
+<h2>Reservations</h2>
+<table border="1">
+    <tr>
+        <th>ID</th>
+        <th>Tourist</th>
+        <th>Arrangement</th>
+        <th>Status</th>
+    </tr>
+    @foreach (var r in reservations)
+    {
+        <tr>
+            <td>@r.Id</td>
+            <td>@r.Tourist.Username</td>
+            <td>@r.SelectedArrangement.Name</td>
+            <td>@r.Status</td>
+        </tr>
+    }
+</table>
