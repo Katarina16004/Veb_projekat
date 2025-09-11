@@ -1,0 +1,6 @@
+Username;Password;FirstName;LastName;Gender;Email;DateOfBirth;UserRole
+tourist1;turista;Katarina;Veljkovic;Female;katarina.veljkovic@example.com;16/01/2004;Tourist
+tourist2;turista;Marina;Jovanovic;Female;marina.jovanovic@example.com;12/03/2004;Tourist
+tourist3;turista;Mateja;Vasic;Male;mateja.vasic@example.com;10/06/2003;Tourist
+manager1;menadzer;Marko;Jovanovic;Male;marko.jovanovic@example.com;22/07/1985;Manager
+admin1;admin;Danijela;Stankovic;Female;danijela.stankovic@example.com;10/01/1990;Administrator

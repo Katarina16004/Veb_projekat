@@ -21,9 +21,9 @@ namespace Veb_Projekat.Models
         public RoleEnum UserRole { get; set; }
 
         // for tourist 
-        public List<Reservation> Reservations { get; set; } = new();
+        public List<Reservation> Reservations { get; set; } = new List<Reservation>();
 
         // for manager
-        public List<Arrangement> CreatedArrangements { get; set; } = new();
+        public List<Arrangement> CreatedArrangements { get; set; } = new List<Arrangement>();
     }
 }

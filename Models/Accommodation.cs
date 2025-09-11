@@ -8,6 +8,7 @@ namespace Veb_Projekat.Models
 {
     public class Accommodation
     {
+        public int Id { get; set; }
         public AccommodationTypeEnum Type { get; set; }       
         public string Name { get; set; } = string.Empty;       
         public int Stars { get; set; }    //for hotels        

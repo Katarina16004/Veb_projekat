@@ -1,0 +1,4 @@
+ID;Name;Type;Stars;HasPool;HasSpa;Accessible;HasWifi;ArragementID
+1;Sunny Beach Resort;Hotel;5;true;true;true;true;1
+2;Mountain Lodge;Motel;0;false;true;true;true;2
+3;Cozy Villa;Villa;0;true;false;true;true;3
