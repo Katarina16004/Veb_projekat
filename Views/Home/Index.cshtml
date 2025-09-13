@@ -1,81 +1,116 @@
-﻿@{
-    ViewBag.Title = "Upcoming Arrangements";
+﻿@using Veb_Projekat.Models
+@{
+    ViewBag.Title = "Arrangements";
+    var arrangements = ViewBag.Arrangements as List<Arrangement>;
 }
 
-<h2>Upcoming Arrangements</h2>
+<h2>Search Arrangements</h2>
 
 <form method="get" action="@Url.Action("Index", "Home")">
-    <input type="text" name="name" placeholder="Arrangement Name" value="@ViewBag.SelectedName" />
-    <input type="text" name="location" placeholder="Location" value="@ViewBag.SelectedLocation" />
+    <div>
+        <label>Name:</label>
+        <input type="text" name="name" value="@ViewBag.SelectedName" />
+    </div>
+    <div>
+        <label>Location:</label>
+        <input type="text" name="location" value="@ViewBag.SelectedLocation" />
+    </div>
+    <div>
+        <label>Type:</label>
+        <select name="type">
+            <option value="">All types</option>
+            @foreach (var t in ViewBag.ArrangementTypes)
+            {
+                <option value="@t" @(ViewBag.SelectedType == t.ToString() ? "selected" : "")>@t</option>
+            }
+        </select>
+    </div>
+    <div>
+        <label>Transport:</label>
+        <select name="transport">
+            <option value="">All transport</option>
+            @foreach (var t in ViewBag.TransportTypes)
+            {
+                <option value="@t" @(ViewBag.SelectedTransport == t.ToString() ? "selected" : "")>@t</option>
+            }
+        </select>
+    </div>
 
-    <select name="type">
-        <option value="">All Types</option>
-        @foreach (var t in ViewBag.ArrangementTypes)
-        {
-            <option value="@t" @(ViewBag.SelectedType == t.ToString() ? "selected" : "")>@t</option>
-        }
-    </select>
+    <div>
+        <label>Start date from:</label>
+        <input type="date" name="startDateFrom" value="@ViewBag.SelectedStartFrom" />
+        <label>to:</label>
+        <input type="date" name="startDateTo" value="@ViewBag.SelectedStartTo" />
+    </div>
 
-    <select name="transport">
-        <option value="">All Transport</option>
-        @foreach (var tr in ViewBag.TransportTypes)
-        {
-            <option value="@tr" @(ViewBag.SelectedTransport == tr.ToString() ? "selected" : "")>@tr</option>
-        }
-    </select>
+    <div>
+        <label>End date from:</label>
+        <input type="date" name="endDateFrom" value="@ViewBag.SelectedEndFrom" />
+        <label>to:</label>
+        <input type="date" name="endDateTo" value="@ViewBag.SelectedEndTo" />
+    </div>
 
-    <label>Start Date From:</label>
-    <input type="date" name="startDateFrom" value="@ViewBag.SelectedStartFrom" />
-    <label>Start Date To:</label>
-    <input type="date" name="startDateTo" value="@ViewBag.SelectedStartTo" />
+    <div>
+        <label>Sort by:</label>
+        <select name="sortBy">
+            <option value="">None</option>
+            <option value="Name" @(ViewBag.SortBy == "Name" ? "selected" : "")>Name</option>
+            <option value="StartDate" @(ViewBag.SortBy == "StartDate" ? "selected" : "")>Start Date</option>
+            <option value="EndDate" @(ViewBag.SortBy == "EndDate" ? "selected" : "")>End Date</option>
+        </select>
 
-    <label>End Date From:</label>
-    <input type="date" name="endDateFrom" value="@ViewBag.SelectedEndFrom" />
-    <label>End Date To:</label>
-    <input type="date" name="endDateTo" value="@ViewBag.SelectedEndTo" />
+        <select name="sortDir">
+            <option value="asc" @(ViewBag.SortDir == "asc" ? "selected" : "")>Ascending</option>
+            <option value="desc" @(ViewBag.SortDir == "desc" ? "selected" : "")>Descending</option>
+        </select>
+    </div>
 
-    <button type="submit">Search</button>
-    <a href="@Url.Action("Index", "Home")">Reset</a>
+    <div>
+        <button type="submit">Search</button>
+        <a href="@Url.Action("Index", "Home")" class="btn-reset">Reset filters</a>
+    </div>
 </form>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>Name</th>
-            <th>Type</th>
-            <th>Transport</th>
-            <th>Location</th>
-            <th>Start (dd/mm/yyyy)</th>
-            <th>End (dd/mm/yyyy)</th>
-            <th>Max Passengers</th>
-            <th>Details</th>
-        </tr>
-    </thead>
-    <tbody>
-        @if (ViewBag.Arrangements != null && ((List<Veb_Projekat.Models.Arrangement>)ViewBag.Arrangements).Any())
-        {
-            foreach (var arr in (List<Veb_Projekat.Models.Arrangement>)ViewBag.Arrangements)
+<hr />
+
+<h3>Results:</h3>
+
+@if (arrangements != null && arrangements.Any())
+{
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Location</th>
+                <th>Type</th>
+                <th>Transport</th>
+                <th>Start Date <br /> (mm/dd/yyyy)</th>
+                <th>End Date <br /> (mm/dd/yyyy)</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var a in arrangements)
             {
                 <tr>
-                    <td>@arr.Name</td>
-                    <td>@arr.Type</td>
-                    <td>@arr.Transport</td>
-                    <td>@arr.Location</td>
-                    <td>@arr.StartDate.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
-                    <td>@arr.EndDate.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
-                    <td>@arr.MaxNumOfPassengers</td>
-                    <td><a href="@Url.Action("Details", "Home", new { id = arr.Id })">View</a></td>
+                    <td>@a.Name</td>
+                    <td>@a.Location</td>
+                    <td>@a.Type</td>
+                    <td>@a.Transport</td>
+                    <td>@a.StartDate.ToString("MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
+                    <td>@a.EndDate.ToString("MM/dd/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
+                    <td>
+                        @Html.ActionLink("Details", "Details", new { id = a.Id })
+                    </td>
                 </tr>
             }
-        }
-        else
-        {
-            <tr>
-                <td colspan="8">No arrangements available.</td>
-            </tr>
-        }
-    </tbody>
-</table>
+        </tbody>
+    </table>
+}
+else
+{
+    <p>No arrangements found.</p>
+}
 
 
 <!--@section scripts {

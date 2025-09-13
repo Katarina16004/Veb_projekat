@@ -53,5 +53,29 @@ namespace Veb_Projekat.Services
         {
             return Repositories.ArrangementRepository.GetById(id);
         }
+
+        public static List<Arrangement> SortByName(List<Arrangement> arrangements, bool ascending = true)
+        {
+            if (ascending)
+                return arrangements.OrderBy(a => a.Name).ToList();
+            else
+                return arrangements.OrderByDescending(a => a.Name).ToList();
+        }
+
+        public static List<Arrangement> SortByStartDate(List<Arrangement> arrangements, bool ascending = true)
+        {
+            if (ascending)
+                return arrangements.OrderBy(a => a.StartDate).ToList();
+            else
+                return arrangements.OrderByDescending(a => a.StartDate).ToList();
+        }
+
+        public static List<Arrangement> SortByEndDate(List<Arrangement> arrangements, bool ascending = true)
+        {
+            if (ascending)
+                return arrangements.OrderBy(a => a.EndDate).ToList();
+            else
+                return arrangements.OrderByDescending(a => a.EndDate).ToList();
+        }
     }
 }

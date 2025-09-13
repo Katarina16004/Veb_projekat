@@ -7,8 +7,28 @@ namespace Veb_Projekat.Controllers
     public class HomeController : Controller
     {
         public ActionResult Index(string name = "", string location = "", string type = "", string transport = "", DateTime? startDateFrom = null, DateTime? startDateTo = null,
-            DateTime? endDateFrom = null, DateTime? endDateTo = null)
+            DateTime? endDateFrom = null, DateTime? endDateTo = null, string sortBy = "", string sortDir = "asc")
         {
+            var arrangements = ArrangementService.SearchArrangements(name, location, type, transport, startDateFrom, startDateTo, endDateFrom, endDateTo);
+
+            switch (sortBy)
+            {
+                case "Name":
+                    arrangements = ArrangementService.SortByName(arrangements, sortDir == "asc");
+                    break;
+                case "StartDate":
+                    arrangements = ArrangementService.SortByStartDate(arrangements, sortDir == "asc");
+                    break;
+                case "EndDate":
+                    arrangements = ArrangementService.SortByEndDate(arrangements, sortDir == "asc");
+                    break;
+                default:
+                    break;
+            }
+
+            ViewBag.SortBy = sortBy;
+            ViewBag.SortDir = sortDir;
+
             ViewBag.SelectedName = name;
             ViewBag.SelectedLocation = location;
             ViewBag.SelectedType = type;
@@ -20,8 +40,7 @@ namespace Veb_Projekat.Controllers
 
             ViewBag.ArrangementTypes = Enum.GetValues(typeof(Veb_Projekat.Models.Enums.ArrangementTypeEnum));
             ViewBag.TransportTypes = Enum.GetValues(typeof(Veb_Projekat.Models.Enums.TransportTypeEnum));
-
-            ViewBag.Arrangements = ArrangementService.SearchArrangements(name, location, type, transport, startDateFrom, startDateTo, endDateFrom, endDateTo);
+            ViewBag.Arrangements = arrangements;
 
             return View();
         }
