@@ -33,5 +33,7 @@ namespace Veb_Projekat.Models
         public string Poster { get; set; } = string.Empty;   
 
         public List<Accommodation> Accommodations { get; set; } = new List<Accommodation>();
+
+        public string ManagerUsername { get; set; } = string.Empty;
     }
 }
