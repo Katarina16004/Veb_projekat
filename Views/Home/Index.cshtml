@@ -1,65 +1,107 @@
 ﻿@{
-    ViewBag.Title = "Home";
-    var users = ViewBag.Users as List<Veb_Projekat.Models.User>;
-    var arrangements = ViewBag.Arrangements as List<Veb_Projekat.Models.Arrangement>;
-    var reservations = ViewBag.Reservations as List<Veb_Projekat.Models.Reservation>;
+    ViewBag.Title = "Upcoming Arrangements";
 }
 
-<h2>Users</h2>
-<table border="1">
-    <tr>
-        <th>Username</th>
-        <th>Full Name</th>
-        <th>Email</th>
-        <th>Role</th>
-    </tr>
-    @foreach (var u in users)
-    {
+<h2>Upcoming Arrangements</h2>
+
+<form method="get" action="@Url.Action("Index", "Home")">
+    <input type="text" name="name" placeholder="Arrangement Name" value="@ViewBag.SelectedName" />
+    <input type="text" name="location" placeholder="Location" value="@ViewBag.SelectedLocation" />
+
+    <select name="type">
+        <option value="">All Types</option>
+        @foreach (var t in ViewBag.ArrangementTypes)
+        {
+            <option value="@t" @(ViewBag.SelectedType == t.ToString() ? "selected" : "")>@t</option>
+        }
+    </select>
+
+    <select name="transport">
+        <option value="">All Transport</option>
+        @foreach (var tr in ViewBag.TransportTypes)
+        {
+            <option value="@tr" @(ViewBag.SelectedTransport == tr.ToString() ? "selected" : "")>@tr</option>
+        }
+    </select>
+
+    <label>Start Date From:</label>
+    <input type="date" name="startDateFrom" value="@ViewBag.SelectedStartFrom" />
+    <label>Start Date To:</label>
+    <input type="date" name="startDateTo" value="@ViewBag.SelectedStartTo" />
+
+    <label>End Date From:</label>
+    <input type="date" name="endDateFrom" value="@ViewBag.SelectedEndFrom" />
+    <label>End Date To:</label>
+    <input type="date" name="endDateTo" value="@ViewBag.SelectedEndTo" />
+
+    <button type="submit">Search</button>
+    <a href="@Url.Action("Index", "Home")">Reset</a>
+</form>
+
+<table class="table">
+    <thead>
         <tr>
-            <td>@u.Username</td>
-            <td>@u.FirstName @u.LastName</td>
-            <td>@u.Email</td>
-            <td>@u.UserRole</td>
+            <th>Name</th>
+            <th>Type</th>
+            <th>Transport</th>
+            <th>Location</th>
+            <th>Start (dd/mm/yyyy)</th>
+            <th>End (dd/mm/yyyy)</th>
+            <th>Max Passengers</th>
+            <th>Details</th>
         </tr>
-    }
+    </thead>
+    <tbody>
+        @if (ViewBag.Arrangements != null && ((List<Veb_Projekat.Models.Arrangement>)ViewBag.Arrangements).Any())
+        {
+            foreach (var arr in (List<Veb_Projekat.Models.Arrangement>)ViewBag.Arrangements)
+            {
+                <tr>
+                    <td>@arr.Name</td>
+                    <td>@arr.Type</td>
+                    <td>@arr.Transport</td>
+                    <td>@arr.Location</td>
+                    <td>@arr.StartDate.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
+                    <td>@arr.EndDate.ToString("dd/MM/yyyy", System.Globalization.CultureInfo.InvariantCulture)</td>
+                    <td>@arr.MaxNumOfPassengers</td>
+                    <td><a href="@Url.Action("Details", "Home", new { id = arr.Id })">View</a></td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8">No arrangements available.</td>
+            </tr>
+        }
+    </tbody>
 </table>
 
-<h2>Arrangements</h2>
-<table border="1">
-    <tr>
-        <th>Name</th>
-        <th>Type</th>
-        <th>Location</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-    </tr>
-    @foreach (var a in arrangements)
-    {
-        <tr>
-            <td>@a.Name</td>
-            <td>@a.Type</td>
-            <td>@a.Location</td>
-            <td>@a.StartDate.ToString("dd/MM/yyyy")</td>
-            <td>@a.EndDate.ToString("dd/MM/yyyy")</td>
-        </tr>
-    }
-</table>
 
-<h2>Reservations</h2>
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Tourist</th>
-        <th>Arrangement</th>
-        <th>Status</th>
-    </tr>
-    @foreach (var r in reservations)
-    {
-        <tr>
-            <td>@r.Id</td>
-            <td>@r.Tourist.Username</td>
-            <td>@r.SelectedArrangement.Name</td>
-            <td>@r.Status</td>
-        </tr>
+<!--@section scripts {
+    <script>
+    const startFrom = document.getElementById('startDateFrom');
+    const startTo = document.getElementById('startDateTo');
+    const endFrom = document.getElementById('endDateFrom');
+    const endTo = document.getElementById('endDateTo');
+
+    function updateDateLimits() {
+        // Start Date To >= Start Date From
+        startTo.min = startFrom.value;
+
+        // End Date From >= Start Date From
+        endFrom.min = startFrom.value;
+
+        // End Date To >= End Date From
+        endTo.min = endFrom.value;
     }
-</table>
+
+    startFrom.addEventListener('change', updateDateLimits);
+    startTo.addEventListener('change', updateDateLimits);
+    endFrom.addEventListener('change', updateDateLimits);
+    endTo.addEventListener('change', updateDateLimits);
+
+    updateDateLimits();
+    </script>
+}
+-->

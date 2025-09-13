@@ -9,7 +9,7 @@ namespace Veb_Projekat.Repositories
 {
     public class ReservationRepository
     {
-        private static string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data/Reservations.txt");
+        private static string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data/Data/Reservations.txt");
 
         public static List<Reservation> GetAll()
         {

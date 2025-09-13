@@ -1,0 +1,27 @@
+﻿@model Veb_Projekat.Models.Arrangement
+
+<h2>@Model.Name</h2>
+
+<p><strong>Tip aranžmana:</strong> @Model.Type</p>
+<p><strong>Transport:</strong> @Model.Transport</p>
+<p><strong>Lokacija:</strong> @Model.Location</p>
+<p><strong>Datum početka:</strong> @Model.StartDate.ToString("dd/MM/yyyy")</p>
+<p><strong>Datum završetka:</strong> @Model.EndDate.ToString("dd/MM/yyyy")</p>
+<p><strong>Maksimalan broj putnika:</strong> @Model.MaxNumOfPassengers</p>
+<p><strong>Opis:</strong> @Model.Description</p>
+<p><strong>Program:</strong> @Model.TravelProgram</p>
+
+<h3>Smeštaj</h3>
+@if (Model.Accommodations.Any())
+{
+    <ul>
+        @foreach (var acc in Model.Accommodations)
+        {
+            <li>@acc.Name (@acc.Type)</li>
+        }
+    </ul>
+}
+else
+{
+    <p>Nema smeštaja za ovaj aranžman.</p>
+}

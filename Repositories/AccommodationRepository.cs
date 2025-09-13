@@ -10,7 +10,7 @@ namespace Veb_Projekat.Repositories
 {
     public class AccommodationRepository
     {
-        private static string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data/Accommodations.txt");
+        private static string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data/Data/Accommodations.txt");
 
         public static Dictionary<int, List<Accommodation>> GetAllGrouped()
         {

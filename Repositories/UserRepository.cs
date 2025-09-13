@@ -11,7 +11,7 @@ namespace Veb_Projekat.Repositories
 {
     public class UserRepository
     {
-        private static string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data/Users.txt");
+        private static string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data/Data/Users.txt");
 
         public static List<User> GetAll()
         {

@@ -10,7 +10,7 @@ namespace Veb_Projekat.Repositories
 {
     public class ArrangementRepository
     {
-        private static string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data/Arrangements.txt");
+        private static string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data/Data/Arrangements.txt");
 
         public static List<Arrangement> GetAll()
         {
@@ -20,7 +20,6 @@ namespace Veb_Projekat.Repositories
                 return arrangements;
 
             var lines = File.ReadAllLines(filePath);
-
             for (int i = 1; i < lines.Length; i++)
             {
                 var parts = lines[i].Split(';');

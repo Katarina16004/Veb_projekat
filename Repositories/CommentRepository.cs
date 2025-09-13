@@ -9,7 +9,7 @@ namespace Veb_Projekat.Repositories
 {
     public class CommentRepository
     {
-        private static string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data/Comments.txt");
+        private static string filePath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "App_Data/Data/Comments.txt");
 
         public static List<Comment> GetAll()
         {

@@ -1,36 +1,38 @@
-﻿using System.Web.Mvc;
-using Veb_Projekat.DataServices.UserDataService;
+﻿using System;
+using System.Web.Mvc;
+using Veb_Projekat.Services;
 
 namespace Veb_Projekat.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly UserDataService _dataService = new UserDataService();
-        public ActionResult Index()
+        public ActionResult Index(string name = "", string location = "", string type = "", string transport = "", DateTime? startDateFrom = null, DateTime? startDateTo = null,
+            DateTime? endDateFrom = null, DateTime? endDateTo = null)
         {
-            var users = _dataService.LoadUsers();
-            var arrangements = _dataService.LoadArrangements(users);
-            var reservations = _dataService.LoadReservations(users, arrangements);
+            ViewBag.SelectedName = name;
+            ViewBag.SelectedLocation = location;
+            ViewBag.SelectedType = type;
+            ViewBag.SelectedTransport = transport;
+            ViewBag.SelectedStartFrom = startDateFrom?.ToString("yyyy-MM-dd") ?? "";
+            ViewBag.SelectedStartTo = startDateTo?.ToString("yyyy-MM-dd") ?? "";
+            ViewBag.SelectedEndFrom = endDateFrom?.ToString("yyyy-MM-dd") ?? "";
+            ViewBag.SelectedEndTo = endDateTo?.ToString("yyyy-MM-dd") ?? "";
 
-            ViewBag.Users = users;
-            ViewBag.Arrangements = arrangements;
-            ViewBag.Reservations = reservations;
+            ViewBag.ArrangementTypes = Enum.GetValues(typeof(Veb_Projekat.Models.Enums.ArrangementTypeEnum));
+            ViewBag.TransportTypes = Enum.GetValues(typeof(Veb_Projekat.Models.Enums.TransportTypeEnum));
+
+            ViewBag.Arrangements = ArrangementService.SearchArrangements(name, location, type, transport, startDateFrom, startDateTo, endDateFrom, endDateTo);
 
             return View();
         }
 
-        /*public ActionResult About()
+        public ActionResult Details(int id)
         {
-            ViewBag.Message = "Your application description page.";
+            var arrangement = ArrangementService.GetDetails(id);
+            if (arrangement == null)
+                return HttpNotFound();
 
-            return View();
+            return View(arrangement);
         }
-
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-
-            return View();
-        }*/
     }
 }
