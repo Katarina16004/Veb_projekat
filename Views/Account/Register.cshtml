@@ -1,0 +1,45 @@
+﻿@model Veb_Projekat.Models.User
+
+<h2>Register</h2>
+
+@using (Html.BeginForm("Register", "Account", FormMethod.Post))
+{
+    @Html.ValidationSummary(true)
+
+    <div>
+        @Html.LabelFor(m => m.Username)
+        @Html.TextBoxFor(m => m.Username)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.Password)
+        @Html.PasswordFor(m => m.Password)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.FirstName)
+        @Html.TextBoxFor(m => m.FirstName)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.LastName)
+        @Html.TextBoxFor(m => m.LastName)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.Email)
+        @Html.TextBoxFor(m => m.Email)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.Gender)
+        @Html.EnumDropDownListFor(m => m.Gender)
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.DateOfBirth)
+        @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { type = "date" })
+    </div>
+
+    <button type="submit">Register</button>
+}
