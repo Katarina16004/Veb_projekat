@@ -10,14 +10,8 @@ namespace Veb_Projekat.Services
 {
     public class AccommodationService
     {
-        public static List<Accommodation> SearchAccommodations(
-            List<Accommodation> accommodations,
-            string type = "",
-            string name = "",
-            bool? hasPool = null,
-            bool? hasSpa = null,
-            bool? accessible = null,
-            bool? hasWifi = null)
+        public static List<Accommodation> SearchAccommodations(List<Accommodation> accommodations, string type = "", string name = "", bool? hasPool = null,
+            bool? hasSpa = null, bool? accessible = null, bool? hasWifi = null)
         {
             var result = new List<Accommodation>();
 

@@ -15,67 +15,6 @@
 
 <h3>Accommodations</h3>
 
-<form method="get" action="@Url.Action("Details", "Home")">
-    <input type="hidden" name="id" value="@Model.Id" />
-    <div>
-        <div>
-            <label>Name:</label>
-            <input type="text" name="accName" value="@ViewBag.AccName" />
-
-            <label>Type:</label>
-            <select name="accType">
-                <option value="">All</option>
-                <option value="Hotel" @(ViewBag.AccType == "Hotel" ? "selected" : "")>Hotel</option>
-                <option value="Motel" @(ViewBag.AccType == "Motel" ? "selected" : "")>Motel</option>
-                <option value="Villa" @(ViewBag.AccType == "Villa" ? "selected" : "")>Villa</option>
-            </select>
-        </div>
-    </div>
-    <div>
-        <label>Pool:</label>
-        <select name="hasPool">
-            <option value="">Any</option>
-            <option value="true" @(ViewBag.HasPool == true ? "selected" : "")>Yes</option>
-            <option value="false" @(ViewBag.HasPool == false ? "selected" : "")>No</option>
-        </select>
-        <label>Spa:</label>
-        <select name="hasSpa">
-            <option value="">Any</option>
-            <option value="true" @(ViewBag.HasSpa == true ? "selected" : "")>Yes</option>
-            <option value="false" @(ViewBag.HasSpa == false ? "selected" : "")>No</option>
-        </select>
-        <label>Accessible:</label>
-        <select name="accessible">
-            <option value="">Any</option>
-            <option value="true" @(ViewBag.Accessible == true ? "selected" : "")>Yes</option>
-            <option value="false" @(ViewBag.Accessible == false ? "selected" : "")>No</option>
-        </select>
-        <label>Wifi:</label>
-        <select name="hasWifi">
-            <option value="">Any</option>
-            <option value="true" @(ViewBag.HasWifi == true ? "selected" : "")>Yes</option>
-            <option value="false" @(ViewBag.HasWifi == false ? "selected" : "")>No</option>
-        </select>
-    </div>
-    <div>
-        <label>Sort by:</label>
-        <select name="accSortBy">
-            <option value="">None</option>
-            <option value="Name" @(ViewBag.AccSortBy == "Name" ? "selected" : "")>Name</option>
-            <option value="TotalUnits" @(ViewBag.AccSortBy == "TotalUnits" ? "selected" : "")>Total Units</option>
-            <option value="AvailableUnits" @(ViewBag.AccSortBy == "AvailableUnits" ? "selected" : "")>Available Units</option>
-        </select>
-        <select name="accSortDir">
-            <option value="asc" @(ViewBag.AccSortDir == "asc" ? "selected" : "")>Ascending</option>
-            <option value="desc" @(ViewBag.AccSortDir == "desc" ? "selected" : "")>Descending</option>
-        </select>
-    </div>
-    <div>
-        <button type="submit">Search/Sort</button>
-        <a href="@Url.Action("Details", "Home", new { id = Model.Id })">Reset</a>
-    </div>
-</form>
-
 @if (Model.Accommodations != null && Model.Accommodations.Any())
 {
     foreach (var acc in Model.Accommodations)
@@ -87,6 +26,63 @@
             <p><strong>Spa:</strong> @(acc.HasSpa ? "Yes" : "No")</p>
             <p><strong>Accessible:</strong> @(acc.Accessible ? "Yes" : "No")</p>
             <p><strong>Wifi:</strong> @(acc.HasWifi ? "Yes" : "No")</p>
+
+            <h5>Filter & Sort Units</h5>
+
+            @{
+                string qMinGuests = Request.QueryString["minGuests_" + acc.Id];
+                string qMaxGuests = Request.QueryString["maxGuests_" + acc.Id];
+                string qPetsAllowed = Request.QueryString["petsAllowed_" + acc.Id];
+                string qMaxPrice = Request.QueryString["maxPrice_" + acc.Id];
+                string qUnitSortBy = Request.QueryString["unitSortBy_" + acc.Id];
+                string qUnitSortDir = Request.QueryString["unitSortDir_" + acc.Id];
+            }
+
+            <form method="get" action="@Url.Action("Details", "Home")">
+                <input type="hidden" name="id" value="@Model.Id" />
+                <input type="hidden" name="unitAccommodationId" value="@acc.Id" />
+
+                <input type="hidden" name="accName" value="@Request.QueryString["accName"]" />
+                <input type="hidden" name="accType" value="@Request.QueryString["accType"]" />
+                <input type="hidden" name="hasPool" value="@Request.QueryString["hasPool"]" />
+                <input type="hidden" name="hasSpa" value="@Request.QueryString["hasSpa"]" />
+                <input type="hidden" name="accessible" value="@Request.QueryString["accessible"]" />
+                <input type="hidden" name="hasWifi" value="@Request.QueryString["hasWifi"]" />
+                <input type="hidden" name="accSortBy" value="@Request.QueryString["accSortBy"]" />
+                <input type="hidden" name="accSortDir" value="@Request.QueryString["accSortDir"]" />
+
+                <label>Min guests:</label>
+                <input type="number" name="minGuests_@acc.Id" value="@qMinGuests" />
+
+                <label>Max guests:</label>
+                <input type="number" name="maxGuests_@acc.Id" value="@qMaxGuests" />
+
+                <label>Pets allowed:</label>
+                <select name="petsAllowed_@acc.Id">
+                    <option value="">Any</option>
+                    <option value="true" @(qPetsAllowed == "true" ? "selected" : "")>Yes</option>
+                    <option value="false" @(qPetsAllowed == "false" ? "selected" : "")>No</option>
+                </select>
+
+                <label>Max price:</label>
+                <input type="number" step="0.01" name="maxPrice_@acc.Id" value="@qMaxPrice" />
+
+                <label>Sort by:</label>
+                <select name="unitSortBy_@acc.Id">
+                    <option value="">None</option>
+                    <option value="MaxGuests" @(qUnitSortBy == "MaxGuests" ? "selected" : "")>Max Guests</option>
+                    <option value="Price" @(qUnitSortBy == "Price" ? "selected" : "")>Price</option>
+                </select>
+
+                <select name="unitSortDir_@acc.Id">
+                    <option value="asc" @(qUnitSortDir == "asc" ? "selected" : "")>Ascending</option>
+                    <option value="desc" @(qUnitSortDir == "desc" ? "selected" : "")>Descending</option>
+                </select>
+
+                <button type="submit">Apply</button>
+                <a href="@Url.Action("Details", "Home", new { id = Model.Id })">Reset</a>
+            </form>
+
 
             <h5>Units</h5>
             @if (acc.Units != null && acc.Units.Any())
