@@ -45,13 +45,51 @@ namespace Veb_Projekat.Controllers
             return View();
         }
 
-        public ActionResult Details(int id)
+        public ActionResult Details(int id, string accName = "", string accType = "", bool? hasPool = null, bool? hasSpa = null, bool? accessible = null, bool? hasWifi = null, string accSortBy = "", string accSortDir = "asc")
         {
             var arrangement = ArrangementService.GetDetails(id);
             if (arrangement == null)
                 return HttpNotFound();
 
-            return View(arrangement);
+            // Filtriraj i sortira accommodations
+            var filteredAccommodations = AccommodationService.SearchAccommodations(
+                arrangement.Accommodations,
+                accType,
+                accName,
+                hasPool,
+                hasSpa,
+                accessible,
+                hasWifi
+            );
+
+            switch (accSortBy)
+            {
+                case "Name":
+                    filteredAccommodations = AccommodationService.SortByName(filteredAccommodations, accSortDir == "asc");
+                    break;
+                case "TotalUnits":
+                    filteredAccommodations = AccommodationService.SortByTotalUnits(filteredAccommodations, accSortDir == "asc");
+                    break;
+                case "AvailableUnits":
+                    filteredAccommodations = AccommodationService.SortByAvailableUnits(filteredAccommodations, accSortDir == "asc");
+                    break;
+            }
+
+            // Sačuvaj u arrangement da View i dalje prima Arrangement model
+            arrangement.Accommodations = filteredAccommodations;
+
+            // Prosledi filter/sort vrednosti u ViewBag da zadrži formu
+            ViewBag.AccName = accName;
+            ViewBag.AccType = accType;
+            ViewBag.HasPool = hasPool;
+            ViewBag.HasSpa = hasSpa;
+            ViewBag.Accessible = accessible;
+            ViewBag.HasWifi = hasWifi;
+            ViewBag.AccSortBy = accSortBy;
+            ViewBag.AccSortDir = accSortDir;
+
+            return View(arrangement); // <-- šaljemo ceo Arrangement
         }
+
     }
 }

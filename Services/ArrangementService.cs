@@ -18,10 +18,10 @@ namespace Veb_Projekat.Services
             {
                 bool match = true;
 
-                if (!string.IsNullOrEmpty(name) && !arr.Name.Equals(name))
+                if (!string.IsNullOrEmpty(name) && arr.Name.IndexOf(name, StringComparison.OrdinalIgnoreCase) < 0)
                     match = false;
 
-                if (!string.IsNullOrEmpty(location) && !arr.Location.Equals(location))
+                if (!string.IsNullOrEmpty(location) && arr.Location.IndexOf(location, StringComparison.OrdinalIgnoreCase) < 0)
                     match = false;
 
                 if (!string.IsNullOrEmpty(type) && !arr.Type.ToString().Equals(type))

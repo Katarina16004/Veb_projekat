@@ -143,6 +143,7 @@
     <Compile Include="Repositories\CommentRepository.cs" />
     <Compile Include="Repositories\ReservationRepository.cs" />
     <Compile Include="Repositories\UserRepository.cs" />
+    <Compile Include="Services\AccommodationService.cs" />
     <Compile Include="Services\ArrangementService.cs" />
   </ItemGroup>
   <ItemGroup>

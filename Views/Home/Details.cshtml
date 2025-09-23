@@ -1,27 +1,158 @@
 ﻿@model Veb_Projekat.Models.Arrangement
+@using Veb_Projekat.Repositories
+@using Veb_Projekat.Models.Enums
 
 <h2>@Model.Name</h2>
 
-<p><strong>Tip aranžmana:</strong> @Model.Type</p>
+<p><strong>Arrangement type:</strong> @Model.Type</p>
 <p><strong>Transport:</strong> @Model.Transport</p>
-<p><strong>Lokacija:</strong> @Model.Location</p>
-<p><strong>Datum početka:</strong> @Model.StartDate.ToString("dd/MM/yyyy")</p>
-<p><strong>Datum završetka:</strong> @Model.EndDate.ToString("dd/MM/yyyy")</p>
-<p><strong>Maksimalan broj putnika:</strong> @Model.MaxNumOfPassengers</p>
-<p><strong>Opis:</strong> @Model.Description</p>
+<p><strong>Location:</strong> @Model.Location</p>
+<p><strong>Start date:</strong> @Model.StartDate.ToString("dd/MM/yyyy")</p>
+<p><strong>End date:</strong> @Model.EndDate.ToString("dd/MM/yyyy")</p>
+<p><strong>Max passengers:</strong> @Model.MaxNumOfPassengers</p>
+<p><strong>Description:</strong> @Model.Description</p>
 <p><strong>Program:</strong> @Model.TravelProgram</p>
 
-<h3>Smeštaj</h3>
-@if (Model.Accommodations.Any())
+<h3>Accommodations</h3>
+
+<form method="get" action="@Url.Action("Details", "Home")">
+    <input type="hidden" name="id" value="@Model.Id" />
+    <div>
+        <div>
+            <label>Name:</label>
+            <input type="text" name="accName" value="@ViewBag.AccName" />
+
+            <label>Type:</label>
+            <select name="accType">
+                <option value="">All</option>
+                <option value="Hotel" @(ViewBag.AccType == "Hotel" ? "selected" : "")>Hotel</option>
+                <option value="Motel" @(ViewBag.AccType == "Motel" ? "selected" : "")>Motel</option>
+                <option value="Villa" @(ViewBag.AccType == "Villa" ? "selected" : "")>Villa</option>
+            </select>
+        </div>
+    </div>
+    <div>
+        <label>Pool:</label>
+        <select name="hasPool">
+            <option value="">Any</option>
+            <option value="true" @(ViewBag.HasPool == true ? "selected" : "")>Yes</option>
+            <option value="false" @(ViewBag.HasPool == false ? "selected" : "")>No</option>
+        </select>
+        <label>Spa:</label>
+        <select name="hasSpa">
+            <option value="">Any</option>
+            <option value="true" @(ViewBag.HasSpa == true ? "selected" : "")>Yes</option>
+            <option value="false" @(ViewBag.HasSpa == false ? "selected" : "")>No</option>
+        </select>
+        <label>Accessible:</label>
+        <select name="accessible">
+            <option value="">Any</option>
+            <option value="true" @(ViewBag.Accessible == true ? "selected" : "")>Yes</option>
+            <option value="false" @(ViewBag.Accessible == false ? "selected" : "")>No</option>
+        </select>
+        <label>Wifi:</label>
+        <select name="hasWifi">
+            <option value="">Any</option>
+            <option value="true" @(ViewBag.HasWifi == true ? "selected" : "")>Yes</option>
+            <option value="false" @(ViewBag.HasWifi == false ? "selected" : "")>No</option>
+        </select>
+    </div>
+    <div>
+        <label>Sort by:</label>
+        <select name="accSortBy">
+            <option value="">None</option>
+            <option value="Name" @(ViewBag.AccSortBy == "Name" ? "selected" : "")>Name</option>
+            <option value="TotalUnits" @(ViewBag.AccSortBy == "TotalUnits" ? "selected" : "")>Total Units</option>
+            <option value="AvailableUnits" @(ViewBag.AccSortBy == "AvailableUnits" ? "selected" : "")>Available Units</option>
+        </select>
+        <select name="accSortDir">
+            <option value="asc" @(ViewBag.AccSortDir == "asc" ? "selected" : "")>Ascending</option>
+            <option value="desc" @(ViewBag.AccSortDir == "desc" ? "selected" : "")>Descending</option>
+        </select>
+    </div>
+    <div>
+        <button type="submit">Search/Sort</button>
+        <a href="@Url.Action("Details", "Home", new { id = Model.Id })">Reset</a>
+    </div>
+</form>
+
+@if (Model.Accommodations != null && Model.Accommodations.Any())
 {
-    <ul>
-        @foreach (var acc in Model.Accommodations)
-        {
-            <li>@acc.Name (@acc.Type)</li>
-        }
-    </ul>
+    foreach (var acc in Model.Accommodations)
+    {
+        <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+            <h4>@acc.Name (@acc.Type)</h4>
+            <p><strong>Stars:</strong> @acc.Stars</p>
+            <p><strong>Pool:</strong> @(acc.HasPool ? "Yes" : "No")</p>
+            <p><strong>Spa:</strong> @(acc.HasSpa ? "Yes" : "No")</p>
+            <p><strong>Accessible:</strong> @(acc.Accessible ? "Yes" : "No")</p>
+            <p><strong>Wifi:</strong> @(acc.HasWifi ? "Yes" : "No")</p>
+
+            <h5>Units</h5>
+            @if (acc.Units != null && acc.Units.Any())
+            {
+                <table border="1" cellpadding="5">
+                    <thead>
+                        <tr>
+                            <th>Unit ID</th>
+                            <th>Max guests</th>
+                            <th>Pets allowed</th>
+                            <th>Price</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var unit in acc.Units)
+                        {
+                            var reservations = ReservationRepository.GetAll()
+                                .Where(r => r.SelectedUnit.Id == unit.Id && r.Status == ReservationStatusEnum.Active)
+                                .ToList();
+
+                            bool isBooked = reservations.Any();
+
+                            <tr style="background:@(isBooked ? "#f8d7da" : "#d4edda");">
+                                <td>@unit.Id</td>
+                                <td>@unit.MaxGuests</td>
+                                <td>@(unit.PetsAllowed ? "Yes" : "No")</td>
+                                <td>@unit.Price.ToString("C")</td>
+                                <td>@(isBooked ? "Booked" : "Available")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+            else
+            {
+                <p>No units available.</p>
+            }
+
+            <h5>Comments</h5>
+            @{
+                var comments = CommentRepository.GetAll()
+                    .Where(c => c.Accommodation != null && c.Accommodation.Id == acc.Id)
+                    .ToList();
+            }
+            @if (comments.Any())
+            {
+                <ul>
+                    @foreach (var comment in comments)
+                    {
+                        <li>
+                            <strong>@comment.Tourist.Username:</strong>
+                            @comment.Text
+                            (<strong>Rating:</strong> @comment.Rating/5)
+                        </li>
+                    }
+                </ul>
+            }
+            else
+            {
+                <p>No comments for this accommodation.</p>
+            }
+        </div>
+    }
 }
 else
 {
-    <p>Nema smeštaja za ovaj aranžman.</p>
+    <p>No accommodations for this arrangement.</p>
 }
