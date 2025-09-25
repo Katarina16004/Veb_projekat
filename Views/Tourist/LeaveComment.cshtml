@@ -1,0 +1,86 @@
+﻿@{
+    ViewBag.Title = "Leave Comment";
+    var accommodation = ViewBag.Accommodation as Veb_Projekat.Models.Accommodation;
+    var reservation = ViewBag.Reservation as Veb_Projekat.Models.Reservation;
+}
+
+<h2>Leave Comment</h2>
+
+<div style="background:#e7f3ff; color:#084298; padding:15px; border:1px solid #b6d7ff; border-radius:5px; margin-bottom:20px;">
+    <h4>💬 Share Your Experience</h4>
+    <p>Please share your experience about the accommodation. Your comment will help other travelers make informed decisions.</p>
+    <p><strong>Note:</strong> Comments will be reviewed by the manager before being published.</p>
+</div>
+
+<!-- Accommodation Info -->
+<div style="border:1px solid #dee2e6; padding:15px; margin-bottom:20px;">
+    <h4 style="color:#28a745;">🏨 @accommodation.Name (@accommodation.Type)</h4>
+    <p><strong>Arrangement:</strong> @reservation.SelectedArrangement.Name</p>
+    <p><strong>Location:</strong> @reservation.SelectedArrangement.Location</p>
+    <p><strong>Travel Dates:</strong> @reservation.SelectedArrangement.StartDate.ToString("dd/MM/yyyy") - @reservation.SelectedArrangement.EndDate.ToString("dd/MM/yyyy")</p>
+</div>
+
+<!-- Comment Form -->
+<form method="post" action="@Url.Action("LeaveComment", "Tourist")" style="border:1px solid #dee2e6; padding:20px;">
+    <input type="hidden" name="accommodationId" value="@accommodation.Id" />
+    <input type="hidden" name="reservationId" value="@reservation.Id" />
+
+    <div style="margin-bottom:20px;">
+        <label style="font-weight:bold; display:block; margin-bottom:5px;">Rating (1-5 stars) <span style="color:red;">*</span></label>
+        <div style="font-size:20px; margin-bottom:10px;">
+            <input type="radio" name="rating" value="1" id="rating1" required />
+            <label for="rating1" style="color:#ffc107; cursor:pointer; margin-right:5px;">⭐</label>
+
+            <input type="radio" name="rating" value="2" id="rating2" />
+            <label for="rating2" style="color:#ffc107; cursor:pointer; margin-right:5px;">⭐⭐</label>
+
+            <input type="radio" name="rating" value="3" id="rating3" />
+            <label for="rating3" style="color:#ffc107; cursor:pointer; margin-right:5px;">⭐⭐⭐</label>
+
+            <input type="radio" name="rating" value="4" id="rating4" />
+            <label for="rating4" style="color:#ffc107; cursor:pointer; margin-right:5px;">⭐⭐⭐⭐</label>
+
+            <input type="radio" name="rating" value="5" id="rating5" />
+            <label for="rating5" style="color:#ffc107; cursor:pointer;">⭐⭐⭐⭐⭐</label>
+        </div>
+    </div>
+
+    <div style="margin-bottom:20px;">
+        <label for="commentText" style="font-weight:bold; display:block; margin-bottom:5px;">Your Comment <span style="color:red;">*</span></label>
+        <textarea name="commentText" id="commentText" rows="6"
+                  placeholder="Please describe your experience with this accommodation..."
+                  style="width:100%; padding:10px; border:1px solid #ced4da; border-radius:3px;"
+                  required></textarea>
+        <small style="color:#6c757d;">Minimum 10 characters required</small>
+    </div>
+
+    <div style="margin-bottom:15px; padding:10px; background:#f8f9fa; border-radius:3px;">
+        <small style="color:#6c757d;">
+            <strong>Guidelines:</strong><br />
+            • Be honest and constructive in your feedback<br />
+            • Focus on the accommodation facilities and services<br />
+            • Avoid inappropriate language<br />
+            • Your comment will be reviewed before publication
+        </small>
+    </div>
+
+    <div style="text-align:center;">
+        <button type="submit" style="background:#28a745; color:white; border:none; padding:12px 30px; font-size:16px; cursor:pointer; border-radius:5px; margin-right:15px;">
+            Submit Comment
+        </button>
+        @Html.ActionLink("Cancel", "MyReservations", "Tourist", null, new { @style = "background:#6c757d; color:white; padding:12px 30px; text-decoration:none; border-radius:5px;" })
+    </div>
+</form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const textarea = document.getElementById('commentText');
+    textarea.addEventListener('input', function() {
+        if (this.value.length < 10) {
+            this.setCustomValidity('Comment must be at least 10 characters long');
+        } else {
+            this.setCustomValidity('');
+        }
+    });
+});
+</script>

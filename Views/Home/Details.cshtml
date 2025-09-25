@@ -13,13 +13,37 @@
 <p><strong>Description:</strong> @Model.Description</p>
 <p><strong>Program:</strong> @Model.TravelProgram</p>
 
+@{
+    var sessionUser = Session["CurrentUser"] as Veb_Projekat.Models.SessionUser;
+    bool isLoggedIn = sessionUser?.IsLoggedIn == true;
+    bool isTourist = sessionUser?.IsTourist == true;
+    bool isArrangementUpcoming = Model.StartDate > DateTime.Now;
+}
+
+@if (isLoggedIn && isTourist && isArrangementUpcoming)
+{
+    <p><strong>Ready to book? You can reserve any available accommodation unit below!</strong></p>
+}
+else if (!isLoggedIn)
+{
+    <p>
+        <strong>Want to make a reservation?</strong>
+        @Html.ActionLink("Login", "Login", "Account") or
+        @Html.ActionLink("Register", "Register", "Account") to reserve your spot!
+    </p>
+}
+else if (!isArrangementUpcoming)
+{
+    <p><strong>Past Arrangement:</strong> This arrangement has already started and is no longer available for booking.</p>
+}
+
 <h3>Accommodations</h3>
 
 @if (Model.Accommodations != null && Model.Accommodations.Any())
 {
     foreach (var acc in Model.Accommodations)
     {
-        <div style="border:1px solid #ccc; padding:10px; margin-bottom:10px;">
+        <div border="1" cellpadding="10">
             <h4>@acc.Name (@acc.Type)</h4>
             <p><strong>Stars:</strong> @acc.Stars</p>
             <p><strong>Pool:</strong> @(acc.HasPool ? "Yes" : "No")</p>
@@ -83,7 +107,6 @@
                 <a href="@Url.Action("Details", "Home", new { id = Model.Id })">Reset</a>
             </form>
 
-
             <h5>Units</h5>
             @if (acc.Units != null && acc.Units.Any())
             {
@@ -95,6 +118,7 @@
                             <th>Pets allowed</th>
                             <th>Price</th>
                             <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -106,12 +130,60 @@
 
                             bool isBooked = reservations.Any();
 
+                            bool userHasReserved = false;
+                            if (isLoggedIn)
+                            {
+                                userHasReserved = reservations.Any(r => r.Tourist.Username == sessionUser.Username);
+                            }
+
                             <tr style="background:@(isBooked ? "#f8d7da" : "#d4edda");">
                                 <td>@unit.Id</td>
                                 <td>@unit.MaxGuests</td>
                                 <td>@(unit.PetsAllowed ? "Yes" : "No")</td>
                                 <td>@unit.Price.ToString("C")</td>
-                                <td>@(isBooked ? "Booked" : "Available")</td>
+                                <td>
+                                    @if (userHasReserved)
+                                    {
+                                        <strong>YOUR BOOKING</strong>
+                                    }
+                                    else if (isBooked)
+                                    {
+                                        <strong>Booked</strong>
+                                    }
+                                    else
+                                    {
+                                        <strong>Available</strong>
+                                    }
+                                </td>
+                                <td>
+                                    @if (userHasReserved)
+                                    {
+                                        @Html.ActionLink("View My Reservation", "MyReservations", "Tourist")
+                                    }
+                                    else if (!isBooked && isLoggedIn && isTourist && isArrangementUpcoming)
+                                    {
+                                        using (Html.BeginForm("Reserve", "Tourist", FormMethod.Post))
+                                        {
+                                            <input type="hidden" name="arrangementId" value="@Model.Id" />
+                                            <input type="hidden" name="unitId" value="@unit.Id" />
+                                            <button type="submit" onclick="return confirm('Reserve this unit for @unit.Price.ToString("C")?');">
+                                                Reserve Now
+                                            </button>
+                                        }
+                                    }
+                                    else if (isBooked)
+                                    {
+                                        <span>Unavailable</span>
+                                    }
+                                    else if (!isLoggedIn)
+                                    {
+                                        @Html.ActionLink("Login to Reserve", "Login", "Account")
+                                    }
+                                    else if (!isArrangementUpcoming)
+                                    {
+                                        <span>Past arrangement</span>
+                                    }
+                                </td>
                             </tr>
                         }
                     </tbody>
@@ -152,3 +224,5 @@ else
 {
     <p>No accommodations for this arrangement.</p>
 }
+
+@Html.ActionLink("Back to Search", "Index", "Home")

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Veb_Projekat.Models;
@@ -31,7 +29,6 @@ namespace Veb_Projekat.Controllers
             }
 
             model.UserRole = RoleEnum.Tourist;
-
             UserRepository.Add(model);
 
             TempData["Success"] = "Registration successful! You can now log in";
@@ -41,6 +38,12 @@ namespace Veb_Projekat.Controllers
         // GET: Login
         public ActionResult Login()
         {
+            SessionUser sessionUser = Session["CurrentUser"] as SessionUser;
+            if (sessionUser != null && sessionUser.IsLoggedIn)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 
@@ -56,18 +59,62 @@ namespace Veb_Projekat.Controllers
                 return View();
             }
 
-            // Save user in session
-            Session["CurrentUser"] = user;
+            SessionUser sessionUser = new SessionUser();
+            sessionUser.Login(user);
+
+            Session["CurrentUser"] = sessionUser;
 
             TempData["Success"] = $"Welcome {user.FirstName}!";
-            return RedirectToAction("Index", "Home");
+
+            switch (user.UserRole)
+            {
+                case RoleEnum.Tourist:
+                    return RedirectToAction("MyReservations", "Tourist");
+                case RoleEnum.Manager:
+                    return RedirectToAction("Index", "Manager");
+                case RoleEnum.Administrator:
+                    return RedirectToAction("Index", "Admin");
+                default:
+                    return RedirectToAction("Index", "Home");
+            }
         }
 
         // Logout
         public ActionResult Logout()
         {
-            Session["CurrentUser"] = null;
+            SessionUser sessionUser = Session["CurrentUser"] as SessionUser;
+            if (sessionUser != null)
+            {
+                sessionUser.Logout();
+            }
+
+            Session.Abandon();
+
+            Response.Cache.SetNoStore();
+            Response.Cache.SetCacheability(HttpCacheability.NoCache);
+            Response.Cache.SetExpires(DateTime.Now);
+            Response.Cache.SetValidUntilExpires(true);
+
+            TempData["Success"] = "You have been logged out successfully.";
             return RedirectToAction("Login");
+        }
+
+        public new ActionResult Profile()
+        {
+            SessionUser sessionUser = Session["CurrentUser"] as SessionUser;
+            if (sessionUser == null || !sessionUser.IsLoggedIn)
+            {
+                return RedirectToAction("Login");
+            }
+
+            var user = UserRepository.GetByUsername(sessionUser.Username);
+            if (user == null)
+            {
+                TempData["Error"] = "User not found.";
+                return RedirectToAction("Login");
+            }
+
+            return View(user);
         }
     }
 }

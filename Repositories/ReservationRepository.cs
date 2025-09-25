@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Web;
 using Veb_Projekat.Models;
+using Veb_Projekat.Models.Enums;
 
 namespace Veb_Projekat.Repositories
 {
@@ -78,6 +79,31 @@ namespace Veb_Projekat.Repositories
 
                 string line = $"{reservation.Id};{reservation.Tourist.Username};{reservation.Status};{reservation.SelectedArrangement.Name};{reservation.SelectedUnit.Id}";
                 sw.WriteLine(line);
+            }
+        }
+        public static void UpdateStatus(Guid reservationId, ReservationStatusEnum newStatus)
+        {
+            if (!File.Exists(filePath))
+                return;
+
+            var lines = File.ReadAllLines(filePath).ToList();
+            bool updated = false;
+
+            for (int i = 1; i < lines.Count; i++) // Preskacemo header
+            {
+                var parts = lines[i].Split(';');
+                if (parts.Length >= 5 && Guid.TryParse(parts[0], out Guid id) && id == reservationId)
+                {
+                    parts[2] = newStatus.ToString(); // upadate status
+                    lines[i] = string.Join(";", parts);
+                    updated = true;
+                    break;
+                }
+            }
+
+            if (updated)
+            {
+                File.WriteAllLines(filePath, lines);
             }
         }
     }

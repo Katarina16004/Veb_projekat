@@ -1,0 +1,121 @@
+﻿@using Veb_Projekat.Models
+@using Veb_Projekat.Models.Enums
+@{
+    ViewBag.Title = "My Reservations";
+    var reservations = ViewBag.Reservations as List<Reservation>;
+}
+
+<h2>My Reservations</h2>
+
+<!-- Search and Filter Form -->
+<form method="get" action="@Url.Action("MyReservations", "Tourist")">
+    <div style="background:#f8f9fa; padding:15px; margin-bottom:20px; border:1px solid #dee2e6;">
+        <div style="display:inline-block; margin-right:15px;">
+            <label>Search (ID or Arrangement):</label>
+            <input type="text" name="search" value="@ViewBag.Search" placeholder="Enter reservation ID or arrangement name" />
+        </div>
+
+        <div style="display:inline-block; margin-right:15px;">
+            <label>Status:</label>
+            <select name="status">
+                <option value="">All statuses</option>
+                <option value="Active" @(ViewBag.Status == "Active" ? "selected" : "")>Active</option>
+                <option value="Cancelled" @(ViewBag.Status == "Cancelled" ? "selected" : "")>Cancelled</option>
+            </select>
+        </div>
+
+        <div style="display:inline-block; margin-right:15px;">
+            <label>Sort by:</label>
+            <select name="sortBy">
+                <option value="">None</option>
+                <option value="ArrangementName" @(ViewBag.SortBy == "ArrangementName" ? "selected" : "")>Arrangement Name</option>
+                <option value="StartDate" @(ViewBag.SortBy == "StartDate" ? "selected" : "")>Start Date</option>
+                <option value="Status" @(ViewBag.SortBy == "Status" ? "selected" : "")>Status</option>
+            </select>
+
+            <select name="sortDir">
+                <option value="asc" @(ViewBag.SortDir == "asc" ? "selected" : "")>Ascending</option>
+                <option value="desc" @(ViewBag.SortDir == "desc" ? "selected" : "")>Descending</option>
+            </select>
+        </div>
+
+        <button type="submit">Apply Filters</button>
+        <a href="@Url.Action("MyReservations", "Tourist")" style="margin-left:10px;">Clear Filters</a>
+    </div>
+</form>
+
+<!-- Reservations Table -->
+@if (reservations != null && reservations.Any())
+{
+    <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
+        <thead style="background:#e9ecef;">
+            <tr>
+                <th>Reservation ID</th>
+                <th>Arrangement</th>
+                <th>Location</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Unit Price</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in reservations)
+            {
+                bool isPast = r.SelectedArrangement.StartDate <= DateTime.Now;
+                bool canCancel = r.Status == ReservationStatusEnum.Active && !isPast;
+                bool canComment = r.Status == ReservationStatusEnum.Active && r.SelectedArrangement.EndDate < DateTime.Now;
+
+                <tr style="background:@(r.Status == ReservationStatusEnum.Cancelled ? "#f8d7da" : (isPast ? "#fff3cd" : "#d4edda"));">
+                    <td>@r.Id.ToString().Substring(0, 8)...</td>
+                    <td><strong>@r.SelectedArrangement.Name</strong></td>
+                    <td>@r.SelectedArrangement.Location</td>
+                    <td>@r.SelectedArrangement.StartDate.ToString("dd/MM/yyyy")</td>
+                    <td>@r.SelectedArrangement.EndDate.ToString("dd/MM/yyyy")</td>
+                    <td>@r.SelectedUnit.Price.ToString("C")</td>
+                    <td>
+                        <span style="padding:3px 8px; border-radius:3px; color:white; background:@(r.Status == ReservationStatusEnum.Active ? "#28a745" : "#dc3545");">
+                            @r.Status
+                        </span>
+                    </td>
+                    <td>
+                        @Html.ActionLink("Details", "ReservationDetails", new { reservationId = r.Id }, new { @style = "margin-right:5px;" })
+
+                        @if (canCancel)
+                        {
+                            using (Html.BeginForm("CancelReservation", "Tourist", FormMethod.Post, new { @style = "display:inline;" }))
+                            {
+                                <input type="hidden" name="reservationId" value="@r.Id" />
+                                <button type="submit" onclick="return confirm('Are you sure you want to cancel this reservation?');"
+                                        style="background:#dc3545; color:white; border:none; padding:3px 8px; cursor:pointer;">
+                                    Cancel
+                                </button>
+                            }
+                        }
+
+                        @if (canComment)
+                        {
+                            @Html.ActionLink("Leave Comment", "LeaveComment", new { accommodationId = r.SelectedArrangement.Accommodations.First().Id, reservationId = r.Id.ToString() },
+                                           new { @style = "margin-left:5px; background:#17a2b8; color:white; padding:3px 8px; text-decoration:none;" })
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    <p style="margin-top:15px;">
+        <strong>Total reservations:</strong> @reservations.Count |
+        <strong>Active:</strong> @reservations.Count(r => r.Status == ReservationStatusEnum.Active) |
+        <strong>Cancelled:</strong> @reservations.Count(r => r.Status == ReservationStatusEnum.Cancelled)
+    </p>
+}
+else
+{
+    <div style="background:#d1ecf1; color:#0c5460; padding:15px; border:1px solid #bee5eb; border-radius:5px;">
+        <h4>No reservations found</h4>
+        <p>You haven't made any reservations yet or no reservations match your current filters.</p>
+        <p>@Html.ActionLink("Browse Arrangements", "Index", "Home", null, new { @class = "btn", @style = "background:#007bff; color:white; padding:8px 15px; text-decoration:none; border-radius:3px;" })</p>
+    </div>
+}

@@ -2,3 +2,5 @@ Id;TouristUsername;Status;ArrangementName;AccommodationUnitId
 3f2504e0-4f89-11d3-9a0c-0305e82c3301;tourist1;Active;Beach Holiday;1
 3f2504e0-4f89-11d3-9a0c-0305e82c3302;tourist2;Cancelled;Mountain Adventure;3
 3f2504e0-4f89-11d3-9a0c-0305e82c3303;tourist3;Active;City Tour;5
+5f5ea9a2-727c-48e4-bc50-27cedb2f821f;tourist1;Cancelled;Beach Holiday;2
+5aa4985d-c8fa-4a96-a7db-5b14a464dd30;tourist1;Active;Beach Holiday;2
