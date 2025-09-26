@@ -6,3 +6,5 @@ ID;AccommodationID;MaxGuests;PetsAllowed;Price;
 5;3;4;false;350.00
 6;4;4;false;100.00
 7;4;2;false;50.00
+8;5;2;false;120.00
+9;5;4;true;250.00

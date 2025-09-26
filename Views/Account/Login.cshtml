@@ -6,12 +6,17 @@
 
     <div>
         <label>Username:</label>
-        <input type="text" name="username" />
+        <input type="text" name="username" value="@ViewBag.RememberedUsername" />
     </div>
 
     <div>
         <label>Password:</label>
         <input type="password" name="password" />
+    </div>
+
+    <div>
+        @Html.CheckBox("rememberMe", false, new { id = "rememberMe" })
+        <label for="rememberMe">Remember me</label>
     </div>
 
     <button type="submit">Login</button>

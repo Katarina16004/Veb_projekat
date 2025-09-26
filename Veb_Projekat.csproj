@@ -151,6 +151,8 @@
     <Compile Include="Services\AccommodationService.cs" />
     <Compile Include="Services\AccommodationUnitService.cs" />
     <Compile Include="Services\ArrangementService.cs" />
+    <Compile Include="Services\CommentService.cs" />
+    <Compile Include="Services\ReservationService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Data\Accommodations.txt" />
@@ -162,6 +164,7 @@
     <Content Include="App_Data\Images\beach_holiday.png" />
     <Content Include="App_Data\Images\city_tour.png" />
     <Content Include="App_Data\Images\mountain_adventure.png" />
+    <Content Include="App_Data\Images\spa_retreat.png" />
     <Content Include="Content\bootstrap-grid.css" />
     <Content Include="Content\bootstrap-grid.min.css" />
     <Content Include="Content\bootstrap-grid.rtl.css" />
