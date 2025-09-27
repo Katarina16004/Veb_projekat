@@ -17,6 +17,5 @@ namespace Veb_Projekat.Models
         public bool Accessible { get; set; }                    
         public bool HasWifi { get; set; }                      
         public List<AccommodationUnit> Units { get; set; } = new List<AccommodationUnit>();
-        public bool IsDeleted { get; set; } = false;
     }
 }

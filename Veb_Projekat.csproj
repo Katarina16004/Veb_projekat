@@ -225,6 +225,10 @@
     <Content Include="Views\Manager\CreateArrangement.cshtml" />
     <Content Include="Views\Manager\EditArrangement.cshtml" />
     <Content Include="Views\Manager\ViewAllArrangements.cshtml" />
+    <Content Include="Views\Manager\ManageAccommodations.cshtml" />
+    <Content Include="Views\Manager\CreateAccommodation.cshtml" />
+    <Content Include="Views\Manager\EditAccommodation.cshtml" />
+    <Content Include="Views\Manager\ViewAllAccommodations.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Base\" />

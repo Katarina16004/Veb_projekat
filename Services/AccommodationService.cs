@@ -72,5 +72,192 @@ namespace Veb_Projekat.Services
                 !reservations.Any(r => r.SelectedUnit.Id == u.Id &&
                                        r.Status == ReservationStatusEnum.Active));
         }
+
+
+
+        public static List<Accommodation> GetByManager(string managerUsername)
+        {
+            return AccommodationRepository.GetByManagerUsername(managerUsername);
+        }
+
+        public static Accommodation GetAccommodationForEdit(int id, string managerUsername)
+        {
+            var accommodation = AccommodationRepository.GetById(id);
+
+            if (accommodation == null)
+                return null;
+
+            if (!CanManageAccommodation(accommodation, managerUsername))
+                return null;
+
+            return accommodation;
+        }
+
+        public static bool CanManageAccommodation(Accommodation accommodation, string managerUsername)
+        {
+            var arrangements = ArrangementRepository.GetAllByManagerUsername(managerUsername);
+            return arrangements.Any(arr => arr.Accommodations.Any(acc => acc.Id == accommodation.Id));
+        }
+
+        public static bool ValidateAccommodationData(string name, int stars, out string errorMessage)
+        {
+            errorMessage = "";
+
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                errorMessage = "Accommodation name is required.";
+                return false;
+            }
+
+            if (stars < 0 || stars > 5)
+            {
+                errorMessage = "Stars must be between 0 and 5.";
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool CreateAccommodation(string managerUsername, int arrangementId, string name, AccommodationTypeEnum type,
+            int stars, bool hasPool, bool hasSpa, bool accessible, bool hasWifi, out string errorMessage)
+        {
+            errorMessage = "";
+
+            var arrangement = ArrangementRepository.GetById(arrangementId);
+            if (arrangement == null || arrangement.ManagerUsername != managerUsername)
+            {
+                errorMessage = "You can only add accommodations to your own arrangements.";
+                return false;
+            }
+
+            if (!ValidateAccommodationData(name, stars, out errorMessage))
+            {
+                return false;
+            }
+
+            var accommodation = new Accommodation
+            {
+                Id = AccommodationRepository.GetNextId(),
+                Name = name,
+                Type = type,
+                Stars = stars,
+                HasPool = hasPool,
+                HasSpa = hasSpa,
+                Accessible = accessible,
+                HasWifi = hasWifi,
+                Units = new List<AccommodationUnit>(),
+                IsDeleted = false
+            };
+
+            try
+            {
+                AccommodationRepository.Add(accommodation, arrangementId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "Error creating accommodation: " + ex.Message;
+                return false;
+            }
+        }
+
+        public static bool UpdateAccommodation(int id, string managerUsername, string name, AccommodationTypeEnum type,
+            int stars, bool hasPool, bool hasSpa, bool accessible, bool hasWifi, out string errorMessage)
+        {
+            errorMessage = "";
+
+            var accommodation = AccommodationRepository.GetById(id);
+            if (accommodation == null)
+            {
+                errorMessage = "Accommodation not found.";
+                return false;
+            }
+
+            if (!CanManageAccommodation(accommodation, managerUsername))
+            {
+                errorMessage = "You can only edit your own accommodations.";
+                return false;
+            }
+
+            if (accommodation.IsDeleted)
+            {
+                errorMessage = "Cannot edit deleted accommodation.";
+                return false;
+            }
+
+            if (!ValidateAccommodationData(name, stars, out errorMessage))
+            {
+                return false;
+            }
+
+            try
+            {
+                AccommodationRepository.Update(id, name, type, stars, hasPool, hasSpa, accessible, hasWifi);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "Error updating accommodation: " + ex.Message;
+                return false;
+            }
+        }
+
+        public static bool CanDeleteAccommodation(int accommodationId, string managerUsername, out string errorMessage)
+        {
+            errorMessage = "";
+
+            var accommodation = AccommodationRepository.GetById(accommodationId);
+            if (accommodation == null)
+            {
+                errorMessage = "Accommodation not found.";
+                return false;
+            }
+
+            if (!CanManageAccommodation(accommodation, managerUsername))
+            {
+                errorMessage = "You can only delete your own accommodations.";
+                return false;
+            }
+
+            if (accommodation.IsDeleted)
+            {
+                errorMessage = "Accommodation is already deleted.";
+                return false;
+            }
+
+            // da li postoje buduci aranzmani
+            var futureArrangements = ArrangementRepository.GetAll().Where(arr => arr.StartDate > DateTime.Now &&
+                             !arr.IsDeleted && arr.Accommodations.Any(acc => acc.Id == accommodationId))
+                .ToList();
+
+            if (futureArrangements.Any())
+            {
+                errorMessage = "Cannot delete accommodation used in future arrangements.";
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool DeleteAccommodation(int accommodationId, string managerUsername, out string errorMessage)
+        {
+            errorMessage = "";
+
+            if (!CanDeleteAccommodation(accommodationId, managerUsername, out errorMessage))
+            {
+                return false;
+            }
+
+            try
+            {
+                AccommodationRepository.LogicalDelete(accommodationId);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "Error deleting accommodation: " + ex.Message;
+                return false;
+            }
+        }
     }
 }

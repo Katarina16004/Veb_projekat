@@ -1,0 +1,79 @@
+﻿@using Veb_Projekat.Models.Enums
+@{
+    ViewBag.Title = "Create New Accommodation";
+    int arrangementId = (int)ViewBag.ArrangementId;
+    string arrangementName = ViewBag.ArrangementName as string;
+}
+
+<h2>Create New Accommodation</h2>
+<h3>For Arrangement: @arrangementName</h3>
+
+@using (Html.BeginForm("CreateAccommodation", "Manager", FormMethod.Post))
+{
+    <input type="hidden" name="arrangementId" value="@arrangementId" />
+
+    @Html.ValidationSummary(true)
+
+    <table style="width: 100%;">
+        <tr>
+            <td style="padding: 5px;"><label>Accommodation Name:</label></td>
+            <td style="padding: 5px;"><input type="text" name="name" required style="width: 300px;" /></td>
+        </tr>
+        <tr>
+            <td style="padding: 5px;"><label>Type:</label></td>
+            <td style="padding: 5px;">
+                <select name="type" required style="width: 310px;">
+                    <option value="">Select type...</option>
+                    @foreach (AccommodationTypeEnum t in ViewBag.AccommodationTypes)
+                    {
+                        <option value="@t">@t</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 5px;"><label>Stars (Hotels only):</label></td>
+            <td style="padding: 5px;">
+                <select name="stars" style="width: 310px;">
+                    <option value="0">0 Stars (N/A)</option>
+                    <option value="1">1 Star</option>
+                    <option value="2">2 Stars</option>
+                    <option value="3">3 Stars</option>
+                    <option value="4">4 Stars</option>
+                    <option value="5">5 Stars</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 5px;"><label>Features:</label></td>
+            <td style="padding: 5px;">
+                <div>
+                    <input type="checkbox" name="hasPool" value="true" id="hasPool" />
+                    <input type="hidden" name="hasPool" value="false" />
+                    <label for="hasPool">Has Swimming Pool</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="hasSpa" value="true" id="hasSpa" />
+                    <input type="hidden" name="hasSpa" value="false" />
+                    <label for="hasSpa">Has Spa & Wellness</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="accessible" value="true" id="accessible" />
+                    <input type="hidden" name="accessible" value="false" />
+                    <label for="accessible">Wheelchair Accessible</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="hasWifi" value="true" id="hasWifi" />
+                    <input type="hidden" name="hasWifi" value="false" />
+                    <label for="hasWifi">Free WiFi</label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="padding: 20px 5px;">
+                <input type="submit" value="Create Accommodation" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none;" />
+                @Html.ActionLink("Cancel", "ManageAccommodations", new { arrangementId = arrangementId }, new { style = "margin-left: 10px;" })
+            </td>
+        </tr>
+    </table>
+}

@@ -1,0 +1,86 @@
+﻿@model Veb_Projekat.Models.Accommodation
+@using Veb_Projekat.Models.Enums
+@{
+    ViewBag.Title = "Edit Accommodation";
+}
+
+<h2>Edit Accommodation: @Model.Name</h2>
+
+@using (Html.BeginForm("EditAccommodation", "Manager", FormMethod.Post))
+{
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    @Html.ValidationSummary(true)
+
+    <table style="width: 100%;">
+        <tr>
+            <td style="padding: 5px;"><label>Accommodation Name:</label></td>
+            <td style="padding: 5px;"><input type="text" name="name" value="@Model.Name" required style="width: 300px;" /></td>
+        </tr>
+        <tr>
+            <td style="padding: 5px;"><label>Type:</label></td>
+            <td style="padding: 5px;">
+                <select name="type" required style="width: 310px;">
+                    @foreach (AccommodationTypeEnum t in ViewBag.AccommodationTypes)
+                    {
+                        <option value="@t" @(Model.Type == t ? "selected" : "")>@t</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 5px;"><label>Stars (Hotels only):</label></td>
+            <td style="padding: 5px;">
+                <select name="stars" style="width: 310px;">
+                    <option value="0" @(Model.Stars == 0 ? "selected" : "")>0 Stars (N/A)</option>
+                    <option value="1" @(Model.Stars == 1 ? "selected" : "")>1 Star</option>
+                    <option value="2" @(Model.Stars == 2 ? "selected" : "")>2 Stars</option>
+                    <option value="3" @(Model.Stars == 3 ? "selected" : "")>3 Stars</option>
+                    <option value="4" @(Model.Stars == 4 ? "selected" : "")>4 Stars</option>
+                    <option value="5" @(Model.Stars == 5 ? "selected" : "")>5 Stars</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 5px;"><label>Features:</label></td>
+            <td style="padding: 5px;">
+                <div>
+                    <input type="checkbox" name="hasPool" value="true" id="hasPool" @(Model.HasPool ? "checked" : "") />
+                    <input type="hidden" name="hasPool" value="false" />
+                    <label for="hasPool">Has Swimming Pool</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="hasSpa" value="true" id="hasSpa" @(Model.HasSpa ? "checked" : "") />
+                    <input type="hidden" name="hasSpa" value="false" />
+                    <label for="hasSpa">Has Spa & Wellness</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="accessible" value="true" id="accessible" @(Model.Accessible ? "checked" : "") />
+                    <input type="hidden" name="accessible" value="false" />
+                    <label for="accessible">Wheelchair Accessible</label>
+                </div>
+                <div>
+                    <input type="checkbox" name="hasWifi" value="true" id="hasWifi" @(Model.HasWifi ? "checked" : "") />
+                    <input type="hidden" name="hasWifi" value="false" />
+                    <label for="hasWifi">Free WiFi</label>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="padding: 10px 5px;">
+                <p><strong>Additional Info:</strong></p>
+                <ul>
+                    <li>Accommodation ID: @Model.Id</li>
+                    <li>Total Units: @Model.Units.Count</li>
+                    <li>Status: @(Model.IsDeleted ? "Deleted" : "Active")</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="padding: 20px 5px;">
+                <input type="submit" value="Update Accommodation" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none;" />
+                @Html.ActionLink("Cancel", "Index", null, new { style = "margin-left: 10px;" })
+            </td>
+        </tr>
+    </table>
+}
