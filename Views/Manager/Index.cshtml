@@ -1,0 +1,16 @@
+﻿@{
+    ViewBag.Title = "Manager Dashboard";
+}
+
+<h2>Manager Dashboard</h2>
+
+<div style="background:#e7f3ff; color:#084298; padding:15px; border:1px solid #b6d7ff; border-radius:5px; margin-bottom:20px;">
+    <h4>Welcome, @(Session["CurrentUser"] as Veb_Projekat.Models.SessionUser).FirstName!</h4>
+    <p>Manage your arrangements, accommodations, and approve comments from this dashboard.</p>
+</div>
+
+<div style="border:1px solid #dee2e6; padding:20px; text-align:center;">
+    <h3>Coming Soon</h3>
+    <p>Your arrangements will be displayed here.</p>
+    <p>@Html.ActionLink("Create New Arrangement", "CreateArrangement", null, new { @class = "btn", @style = "background:#28a745; color:white; padding:8px 15px; text-decoration:none; border-radius:3px;" })</p>
+</div>

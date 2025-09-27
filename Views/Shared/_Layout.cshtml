@@ -20,6 +20,17 @@
             {
                 @: | @Html.ActionLink("My Reservations", "MyReservations", "Tourist")
             }
+            else if (currentUser.IsManager)
+            {
+                @: | @Html.ActionLink("My Arrangements", "Index", "Manager")
+                @: | @Html.ActionLink("Create Arrangement", "CreateArrangement", "Manager")
+                @: | @Html.ActionLink("Manage Comments", "ApproveComments", "Manager")
+            }
+            else if (currentUser.IsAdmin)
+            {
+                @: | @Html.ActionLink("Users", "Index", "Admin")
+                @: | @Html.ActionLink("Create Manager", "CreateManager", "Admin")
+            }
 
             @: | @Html.ActionLink("Profile", "Profile", "Account")
             @: | @Html.ActionLink("Logout", "Logout", "Account")
@@ -46,7 +57,6 @@
 
     @RenderBody()
 
-    @* DODATO: RenderSection za scripts *@
     @RenderSection("scripts", required: false)
 </body>
 </html>
