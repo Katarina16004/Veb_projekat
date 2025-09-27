@@ -63,7 +63,7 @@ namespace Veb_Projekat.Repositories
                 if (!fileExists)
                     sw.WriteLine("Username;Password;FirstName;LastName;Gender;Email;DateOfBirth;UserRole");
 
-                string line = $"{user.Username};{user.Password};{user.FirstName};{user.LastName};{user.Gender};{user.Email};{user.DateOfBirth:dd/MM/yyyy};{user.UserRole}";
+                string line = $"{user.Username};{user.Password};{user.FirstName};{user.LastName};{user.Gender};{user.Email};{user.DateOfBirth.ToString("dd/MM/yyyy", CultureInfo.InvariantCulture)};{user.UserRole}";
                 sw.WriteLine(line);
             }
         }
@@ -83,7 +83,7 @@ namespace Veb_Projekat.Repositories
 
             foreach (var user in users.Where(u => u.UserRole == RoleEnum.Manager))
             {
-                user.CreatedArrangements = ArrangementRepository.GetByManagerUsername(user.Username);
+                user.CreatedArrangements = ArrangementRepository.GetAllByManagerUsername(user.Username);
             }
         }
 

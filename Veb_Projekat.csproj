@@ -222,6 +222,9 @@
     <Content Include="Views\Tourist\LeaveComment.cshtml" />
     <Content Include="Views\Account\Profile.cshtml" />
     <Content Include="Views\Manager\Index.cshtml" />
+    <Content Include="Views\Manager\CreateArrangement.cshtml" />
+    <Content Include="Views\Manager\EditArrangement.cshtml" />
+    <Content Include="Views\Manager\ViewAllArrangements.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Base\" />

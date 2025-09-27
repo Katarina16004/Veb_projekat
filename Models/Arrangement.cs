@@ -35,5 +35,6 @@ namespace Veb_Projekat.Models
         public List<Accommodation> Accommodations { get; set; } = new List<Accommodation>();
 
         public string ManagerUsername { get; set; } = string.Empty;
+        public bool IsDeleted { get; set; } = false;
     }
 }

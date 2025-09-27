@@ -1,0 +1,63 @@
+﻿@using Veb_Projekat.Models
+@{
+    ViewBag.Title = "All My Arrangements";
+    var arrangements = ViewBag.AllArrangements as List<Arrangement>;
+    int activeCount = (int)ViewBag.ActiveCount;
+    int deletedCount = (int)ViewBag.DeletedCount;
+}
+
+<h2>All My Arrangements</h2>
+
+<p>
+    @Html.ActionLink("Active Only", "ViewAllArrangements", new { includeDeleted = false })
+    |
+    @Html.ActionLink("Include Deleted", "ViewAllArrangements", new { includeDeleted = true })
+</p>
+
+@if (arrangements != null && arrangements.Any())
+{
+    <table border="1">
+        <tr>
+            <th>Name</th>
+            <th>Location</th>
+            <th>Start Date</th>
+            <th>Status</th>
+            <th>State</th>
+            <th>Actions</th>
+        </tr>
+
+        @foreach (var arrangement in arrangements)
+        {
+            bool isUpcoming = arrangement.StartDate > DateTime.Now;
+
+            <tr>
+                <td>
+                    <strong>@arrangement.Name</strong>
+                    @if (arrangement.IsDeleted)
+                    {
+                        <span>(DELETED)</span>
+                    }
+                </td>
+                <td>@arrangement.Location</td>
+                <td>@arrangement.StartDate.ToString("dd/MM/yyyy")</td>
+                <td>@(isUpcoming ? "Upcoming" : "Past")</td>
+                <td>@(arrangement.IsDeleted ? "Deleted" : "Active")</td>
+                <td>
+                    @Html.ActionLink("View", "Details", "Home", new { id = arrangement.Id }, null)
+
+                    @if (!arrangement.IsDeleted && isUpcoming)
+                    {
+                        @Html.Raw(" | ")
+                        @Html.ActionLink("Edit", "EditArrangement", new { id = arrangement.Id })
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <p>No arrangements found.</p>
+}
+
+<p>@Html.ActionLink("Back to Dashboard", "Index")</p>

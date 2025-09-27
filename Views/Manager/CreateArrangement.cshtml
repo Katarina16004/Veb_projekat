@@ -1,0 +1,72 @@
+﻿@using Veb_Projekat.Models.Enums
+@{
+    ViewBag.Title = "Create New Arrangement";
+}
+
+<h2>Create New Arrangement</h2>
+
+@using (Html.BeginForm("CreateArrangement", "Manager", FormMethod.Post))
+{
+    @Html.ValidationSummary(true)
+
+    <table>
+        <tr>
+            <td><label>Arrangement Name:</label></td>
+            <td><input type="text" name="name" required /></td>
+        </tr>
+        <tr>
+            <td><label>Type:</label></td>
+            <td>
+                <select name="type" required>
+                    <option value="">Select type...</option>
+                    @foreach (ArrangementTypeEnum t in ViewBag.ArrangementTypes)
+                    {
+                        <option value="@t">@t</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Transport:</label></td>
+            <td>
+                <select name="transport" required>
+                    <option value="">Select transport...</option>
+                    @foreach (TransportTypeEnum t in ViewBag.TransportTypes)
+                    {
+                        <option value="@t">@t</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Location:</label></td>
+            <td><input type="text" name="location" required /></td>
+        </tr>
+        <tr>
+            <td><label>Start Date:</label></td>
+            <td><input type="date" name="startDate" required min="@DateTime.Now.ToString("yyyy-MM-dd")" /></td>
+        </tr>
+        <tr>
+            <td><label>End Date:</label></td>
+            <td><input type="date" name="endDate" required /></td>
+        </tr>
+        <tr>
+            <td><label>Max Passengers:</label></td>
+            <td><input type="number" name="maxPassengers" required min="1" max="1000" /></td>
+        </tr>
+        <tr>
+            <td><label>Description:</label></td>
+            <td><textarea name="description" rows="4"></textarea></td>
+        </tr>
+        <tr>
+            <td><label>Travel Program:</label></td>
+            <td><textarea name="program" rows="5"></textarea></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="Create Arrangement" />
+                @Html.ActionLink("Cancel", "Index")
+            </td>
+        </tr>
+    </table>
+}

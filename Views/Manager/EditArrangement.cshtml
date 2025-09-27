@@ -1,0 +1,79 @@
+﻿@model Veb_Projekat.Models.Arrangement
+@using Veb_Projekat.Models.Enums
+@{
+    ViewBag.Title = "Edit Arrangement";
+}
+
+<h2>Edit Arrangement: @Model.Name</h2>
+
+@using (Html.BeginForm("EditArrangement", "Manager", FormMethod.Post))
+{
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    @Html.ValidationSummary(true)
+
+    <table>
+        <tr>
+            <td><label>Arrangement Name:</label></td>
+            <td><input type="text" name="name" value="@Model.Name" required /></td>
+        </tr>
+        <tr>
+            <td><label>Type:</label></td>
+            <td>
+                <select name="type" required>
+                    @foreach (ArrangementTypeEnum t in ViewBag.ArrangementTypes)
+                    {
+                        <option value="@t" @(Model.Type == t ? "selected" : "")>@t</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Transport:</label></td>
+            <td>
+                <select name="transport" required>
+                    @foreach (TransportTypeEnum t in ViewBag.TransportTypes)
+                    {
+                        <option value="@t" @(Model.Transport == t ? "selected" : "")>@t</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label>Location:</label></td>
+            <td><input type="text" name="location" value="@Model.Location" required /></td>
+        </tr>
+        <tr>
+            <td><label>Start Date:</label></td>
+            <td><input type="date" name="startDate" value="@Model.StartDate.ToString("yyyy-MM-dd")" required /></td>
+        </tr>
+        <tr>
+            <td><label>End Date:</label></td>
+            <td><input type="date" name="endDate" value="@Model.EndDate.ToString("yyyy-MM-dd")" required /></td>
+        </tr>
+        <tr>
+            <td><label>Max Passengers:</label></td>
+            <td><input type="number" name="maxPassengers" value="@Model.MaxNumOfPassengers" required min="1" max="1000" /></td>
+        </tr>
+        <tr>
+            <td><label>Description:</label></td>
+            <td><textarea name="description" rows="4">@Model.Description</textarea></td>
+        </tr>
+        <tr>
+            <td><label>Travel Program:</label></td>
+            <td><textarea name="program" rows="5">@Model.TravelProgram</textarea></td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <p><strong>Current poster:</strong> @Model.Poster</p>
+                <p><strong>Created by:</strong> @Model.ManagerUsername</p>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="Update Arrangement" />
+                @Html.ActionLink("Cancel", "Index")
+            </td>
+        </tr>
+    </table>
+}

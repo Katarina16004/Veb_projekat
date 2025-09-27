@@ -4,6 +4,4 @@ tourist2;turista;Marina;Jovanovic;Female;marina.jovanovic@example.com;12/03/2004
 tourist3;turista;Mateja;Vasic;Male;mateja.vasic@example.com;10/06/2003;Tourist
 manager1;menadzer;Marko;Jovanovic;Male;marko.jovanovic@example.com;22/07/1985;Manager
 admin1;admin;Danijela;Stankovic;Female;danijela.stankovic@example.com;10/01/1990;Administrator
-Kaca;mikica01;Katarina;Veljkovic;Female;veljkovickatarina@gmail.com;16.01.2004;Tourist
-KroNoSoo;mikica01;Katarina;Veljkovic;Female;veljkovickatarina@gmail.com;25.09.2025;Tourist
-Ninic;turista;Nikolina;Manojlovic;Female;manojlovicnikolina@nmp.com;14.09.2004;Tourist
+novi;novi;novi;novi;Male;novi;30/09/2025;Tourist
