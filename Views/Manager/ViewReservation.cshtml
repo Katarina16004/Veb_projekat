@@ -1,0 +1,123 @@
+﻿@model Veb_Projekat.Models.Reservation
+@{
+    ViewBag.Title = "Reservation Details";
+    bool isPast = Model.SelectedArrangement.StartDate <= DateTime.Now;
+    bool isFuture = Model.SelectedArrangement.StartDate > DateTime.Now;
+}
+
+<h2>Reservation Details (Manager View)</h2>
+
+<div style="background:#f8f9fa; padding:20px; border:1px solid #dee2e6; margin-bottom:20px; border-radius:5px;">
+    <div style="display:flex; justify-content:space-between; align-items:center;">
+        <h3>Reservation #@Model.Id.ToString().Substring(0, 8)...</h3>
+        <div>
+            <span style="padding:5px 10px; border-radius:5px; color:white;
+                         background:@(Model.Status == Veb_Projekat.Models.Enums.ReservationStatusEnum.Active ? "#28a745" : "#dc3545");">
+                @Model.Status
+            </span>
+            @if (isFuture)
+            {
+                <span style="padding:5px 10px; border-radius:5px; color:white; background:#007bff; margin-left:5px;">
+                    Upcoming
+                </span>
+            }
+            else if (isPast)
+            {
+                <span style="padding:5px 10px; border-radius:5px; color:white; background:#6c757d; margin-left:5px;">
+                    Past
+                </span>
+            }
+        </div>
+    </div>
+</div>
+
+<!-- Tourist Information -->
+<div style="border:1px solid #dee2e6; padding:15px; margin-bottom:20px; border-radius:5px;">
+    <h4 style="color:#6f42c1; margin-bottom:15px;">Tourist Information</h4>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
+        <div><strong>Username:</strong> @Model.Tourist.Username</div>
+        <div><strong>Name:</strong> @Model.Tourist.FirstName @Model.Tourist.LastName</div>
+        <div><strong>Email:</strong> @Model.Tourist.Email</div>
+        <div><strong>Gender:</strong> @Model.Tourist.Gender</div>
+        <div><strong>Date of Birth:</strong> @Model.Tourist.DateOfBirth.ToString("dd/MM/yyyy")</div>
+        <div><strong>Age:</strong> @((DateTime.Now - Model.Tourist.DateOfBirth).Days / 365) years</div>
+    </div>
+</div>
+
+<!-- Arrangement Information -->
+<div style="border:1px solid #dee2e6; padding:15px; margin-bottom:20px; border-radius:5px;">
+    <h4 style="color:#007bff; margin-bottom:15px;">Arrangement Information</h4>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <div><strong>Name:</strong> @Model.SelectedArrangement.Name</div>
+        <div><strong>Location:</strong> @Model.SelectedArrangement.Location</div>
+        <div><strong>Type:</strong> @Model.SelectedArrangement.Type</div>
+        <div><strong>Transport:</strong> @Model.SelectedArrangement.Transport</div>
+        <div><strong>Start Date:</strong> @Model.SelectedArrangement.StartDate.ToString("dd/MM/yyyy")</div>
+        <div><strong>End Date:</strong> @Model.SelectedArrangement.EndDate.ToString("dd/MM/yyyy")</div>
+        <div><strong>Duration:</strong> @((Model.SelectedArrangement.EndDate - Model.SelectedArrangement.StartDate).Days) days</div>
+        <div><strong>Max Passengers:</strong> @Model.SelectedArrangement.MaxNumOfPassengers</div>
+    </div>
+
+    @if (!string.IsNullOrEmpty(Model.SelectedArrangement.Description))
+    {
+        <div style="margin-top:15px;">
+            <strong>Description:</strong>
+            <p style="margin-top:5px; padding:10px; background:#f8f9fa; border-radius:3px;">@Model.SelectedArrangement.Description</p>
+        </div>
+    }
+</div>
+
+<!-- Accommodation Unit Information -->
+<div style="border:1px solid #dee2e6; padding:15px; margin-bottom:20px; border-radius:5px;">
+    <h4 style="color:#28a745; margin-bottom:15px;">Accommodation Unit Details</h4>
+
+    @{
+        var accommodation = Model.SelectedArrangement.Accommodations.FirstOrDefault(a => a.Units.Any(u => u.Id == Model.SelectedUnit.Id));
+    }
+
+    @if (accommodation != null)
+    {
+        <div style="margin-bottom:15px;">
+            <h5 style="color:#6c757d;">Accommodation: @accommodation.Name</h5>
+            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px; margin-top:10px;">
+                <div><strong>Type:</strong> @accommodation.Type</div>
+                <div><strong>Stars:</strong> @accommodation.Stars @if (accommodation.Stars > 0)
+                {@Html.Raw("★".PadRight(accommodation.Stars))}</div>
+                <div>
+                    <strong>Features:</strong>
+                    @if (accommodation.HasPool)
+                    {<span>Pool</span>}
+                    @if (accommodation.HasSpa)
+                    {<span>Spa</span>}
+                    @if (accommodation.Accessible)
+                    {<span>Accessible</span>}
+                    @if (accommodation.HasWifi)
+                    {<span>WiFi</span>}
+                </div>
+            </div>
+        </div>
+    }
+
+    <h5 style="color:#6c757d;">Unit Specifications:</h5>
+    <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+        <div><strong>Unit ID:</strong> #@Model.SelectedUnit.Id</div>
+        <div><strong>Max Guests:</strong>  @Model.SelectedUnit.MaxGuests</div>
+        <div><strong>Pets Allowed:</strong> @(Model.SelectedUnit.PetsAllowed ? " Yes" : " No")</div>
+        <div><strong>Price:</strong> <span style="color:#28a745; font-size:18px; font-weight:bold;">@Model.SelectedUnit.Price.ToString("C")</span></div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div style="margin-top:30px;">
+    @Html.ActionLink("← Back to All Reservations", "ViewAllReservations", "Manager", null,
+                   new { @style = "background:#6c757d; color:white; padding:10px 20px; text-decoration:none; border-radius:5px; margin-right:15px;" })
+
+    @Html.ActionLink("View Arrangement Details", "Details", "Home", new { id = Model.SelectedArrangement.Id },
+                   new { @style = "background:#007bff; color:white; padding:10px 20px; text-decoration:none; border-radius:5px; margin-right:15px;" })
+
+    @if (accommodation != null)
+    {
+        @Html.ActionLink("Manage This Accommodation", "ManageUnits", "Manager", new { accommodationId = accommodation.Id },
+                       new { @style = "background:#28a745; color:white; padding:10px 20px; text-decoration:none; border-radius:5px;" })
+    }
+</div>

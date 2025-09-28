@@ -23,6 +23,41 @@
     <li>Deleted: @((int)ViewBag.DeletedUnits)</li>
 </ul>
 
+<h3>Filter & Sort Units</h3>
+
+<form method="get" action="@Url.Action("ViewAllUnits", "Manager")">
+    <label>Min guests:</label>
+    <input type="number" name="minGuests" value="@ViewBag.MinGuests" />
+
+    <label>Max guests:</label>
+    <input type="number" name="maxGuests" value="@ViewBag.MaxGuests" />
+
+    <label>Pets allowed:</label>
+    <select name="petsAllowed">
+        <option value="">Any</option>
+        <option value="true" @(ViewBag.PetsAllowed == true ? "selected" : "")>Yes</option>
+        <option value="false" @(ViewBag.PetsAllowed == false ? "selected" : "")>No</option>
+    </select>
+
+    <label>Max price:</label>
+    <input type="number" step="0.01" name="maxPrice" value="@ViewBag.MaxPrice" />
+
+    <label>Sort by:</label>
+    <select name="unitSortBy">
+        <option value="">None</option>
+        <option value="MaxGuests" @(ViewBag.SortBy == "MaxGuests" ? "selected" : "")>Max Guests</option>
+        <option value="Price" @(ViewBag.SortBy == "Price" ? "selected" : "")>Price</option>
+    </select>
+
+    <select name="unitSortDir">
+        <option value="asc" @(ViewBag.SortDir == "asc" ? "selected" : "")>Ascending</option>
+        <option value="desc" @(ViewBag.SortDir == "desc" ? "selected" : "")>Descending</option>
+    </select>
+
+    <button type="submit">Apply</button>
+    <a href="@Url.Action("ViewAllUnits", "Manager")">Reset</a>
+</form>
+
 <p>
     @Html.ActionLink("Back to Dashboard", "Index") |
     @Html.ActionLink("View Accommodations", "ViewAllAccommodations") |
@@ -31,117 +66,108 @@
 
 @if (units != null && units.Any())
 {
-    <table border="1" style="width: 100%; border-collapse: collapse;">
-        <tr style="background-color: #f0f0f0;">
-            <th style="padding: 10px;">Unit</th>
-            <th style="padding: 10px;">Capacity</th>
-            <th style="padding: 10px;">Pets</th>
-            <th style="padding: 10px;">Price</th>
-            <th style="padding: 10px;">Status</th>
-            <th style="padding: 10px;">Reservations</th>
-            <th style="padding: 10px;">Parent Accommodation</th>
-            <th style="padding: 10px;">Actions</th>
-        </tr>
-
-        @foreach (var unit in units)
-        {
-            var allGrouped = Veb_Projekat.Repositories.AccommodationUnitRepository.GetAllGrouped();
-            int accommodationId = -1;
-
-            foreach (var kvp in allGrouped)
-            {
-                if (kvp.Value.Any(u => u.Id == unit.Id))
-                {
-                    accommodationId = kvp.Key;
-                    break;
-                }
-            }
-
-            var parentAccommodation = Veb_Projekat.Repositories.AccommodationRepository.GetById(accommodationId);
-
-            // rezervacije
-            var reservations = Veb_Projekat.Repositories.ReservationRepository.GetAll()
-                .Where(r => r.SelectedUnit.Id == unit.Id &&
-                           r.Status == Veb_Projekat.Models.Enums.ReservationStatusEnum.Active)
-                .ToList();
-
-            var futureReservations = reservations
-                .Where(r => r.SelectedArrangement.StartDate > DateTime.Now)
-                .ToList();
-
-            <tr style="@(unit.IsDeleted ? "background-color: #ffeeee;" : "")">
-                <td style="padding: 10px;">
-                    <strong>Unit #@unit.Id</strong>
-                    @if (unit.IsDeleted)
-                    {
-                        <br /><span style="color: red;">(DELETED)</span>
-                    }
-                </td>
-                <td style="padding: 10px;">
-                    @unit.MaxGuests @(unit.MaxGuests == 1 ? "guest" : "guests")
-                </td>
-                <td style="padding: 10px;">
-                    @if (unit.PetsAllowed)
-                    {
-                        <span style="color: green;">Yes</span>
-                    }
-                    else
-                    {
-                        <span style="color: red;">No</span>
-                    }
-                </td>
-                <td style="padding: 10px;">
-                    @unit.Price.ToString("F2") RSD
-                </td>
-                <td style="padding: 10px;">
-                    <span style="color: @(unit.IsDeleted ? "red" : "green");">
-                        @(unit.IsDeleted ? "Deleted" : "Active")
-                    </span>
-                </td>
-                <td style="padding: 10px;">
-                    @if (reservations.Any())
-                    {
-                        <span style="color: orange;">@reservations.Count active</span>
-                        if (futureReservations.Any())
-                        {
-                            <br /><small style="color: red;">@futureReservations.Count future</small>
-                        }
-                    }
-                    else
-                    {
-                        <span style="color: green;">Available</span>
-                    }
-                </td>
-                <td style="padding: 10px;">
-                    @if (parentAccommodation != null)
-                    {
-                        @Html.ActionLink(parentAccommodation.Name, "ManageUnits", new { accommodationId = parentAccommodation.Id })
-                        <br /><small>@parentAccommodation.Type</small>
-                    }
-                    else
-                    {
-                        <span style="color: gray;">Unknown</span>
-                    }
-                </td>
-                <td style="padding: 10px;">
-                    @Html.ActionLink("Edit", "EditUnit", new { id = unit.Id })
-
-                    @if (!unit.IsDeleted && parentAccommodation != null)
-                    {
-                        @Html.Raw(" | ")
-                        @Html.ActionLink("Manage", "ManageUnits", new { accommodationId = parentAccommodation.Id })
-                        @Html.Raw(" | ")
-
-                        using (Html.BeginForm("DeleteUnit", "Manager", FormMethod.Post, new { style = "display:inline;" }))
-                        {
-                            <input type="hidden" name="id" value="@unit.Id" />
-                            <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this unit?');"
-                                   style="background-color: #ff4444; color: white; border: none; padding: 2px 8px;" />
-                        }
-                    }
-                </td>
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Unit ID</th>
+                <th>Max guests</th>
+                <th>Pets allowed</th>
+                <th>Price</th>
+                <th>Status</th>
+                <th>Reservations</th>
+                <th>Parent Accommodation</th>
+                <th>Actions</th>
             </tr>
-        }
+        </thead>
+        <tbody>
+            @foreach (var unit in units)
+            {
+                var allGrouped = Veb_Projekat.Repositories.AccommodationUnitRepository.GetAllGrouped();
+                int accommodationId = -1;
+
+                foreach (var kvp in allGrouped)
+                {
+                    if (kvp.Value.Any(u => u.Id == unit.Id))
+                    {
+                        accommodationId = kvp.Key;
+                        break;
+                    }
+                }
+
+                var parentAccommodation = Veb_Projekat.Repositories.AccommodationRepository.GetById(accommodationId);
+
+                var reservations = Veb_Projekat.Repositories.ReservationRepository.GetAll()
+                    .Where(r => r.SelectedUnit.Id == unit.Id &&
+                               r.Status == Veb_Projekat.Models.Enums.ReservationStatusEnum.Active)
+                    .ToList();
+
+                var futureReservations = reservations
+                    .Where(r => r.SelectedArrangement.StartDate > DateTime.Now)
+                    .ToList();
+
+                bool isBooked = reservations.Any();
+
+                <tr style="background:@(unit.IsDeleted ? "#f8d7da" : (isBooked ? "#fff3cd" : "#d4edda"));">
+                    <td>@unit.Id</td>
+                    <td>@unit.MaxGuests</td>
+                    <td>@(unit.PetsAllowed ? "Yes" : "No")</td>
+                    <td>@unit.Price.ToString("C")</td>
+                    <td>
+                        @if (unit.IsDeleted)
+                        {
+                            <strong>Deleted</strong>
+                        }
+                        else
+                        {
+                            <strong>Active</strong>
+                        }
+                    </td>
+                    <td>
+                        @if (reservations.Any())
+                        {
+                            <strong>@reservations.Count active</strong>
+                            if (futureReservations.Any())
+                            {
+                                <br /><small>@futureReservations.Count future</small>
+                            }
+                        }
+                        else
+                        {
+                            <strong>Available</strong>
+                        }
+                    </td>
+                    <td>
+                        @if (parentAccommodation != null)
+                        {
+                            @Html.ActionLink(parentAccommodation.Name, "ManageUnits", new { accommodationId = parentAccommodation.Id })
+                            <br /><small>@parentAccommodation.Type</small>
+                        }
+                        else
+                        {
+                            <span>Unknown</span>
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "EditUnit", new { id = unit.Id })
+
+                        @if (!unit.IsDeleted && parentAccommodation != null)
+                        {
+                            @Html.Raw(" | ")
+                            @Html.ActionLink("Manage", "ManageUnits", new { accommodationId = parentAccommodation.Id })
+                            @Html.Raw(" | ")
+
+                            using (Html.BeginForm("DeleteUnit", "Manager", FormMethod.Post, new { style = "display:inline;" }))
+                            {
+                                <input type="hidden" name="id" value="@unit.Id" />
+                                <button type="submit" onclick="return confirm('Are you sure you want to delete this unit?');">
+                                    Delete
+                                </button>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
 }
 else

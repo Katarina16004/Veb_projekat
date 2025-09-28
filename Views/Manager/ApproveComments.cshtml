@@ -1,0 +1,144 @@
+﻿@using Veb_Projekat.Models
+@using Veb_Projekat.Models.Enums
+@{
+    ViewBag.Title = "Manage Comments";
+    var comments = ViewBag.Comments as List<Comment>;
+    string filter = ViewBag.Filter as string;
+}
+
+<h2>Comment Management</h2>
+
+@if (TempData["Success"] != null)
+{
+    <p style="color: green;"><strong>Success:</strong> @TempData["Success"]</p>
+}
+
+@if (TempData["Error"] != null)
+{
+    <p style="color: red;"><strong>Error:</strong> @TempData["Error"]</p>
+}
+
+<h3>Statistics</h3>
+<ul>
+    <li>Pending Comments: @((int)ViewBag.PendingCount)</li>
+    <li>Total Comments: @((int)ViewBag.TotalCount)</li>
+</ul>
+
+<h3>Filter Comments</h3>
+<p>
+    @Html.ActionLink("Pending", "ApproveComments", new { filter = "pending" }, new { @class = filter == "pending" ? "active-filter" : "" }) |
+    @Html.ActionLink("Approved", "ApproveComments", new { filter = "approved" }, new { @class = filter == "approved" ? "active-filter" : "" }) |
+    @Html.ActionLink("Rejected", "ApproveComments", new { filter = "rejected" }, new { @class = filter == "rejected" ? "active-filter" : "" }) |
+    @Html.ActionLink("All", "ApproveComments", new { filter = "all" }, new { @class = filter == "all" ? "active-filter" : "" })
+</p>
+
+<p>
+    @Html.ActionLink("Back to Dashboard", "Index") |
+    @Html.ActionLink("View All Reservations", "ViewAllReservations")
+</p>
+
+@if (comments != null && comments.Any())
+{
+    <h3>Comments (@comments.Count)</h3>
+
+    <table border="1" style="width: 100%; border-collapse: collapse;">
+        <tr style="background-color: #f0f0f0;">
+            <th style="padding: 10px;">Tourist</th>
+            <th style="padding: 10px;">Accommodation</th>
+            <th style="padding: 10px;">Rating</th>
+            <th style="padding: 10px;">Comment</th>
+            <th style="padding: 10px;">Status</th>
+            <th style="padding: 10px;">Created</th>
+            <th style="padding: 10px;">Actions</th>
+        </tr>
+
+        @foreach (var comment in comments.OrderByDescending(c => c.CreatedAt))
+        {
+            <tr style="@(comment.Status == CommentStatusEnum.Pending ? "background-color: #fff3cd;" :
+                         comment.Status == CommentStatusEnum.Approved ? "background-color: #d4edda;" :
+                         "background-color: #f8d7da;")">
+                <td style="padding: 10px;">
+                    <strong>@comment.Tourist.Username</strong><br />
+                    <small>@comment.Tourist.FirstName @comment.Tourist.LastName</small>
+                </td>
+                <td style="padding: 10px;">
+                    <strong>@comment.Accommodation.Name</strong><br />
+                    <small>@comment.Accommodation.Type</small>
+                </td>
+                <td style="padding: 10px; text-align: center;">
+                    <div style="font-size: 18px; color: #ffc107;">
+                        @for (int i = 0; i < comment.Rating; i++)
+                        {
+                            @Html.Raw("★")
+                        }
+                        @for (int i = comment.Rating; i < 5; i++)
+                        {
+                            @Html.Raw("☆")
+                        }
+                    </div>
+                    <small>@comment.Rating/5</small>
+                </td>
+                <td style="padding: 10px; max-width: 300px;">
+                    <div style="max-height: 100px; overflow-y: auto;">
+                        @comment.Text
+                    </div>
+                </td>
+                <td style="padding: 10px; text-align: center;">
+                    <span style="padding: 3px 8px; border-radius: 3px; color: white;
+                                 background: @(comment.Status == CommentStatusEnum.Pending ? "#ffc107" :
+                                              comment.Status == CommentStatusEnum.Approved ? "#28a745" : "#dc3545");">
+                        @comment.Status
+                    </span>
+                </td>
+                <td style="padding: 10px;">
+                    @comment.CreatedAt.ToString("dd/MM/yyyy")<br />
+                    <small>@comment.CreatedAt.ToString("HH:mm")</small>
+                </td>
+                <td style="padding: 10px;">
+                    @if (comment.Status == CommentStatusEnum.Pending)
+                    {
+                        using (Html.BeginForm("ApproveComment", "Manager", FormMethod.Post, new { style = "display:inline;" }))
+                        {
+                            <input type="hidden" name="commentId" value="@comment.Id" />
+                            <input type="submit" value="✓ Approve"
+                                   style="background-color: #28a745; color: white; border: none; padding: 4px 8px; margin-right: 3px; cursor: pointer;" />
+                        }
+
+                        using (Html.BeginForm("RejectComment", "Manager", FormMethod.Post, new { style = "display:inline;" }))
+                        {
+                            <input type="hidden" name="commentId" value="@comment.Id" />
+                            <input type="submit" value="✗ Reject" onclick="return confirm('Are you sure you want to reject this comment?');"
+                                   style="background-color: #dc3545; color: white; border: none; padding: 4px 8px; cursor: pointer;" />
+                        }
+                    }
+                    else
+                    {
+                        <span style="color: #6c757d; font-style: italic;">@(comment.Status == CommentStatusEnum.Approved ? "Approved" : "Rejected")</span>
+                    }
+                </td>
+            </tr>
+        }
+    </table>
+}
+else
+{
+    <div style="background:#d1ecf1; color:#0c5460; padding:15px; border:1px solid #bee5eb; border-radius:5px;">
+        <h4>No comments found</h4>
+        @if (filter == "pending")
+        {
+            <p>No pending comments at this time. All caught up! 🎉</p>
+        }
+        else
+        {
+            <p>No comments match the selected filter.</p>
+        }
+    </div>
+}
+
+<style>
+    .active-filter {
+        font-weight: bold;
+        color: #007bff;
+        text-decoration: underline;
+    }
+</style>

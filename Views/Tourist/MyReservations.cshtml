@@ -77,7 +77,7 @@
                             @r.Status
                         </span>
                     </td>
-                    <td>
+                    <td style="padding: 10px;">
                         @Html.ActionLink("Details", "ReservationDetails", new { reservationId = r.Id }, new { @style = "margin-right:5px;" })
 
                         @if (canCancel)
@@ -94,8 +94,16 @@
 
                         @if (canComment)
                         {
-                            @Html.ActionLink("Leave Comment", "LeaveComment", new { accommodationId = r.SelectedArrangement.Accommodations.First().Id, reservationId = r.Id.ToString() },
-                                           new { @style = "margin-left:5px; background:#17a2b8; color:white; padding:3px 8px; text-decoration:none;" })
+                            
+                             var accommodationForComment = r.SelectedArrangement.Accommodations
+                                    .FirstOrDefault(a => a.Units.Any(u => u.Id == r.SelectedUnit.Id));
+                            
+
+                            if (accommodationForComment != null)
+                            {
+                                @Html.ActionLink("Leave Comment", "LeaveComment", new { accommodationId = accommodationForComment.Id, reservationId = r.Id.ToString() },
+                                               new { @style = "margin-left:5px; background:#17a2b8; color:white; padding:3px 8px; text-decoration:none; border-radius:3px;" })
+                            }
                         }
                     </td>
                 </tr>

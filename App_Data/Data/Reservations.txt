@@ -5,3 +5,4 @@ Id;TouristUsername;Status;ArrangementName;AccommodationUnitId
 5f5ea9a2-727c-48e4-bc50-27cedb2f821f;tourist1;Cancelled;Beach Holiday;2
 5aa4985d-c8fa-4a96-a7db-5b14a464dd30;tourist1;Cancelled;Beach Holiday;2
 7a1b2c3d-4e5f-6789-abcd-ef1234567890;tourist1;Active;Spa Retreat;8
+9dda789e-8591-46af-969e-ab7476c6baf9;tourist1;Active;novi;10

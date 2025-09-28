@@ -1,0 +1,116 @@
+﻿@using Veb_Projekat.Models
+@using Veb_Projekat.Models.Enums
+@{
+    ViewBag.Title = "All Reservations";
+    var reservations = ViewBag.MyReservations as List<Reservation>;
+}
+
+<h2>All Reservations</h2>
+
+@if (TempData["Success"] != null)
+{
+    <p style="color: green;"><strong>Success:</strong> @TempData["Success"]</p>
+}
+
+@if (TempData["Error"] != null)
+{
+    <p style="color: red;"><strong>Error:</strong> @TempData["Error"]</p>
+}
+
+<h3>Statistics</h3>
+<ul>
+    <li>Total Reservations: @((int)ViewBag.TotalReservations)</li>
+    <li>Active: @((int)ViewBag.ActiveReservations)</li>
+    <li>Cancelled: @((int)ViewBag.CancelledReservations)</li>
+</ul>
+
+<p>
+    @Html.ActionLink("Back to Dashboard", "Index") |
+    @Html.ActionLink("Manage Comments", "ApproveComments") |
+    @Html.ActionLink("View Accommodations", "ViewAllAccommodations")
+</p>
+
+@if (reservations != null && reservations.Any())
+{
+    <table border="1" cellpadding="8" cellspacing="0" style="width:100%; border-collapse:collapse;">
+        <thead style="background:#e9ecef;">
+            <tr>
+                <th style="padding:10px;">Reservation ID</th>
+                <th style="padding:10px;">Tourist</th>
+                <th style="padding:10px;">Arrangement</th>
+                <th style="padding:10px;">Location</th>
+                <th style="padding:10px;">Dates</th>
+                <th style="padding:10px;">Unit</th>
+                <th style="padding:10px;">Price</th>
+                <th style="padding:10px;">Status</th>
+                <th style="padding:10px;">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in reservations)
+            {
+                bool isPast = r.SelectedArrangement.StartDate <= DateTime.Now;
+                bool isFuture = r.SelectedArrangement.StartDate > DateTime.Now;
+
+                <tr style="background:@(r.Status == ReservationStatusEnum.Cancelled ? "#f8d7da" :
+                                       isPast ? "#fff3cd" : "#d4edda");">
+                    <td style="padding:10px;">
+                        <strong>@r.Id.ToString().Substring(0, 8)...</strong>
+                    </td>
+                    <td style="padding:10px;">
+                        <strong>@r.Tourist.Username</strong><br />
+                        <small>@r.Tourist.FirstName @r.Tourist.LastName</small><br />
+                        <small style="color:#6c757d;">@r.Tourist.Email</small>
+                    </td>
+                    <td style="padding:10px;">
+                        <strong>@r.SelectedArrangement.Name</strong><br />
+                        <small>@r.SelectedArrangement.Type | @r.SelectedArrangement.Transport</small>
+                    </td>
+                    <td style="padding:10px;">@r.SelectedArrangement.Location</td>
+                    <td style="padding:10px;">
+                        <strong>Start:</strong> @r.SelectedArrangement.StartDate.ToString("dd/MM/yyyy")<br />
+                        <strong>End:</strong> @r.SelectedArrangement.EndDate.ToString("dd/MM/yyyy")<br />
+                        <small style="color:#6c757d;">
+                            @if (isFuture)
+                            {
+                                <span style="color:#28a745;">In @((r.SelectedArrangement.StartDate - DateTime.Now).Days) days</span>
+                            }
+                            else if (isPast)
+                            {
+                                <span style="color:#6c757d;">Past trip</span>
+                            }
+                        </small>
+                    </td>
+                    <td style="padding:10px;">
+                        <strong>Unit #@r.SelectedUnit.Id</strong><br />
+                        <small> @r.SelectedUnit.MaxGuests guests</small><br />
+                        <small>@(r.SelectedUnit.PetsAllowed ? " Pets OK" : " No pets")</small>
+                    </td>
+                    <td style="padding:10px; text-align:right;">
+                        <strong style="color:#28a745;">@r.SelectedUnit.Price.ToString("C")</strong>
+                    </td>
+                    <td style="padding:10px; text-align:center;">
+                        <span style="padding:3px 8px; border-radius:3px; color:white;
+                                     background:@(r.Status == ReservationStatusEnum.Active ? "#28a745" : "#dc3545");">
+                            @r.Status
+                        </span>
+                    </td>
+                    <td style="padding:10px;">
+                        @Html.ActionLink("View Details", "ViewReservation", new { reservationId = r.Id },
+                                       new { style = "background:#007bff; color:white; padding:4px 8px; text-decoration:none; border-radius:3px;" })
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+    
+}
+else
+{
+    <div style="background:#d1ecf1; color:#0c5460; padding:15px; border:1px solid #bee5eb; border-radius:5px;">
+        <h4>No reservations found</h4>
+        <p>You don't have any reservations yet.</p>
+        <p>@Html.ActionLink("View My Arrangements", "ViewAllArrangements", null, new { @style = "color:#007bff;" })</p>
+    </div>
+}

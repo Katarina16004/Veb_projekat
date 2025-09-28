@@ -4,4 +4,4 @@ ID;Name;Type;Transport;Location;StartDate;EndDate;MaxNumOfPassengers;Description
 3;City Tour;Bed_Breakfast;Bus_Plane;Paris;05/09/2025;12/09/2025;25;Discover the city sights;Day 1: Louvre, Day 2: Eiffel Tower, Day 3: Seine Cruise;city_tour.png;manager1;false
 4;Spa Retreat;AllInclusive;Bus;Tuscany;15/03/2025;22/03/2025;12;Completed spa and wellness trip;Day 1: Arrival, Day 2: Spa treatments, Day 3: Wine tasting;spa_retreat.png;manager1;true5;Novi;AllInclusive;Bus_Plane;Maldives;29.09.2025;02.10.2025;4;mnogo dbro;bla bla;novi.png;manager1;False
 6;novi2;FullBoard;Bus;ddd;01/10/2025;03/10/2025;2;dd;dd;novi2.png;manager1;true
-7;novi;FullBoard;Plane;novi;30/09/2025;09/10/2025;1;3;4;novi.png;manager1;false
+7;novi;FullBoard;Plane;novi;17/09/2025;27/09/2025;1;3;4;novi.png;manager1;false

@@ -23,6 +23,66 @@
     <li>Deleted: @((int)ViewBag.DeletedAccommodations)</li>
 </ul>
 
+<h3>Filter & Sort Accommodations</h3>
+
+<form method="get" action="@Url.Action("ViewAllAccommodations", "Manager")">
+    <label>Name:</label>
+    <input type="text" name="accName" value="@ViewBag.SelectedName" placeholder="Accommodation name..." />
+
+    <label>Type:</label>
+    <select name="accType">
+        <option value="">All types</option>
+        @foreach (var t in Enum.GetValues(typeof(Veb_Projekat.Models.Enums.AccommodationTypeEnum)))
+        {
+            <option value="@t" @(ViewBag.SelectedType == t.ToString() ? "selected" : "")>@t</option>
+        }
+    </select>
+
+    <label>Pool:</label>
+    <select name="hasPool">
+        <option value="">Any</option>
+        <option value="true" @(ViewBag.HasPool == true ? "selected" : "")>Yes</option>
+        <option value="false" @(ViewBag.HasPool == false ? "selected" : "")>No</option>
+    </select>
+
+    <label>Spa:</label>
+    <select name="hasSpa">
+        <option value="">Any</option>
+        <option value="true" @(ViewBag.HasSpa == true ? "selected" : "")>Yes</option>
+        <option value="false" @(ViewBag.HasSpa == false ? "selected" : "")>No</option>
+    </select>
+
+    <label>Accessible:</label>
+    <select name="accessible">
+        <option value="">Any</option>
+        <option value="true" @(ViewBag.Accessible == true ? "selected" : "")>Yes</option>
+        <option value="false" @(ViewBag.Accessible == false ? "selected" : "")>No</option>
+    </select>
+
+    <label>WiFi:</label>
+    <select name="hasWifi">
+        <option value="">Any</option>
+        <option value="true" @(ViewBag.HasWifi == true ? "selected" : "")>Yes</option>
+        <option value="false" @(ViewBag.HasWifi == false ? "selected" : "")>No</option>
+    </select>
+
+    <label>Sort by:</label>
+    <select name="accSortBy">
+        <option value="">None</option>
+        <option value="Name" @(ViewBag.SortBy == "Name" ? "selected" : "")>Name</option>
+        <option value="TotalUnits" @(ViewBag.SortBy == "TotalUnits" ? "selected" : "")>Total Units</option>
+        <option value="AvailableUnits" @(ViewBag.SortBy == "AvailableUnits" ? "selected" : "")>Available Units</option>
+    </select>
+
+    <select name="accSortDir">
+        <option value="asc" @(ViewBag.SortDir == "asc" ? "selected" : "")>Ascending</option>
+        <option value="desc" @(ViewBag.SortDir == "desc" ? "selected" : "")>Descending</option>
+    </select>
+
+    <button type="submit">Apply</button>
+    <a href="@Url.Action("ViewAllAccommodations", "Manager")">Reset</a>
+</form>
+
 <p>
     @Html.ActionLink("Back to Dashboard", "Index") |
     @Html.ActionLink("View Arrangements", "ViewAllArrangements")
@@ -30,103 +90,114 @@
 
 @if (accommodations != null && accommodations.Any())
 {
-    <table border="1" style="width: 100%; border-collapse: collapse;">
-        <tr style="background-color: #f0f0f0;">
-            <th style="padding: 10px;">Name</th>
-            <th style="padding: 10px;">Type</th>
-            <th style="padding: 10px;">Stars</th>
-            <th style="padding: 10px;">Features</th>
-            <th style="padding: 10px;">Units</th>
-            <th style="padding: 10px;">Status</th>
-            <th style="padding: 10px;">Parent Arrangement</th>
-            <th style="padding: 10px;">Actions</th>
-        </tr>
+    <table border="1" cellpadding="5">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Stars</th>
+                <th>Features</th>
+                <th>Total Units</th>
+                <th>Available Units</th>
+                <th>Status</th>
+                <th>Parent Arrangement</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var accommodation in accommodations)
+            {
+                var arrangements = Veb_Projekat.Repositories.ArrangementRepository.GetAllByManagerUsername(
+                    (Session["CurrentUser"] as Veb_Projekat.Models.SessionUser).Username);
+                var parentArrangement = arrangements.FirstOrDefault(arr =>
+                    arr.Accommodations.Any(acc => acc.Id == accommodation.Id));
 
-        @foreach (var accommodation in accommodations)
-        {
-            var arrangements = Veb_Projekat.Repositories.ArrangementRepository.GetAllByManagerUsername(
-                (Session["CurrentUser"] as Veb_Projekat.Models.SessionUser).Username);
-            var parentArrangement = arrangements.FirstOrDefault(arr =>
-                arr.Accommodations.Any(acc => acc.Id == accommodation.Id));
+                var reservations = Veb_Projekat.Repositories.ReservationRepository.GetAll();
+                var availableUnits = accommodation.Units.Count(u =>
+                    !reservations.Any(r => r.SelectedUnit.Id == u.Id &&
+                                           r.Status == Veb_Projekat.Models.Enums.ReservationStatusEnum.Active));
 
-            <tr style="@(accommodation.IsDeleted ? "background-color: #ffeeee;" : "")">
-                <td style="padding: 10px;">
-                    <strong>@accommodation.Name</strong><br />
-                    <small>ID: @accommodation.Id</small>
-                    @if (accommodation.IsDeleted)
-                    {
-                        <br /><span style="color: red;">(DELETED)</span>
-                    }
-                </td>
-                <td style="padding: 10px;">@accommodation.Type</td>
-                <td style="padding: 10px;">
-                    @if (accommodation.Type == Veb_Projekat.Models.Enums.AccommodationTypeEnum.Hotel)
-                    {
-                        for (int i = 0; i < accommodation.Stars; i++)
+                <tr style="background:@(accommodation.IsDeleted ? "#f8d7da" : "#d4edda");">
+                    <td>
+                        <strong>@accommodation.Name</strong>
+                        @if (accommodation.IsDeleted)
                         {
-                            @Html.Raw("★")
+                            <br /><small>(DELETED)</small>
                         }
-                        <span>(@accommodation.Stars)</span>
-                    }
-                    else
-                    {
-                        <span>N/A</span>
-                    }
-                </td>
-                <td style="padding: 10px;">
-                    <div style="font-size: 12px;">
+                    </td>
+                    <td>@accommodation.Type</td>
+                    <td>
+                        @if (accommodation.Type == Veb_Projekat.Models.Enums.AccommodationTypeEnum.Hotel)
+                        {
+                            for (int i = 0; i < accommodation.Stars; i++)
+                            {
+                                @Html.Raw("★")
+                            }
+                            <span>(@accommodation.Stars)</span>
+                        }
+                        else
+                        {
+                            <span>N/A</span>
+                        }
+                    </td>
+                    <td>
                         @if (accommodation.HasPool)
-                        {<div>Pool</div>}
+                        {<span>Pool </span>}
                         @if (accommodation.HasSpa)
-                        {<div>Spa</div>}
+                        {<span>Spa </span>}
                         @if (accommodation.Accessible)
-                        {<div>Accessible</div>}
+                        {<span>Accessible </span>}
                         @if (accommodation.HasWifi)
-                        {<div>WiFi</div>}
+                        {<span>WiFi</span>}
                         @if (!accommodation.HasPool && !accommodation.HasSpa && !accommodation.Accessible && !accommodation.HasWifi)
                         {
                             <span>None</span>
                         }
-                    </div>
-                </td>
-                <td style="padding: 10px; text-align: center;">
-                    <strong>@accommodation.Units.Count</strong>
-                </td>
-                <td style="padding: 10px;">
-                    <span style="color: @(accommodation.IsDeleted ? "red" : "green");">
-                        @(accommodation.IsDeleted ? "Deleted" : "Active")
-                    </span>
-                </td>
-                <td style="padding: 10px;">
-                    @if (parentArrangement != null)
-                    {
-                        @Html.ActionLink(parentArrangement.Name, "ManageAccommodations", new { arrangementId = parentArrangement.Id })
-                        <br /><small>@parentArrangement.Location</small>
-                    }
-                    else
-                    {
-                        <span style="color: gray;">Unknown</span>
-                    }
-                </td>
-                <td style="padding: 10px;">
-                    @Html.ActionLink("Edit", "EditAccommodation", new { id = accommodation.Id })
-
-                    @if (!accommodation.IsDeleted && parentArrangement != null)
-                    {
-                        @Html.Raw(" | ")
-                        @Html.ActionLink("Manage", "ManageAccommodations", new { arrangementId = parentArrangement.Id })
-                        @Html.Raw(" | ")
-
-                        using (Html.BeginForm("DeleteAccommodation", "Manager", FormMethod.Post, new { style = "display:inline;" }))
+                    </td>
+                    <td><strong>@accommodation.Units.Count</strong></td>
+                    <td><strong>@availableUnits</strong></td>
+                    <td>
+                        @if (accommodation.IsDeleted)
                         {
-                            <input type="hidden" name="id" value="@accommodation.Id" />
-                            <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this accommodation?');"
-                                   style="background-color: #ff4444; color: white; border: none; padding: 2px 8px;" />
+                            <strong>Deleted</strong>
                         }
-                    }
-                </td>
-            </tr>
-        }
+                        else
+                        {
+                            <strong>Active</strong>
+                        }
+                    </td>
+                    <td>
+                        @if (parentArrangement != null)
+                        {
+                            @Html.ActionLink(parentArrangement.Name, "ManageAccommodations", new { arrangementId = parentArrangement.Id })
+                            <br /><small>@parentArrangement.Location</small>
+                        }
+                        else
+                        {
+                            <span>Unknown</span>
+                        }
+                    </td>
+                    <td>
+                        @Html.ActionLink("Edit", "EditAccommodation", new { id = accommodation.Id })
+
+                        @if (!accommodation.IsDeleted && parentArrangement != null)
+                        {
+                            @Html.Raw(" | ")
+                            @Html.ActionLink("Manage", "ManageAccommodations", new { arrangementId = parentArrangement.Id })
+                            @Html.Raw(" | ")
+
+                            using (Html.BeginForm("DeleteAccommodation", "Manager", FormMethod.Post, new { style = "display:inline;" }))
+                            {
+                                <input type="hidden" name="id" value="@accommodation.Id" />
+                                <button type="submit" onclick="return confirm('Are you sure you want to delete this accommodation?');">
+                                    Delete
+                                </button>
+                            }
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
     </table>
 }
 else

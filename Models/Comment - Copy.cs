@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using Veb_Projekat.Models.Enums;
 
 namespace Veb_Projekat.Models
 {
     public class Comment
     {
-        public Guid Id { get; set; } = Guid.NewGuid();
         public User Tourist { get; set; } = null;        
 
         public Accommodation Accommodation { get; set; } = null;
@@ -16,7 +14,5 @@ namespace Veb_Projekat.Models
         public string Text { get; set; } = string.Empty;   
 
         public int Rating { get; set; }
-        public CommentStatusEnum Status { get; set; } = CommentStatusEnum.Pending;
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
     }
 }

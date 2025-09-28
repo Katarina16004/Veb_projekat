@@ -196,26 +196,35 @@ else if (!isArrangementUpcoming)
 
             <h5>Comments</h5>
             @{
-                var comments = CommentRepository.GetAll()
+                var comments = CommentRepository.GetApprovedOnly()  // samo prihvacene
                     .Where(c => c.Accommodation != null && c.Accommodation.Id == acc.Id)
                     .ToList();
             }
             @if (comments.Any())
             {
                 <ul>
-                    @foreach (var comment in comments)
+                    @foreach (var comment in comments.OrderByDescending(c => c.CreatedAt))
                     {
-                        <li>
-                            <strong>@comment.Tourist.Username:</strong>
-                            @comment.Text
-                            (<strong>Rating:</strong> @comment.Rating/5)
+                        <li style="margin-bottom: 15px; padding: 10px; border: 1px solid #dee2e6; border-radius: 5px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <strong>@comment.Tourist.Username</strong>
+                                <div style="color: #ffc107; font-size: 16px;">
+                                    @for (int i = 0; i < comment.Rating; i++)
+                                    {
+                                        @Html.Raw("★")
+                                    }
+                                    <small>(@comment.Rating/5)</small>
+                                </div>
+                            </div>
+                            <p style="margin-top: 8px; margin-bottom: 5px;">@comment.Text</p>
+                            <small style="color: #6c757d;">@comment.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
                         </li>
                     }
                 </ul>
             }
             else
             {
-                <p>No comments for this accommodation.</p>
+                <p style="color: #6c757d; font-style: italic;">No approved comments yet for this accommodation.</p>
             }
         </div>
     }

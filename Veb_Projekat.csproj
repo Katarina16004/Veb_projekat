@@ -135,6 +135,7 @@
     <Compile Include="Models\Comment.cs" />
     <Compile Include="Models\Enums\AccommodationTypeEnum.cs" />
     <Compile Include="Models\Enums\ArrangementTypeEnum.cs" />
+    <Compile Include="Models\Enums\CommentStatusEnum.cs" />
     <Compile Include="Models\Enums\GenderEnum.cs" />
     <Compile Include="Models\Enums\ReservationStatusEnum.cs" />
     <Compile Include="Models\Enums\RoleEnum.cs" />
@@ -233,6 +234,9 @@
     <Content Include="Views\Manager\CreateUnit.cshtml" />
     <Content Include="Views\Manager\EditUnit.cshtml" />
     <Content Include="Views\Manager\ViewAllUnits.cshtml" />
+    <Content Include="Views\Manager\ViewAllReservations.cshtml" />
+    <Content Include="Views\Manager\ViewReservation.cshtml" />
+    <Content Include="Views\Manager\ApproveComments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Base\" />

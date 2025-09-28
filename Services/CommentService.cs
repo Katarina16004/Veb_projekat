@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Veb_Projekat.Models;
+using Veb_Projekat.Models.Enums;
 using Veb_Projekat.Repositories;
 
 namespace Veb_Projekat.Services
@@ -50,7 +51,7 @@ namespace Veb_Projekat.Services
             }
 
             var tourist = UserRepository.GetByUsername(touristUsername);
-            var accommodation = AccommodationRepository.GetAllGrouped().SelectMany(kvp => kvp.Value).FirstOrDefault(a => a.Id == accommodationId);
+            var accommodation = AccommodationRepository.GetById(accommodationId);
 
             if (accommodation == null)
             {
@@ -60,10 +61,13 @@ namespace Veb_Projekat.Services
 
             var comment = new Comment
             {
+                Id = Guid.NewGuid(),
                 Tourist = tourist,
                 Accommodation = accommodation,
                 Text = commentText,
-                Rating = rating
+                Rating = rating,
+                Status = CommentStatusEnum.Pending,
+                CreatedAt = DateTime.Now
             };
 
             CommentRepository.Add(comment);
@@ -73,6 +77,71 @@ namespace Veb_Projekat.Services
         public static bool ValidateCommentData(string commentText, int rating)
         {
             return !string.IsNullOrEmpty(commentText) && commentText.Trim().Length >= 10 && rating >= 1 && rating <= 5;
+        }
+
+
+        public static bool CanManageComment(Guid commentId, string managerUsername, out Comment comment, out string errorMessage)
+        {
+            errorMessage = "";
+            comment = CommentRepository.GetById(commentId);
+
+            if (comment == null)
+            {
+                errorMessage = "Comment not found.";
+                return false;
+            }
+
+            if (!AccommodationService.CanManageAccommodation(comment.Accommodation, managerUsername))
+            {
+                errorMessage = "You can only manage comments for your own accommodations.";
+                return false;
+            }
+
+            if (comment.Status != CommentStatusEnum.Pending)
+            {
+                errorMessage = "Only pending comments can be approved or rejected.";
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool ApproveComment(Guid commentId, string managerUsername, out string errorMessage)
+        {
+            errorMessage = "";
+
+            if (!CanManageComment(commentId, managerUsername, out Comment comment, out errorMessage))
+                return false;
+
+            try
+            {
+                CommentRepository.UpdateStatus(commentId, CommentStatusEnum.Approved);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "Error approving comment: " + ex.Message;
+                return false;
+            }
+        }
+
+        public static bool RejectComment(Guid commentId, string managerUsername, out string errorMessage)
+        {
+            errorMessage = "";
+
+            if (!CanManageComment(commentId, managerUsername, out Comment comment, out errorMessage))
+                return false;
+
+            try
+            {
+                CommentRepository.UpdateStatus(commentId, CommentStatusEnum.Rejected);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = "Error rejecting comment: " + ex.Message;
+                return false;
+            }
         }
     }
 }

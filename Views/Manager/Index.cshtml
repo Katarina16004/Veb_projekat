@@ -6,18 +6,6 @@
 
 <h2>Manager Dashboard</h2>
 
-<p>Welcome, @(Session["CurrentUser"] as Veb_Projekat.Models.SessionUser).FirstName!</p>
-
-@if (TempData["Success"] != null)
-{
-    <p><strong>Success:</strong> @TempData["Success"]</p>
-}
-
-@if (TempData["Error"] != null)
-{
-    <p><strong>Error:</strong> @TempData["Error"]</p>
-}
-
 <h3>Statistics</h3>
 <ul>
     <li>Total Arrangements: @((int)ViewBag.TotalArrangements)</li>
@@ -30,7 +18,9 @@
     @Html.ActionLink("Create New Arrangement", "CreateArrangement") |
     @Html.ActionLink("View All Arrangements", "ViewAllArrangements") |
     @Html.ActionLink("View All Accommodations", "ViewAllAccommodations") |
-    @Html.ActionLink("Approve Comments", "ApproveComments")
+    @Html.ActionLink("View All Units", "ViewAllUnits") |
+    @Html.ActionLink("View All Reservations", "ViewAllReservations") |
+    @Html.ActionLink("Manage Comments", "ApproveComments")
 </p>
 
 <h3>Recent Arrangements</h3>
@@ -47,12 +37,17 @@
             <th>Start Date</th>
             <th>Status</th>
             <th>Accommodations</th>
+            <th>Reservations</th>
             <th>Actions</th>
         </tr>
 
         @foreach (var arrangement in recentArrangements)
         {
             bool isUpcoming = arrangement.StartDate > DateTime.Now;
+
+            var allReservations = Veb_Projekat.Repositories.ReservationRepository.GetAll();
+            var arrangementReservations = allReservations.Where(r => r.SelectedArrangement.Id == arrangement.Id).ToList();
+            var dashboardActiveCount = arrangementReservations.Where(r => r.Status == Veb_Projekat.Models.Enums.ReservationStatusEnum.Active).Count();
 
             <tr>
                 <td>
@@ -65,6 +60,22 @@
                 <td>@(isUpcoming ? "Upcoming" : "Past")</td>
                 <td>
                     @Html.ActionLink("Manage (" + arrangement.Accommodations.Count + ")", "ManageAccommodations", new { arrangementId = arrangement.Id })
+                </td>
+                <td style="text-align: center;">
+                    @if (arrangementReservations.Any())
+                    {
+                        @Html.ActionLink(dashboardActiveCount + " active", "ViewAllReservations",
+                                       new { search = arrangement.Name },
+                                       new { style = "color: " + (dashboardActiveCount > 0 ? "#28a745" : "#6c757d") })
+                        if (arrangementReservations.Count != dashboardActiveCount)
+                        {
+                            <br /><small style="color:#dc3545;">(@(arrangementReservations.Count - dashboardActiveCount) cancelled)</small>
+                        }
+                    }
+                    else
+                    {
+                        <span style="color:#6c757d;">No reservations</span>
+                    }
                 </td>
                 <td>
                     @Html.ActionLink("View", "Details", "Home", new { id = arrangement.Id }, null)
