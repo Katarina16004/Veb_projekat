@@ -1,0 +1,58 @@
+﻿@model Veb_Projekat.Models.AccommodationUnit
+@{
+    ViewBag.Title = "Edit Unit";
+    string accommodationName = ViewBag.AccommodationName as string;
+    int accommodationId = (int)ViewBag.AccommodationId;
+}
+
+<h2>@Model.Id</h2>
+<h3>In Accommodation: @accommodationName</h3>
+
+@using (Html.BeginForm("EditUnit", "Manager", FormMethod.Post))
+{
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    @Html.ValidationSummary(true)
+
+    <table style="width: 100%;">
+        <tr>
+            <td style="padding: 5px;"><label>Maximum Guests:</label></td>
+            <td style="padding: 5px;">
+                <input type="number" name="maxGuests" value="@Model.MaxGuests" required min="1" max="20" style="width: 100px;" />
+                <small>Current: @Model.MaxGuests guests</small>
+                <br /><small style="color: orange;">⚠️ Cannot change if unit has future reservations</small>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 5px;"><label>Pets Allowed:</label></td>
+            <td style="padding: 5px;">
+                <input type="checkbox" name="petsAllowed" value="true" id="petsAllowed" @(Model.PetsAllowed ? "checked" : "") />
+                <input type="hidden" name="petsAllowed" value="false" />
+                <label for="petsAllowed">Allow pets in this unit</label>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 5px;"><label>Price per Night:</label></td>
+            <td style="padding: 5px;">
+                <input type="number" name="price" value="@Model.Price.ToString("F2")" required min="1" max="10000" step="0.01" style="width: 150px;" />
+                <small>Current: @Model.Price.ToString("F2") RSD per night</small>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="padding: 10px 5px;">
+                <p><strong>Unit Information:</strong></p>
+                <ul>
+                    <li>Unit ID: @Model.Id</li>
+                    <li>Status: @(Model.IsDeleted ? "Deleted" : "Active")</li>
+                    <li>Current Configuration: @Model.MaxGuests guests, @(Model.PetsAllowed ? "Pets OK" : "No Pets"), @Model.Price RSD/night</li>
+                </ul>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="padding: 20px 5px;">
+                <input type="submit" value="Update Unit" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none;" />
+                @Html.ActionLink("Cancel", "ManageUnits", new { accommodationId = accommodationId }, new { style = "margin-left: 10px;" })
+            </td>
+        </tr>
+    </table>
+}

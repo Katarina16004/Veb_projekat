@@ -78,7 +78,7 @@
                     {<span>WiFi</span><br />}
                 </td>
                 <td style="padding: 10px; text-align: center;">
-                    <strong>@accommodation.Units.Count</strong> units
+                    @Html.ActionLink("Manage (" + accommodation.Units.Count + ")", "ManageUnits", new { accommodationId = accommodation.Id })
                 </td>
                 <td style="padding: 10px;">
                     @(accommodation.IsDeleted ? "Deleted" : "Active")

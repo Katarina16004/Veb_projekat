@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Create New Unit";
+    int accommodationId = (int)ViewBag.AccommodationId;
+    string accommodationName = ViewBag.AccommodationName as string;
+}
+
+<h2>Create New Unit</h2>
+<h3>For Accommodation: @accommodationName</h3>
+
+@using (Html.BeginForm("CreateUnit", "Manager", FormMethod.Post))
+{
+    <input type="hidden" name="accommodationId" value="@accommodationId" />
+
+    @Html.ValidationSummary(true)
+
+    <table style="width: 100%;">
+        <tr>
+            <td style="padding: 5px;"><label>Maximum Guests:</label></td>
+            <td style="padding: 5px;">
+                <input type="number" name="maxGuests" required min="1" max="20" value="2" style="width: 100px;" />
+                <small>How many guests can stay in this unit?</small>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 5px;"><label>Pets Allowed:</label></td>
+            <td style="padding: 5px;">
+                <input type="checkbox" name="petsAllowed" value="true" id="petsAllowed" />
+                <input type="hidden" name="petsAllowed" value="false" />
+                <label for="petsAllowed">Allow pets in this unit</label>
+            </td>
+        </tr>
+        <tr>
+            <td style="padding: 5px;"><label>Price per Night:</label></td>
+            <td style="padding: 5px;">
+                <input type="number" name="price" required min="1" max="10000" step="0.01" value="100.00" style="width: 150px;" />
+                <small>Price in RSD per night</small>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2" style="padding: 20px 5px;">
+                <input type="submit" value="Create Unit" style="background-color: #4CAF50; color: white; padding: 10px 20px; border: none;" />
+                @Html.ActionLink("Cancel", "ManageUnits", new { accommodationId = accommodationId }, new { style = "margin-left: 10px;" })
+            </td>
+        </tr>
+    </table>
+}

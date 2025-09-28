@@ -11,5 +11,6 @@ namespace Veb_Projekat.Models
         public int MaxGuests { get; set; }        
         public bool PetsAllowed { get; set; }   
         public decimal Price { get; set; }
+        public bool IsDeleted { get; set; } = false;
     }
 }

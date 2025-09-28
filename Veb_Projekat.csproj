@@ -229,6 +229,10 @@
     <Content Include="Views\Manager\CreateAccommodation.cshtml" />
     <Content Include="Views\Manager\EditAccommodation.cshtml" />
     <Content Include="Views\Manager\ViewAllAccommodations.cshtml" />
+    <Content Include="Views\Manager\ManageUnits.cshtml" />
+    <Content Include="Views\Manager\CreateUnit.cshtml" />
+    <Content Include="Views\Manager\EditUnit.cshtml" />
+    <Content Include="Views\Manager\ViewAllUnits.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Base\" />

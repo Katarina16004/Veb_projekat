@@ -266,5 +266,224 @@ namespace Veb_Projekat.Controllers
 
             return View();
         }
+
+      
+
+        // GET: ManageUnits
+        public ActionResult ManageUnits(int accommodationId)
+        {
+            var accommodation = AccommodationService.GetAccommodationForEdit(accommodationId, CurrentUser.Username);
+
+            if (accommodation == null)
+            {
+                TempData["Error"] = "Accommodation not found or you don't have permission to manage it.";
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.Accommodation = accommodation;
+            ViewBag.Units = accommodation.Units;
+
+            return View();
+        }
+
+        // GET: CreateUnit
+        public ActionResult CreateUnit(int accommodationId)
+        {
+            var accommodation = AccommodationService.GetAccommodationForEdit(accommodationId, CurrentUser.Username);
+
+            if (accommodation == null)
+            {
+                TempData["Error"] = "Accommodation not found or you don't have permission to add units.";
+                return RedirectToAction("Index");
+            }
+
+            ViewBag.AccommodationId = accommodationId;
+            ViewBag.AccommodationName = accommodation.Name;
+
+            return View();
+        }
+
+        // POST: CreateUnit
+        [HttpPost]
+        public ActionResult CreateUnit(int accommodationId, int maxGuests, bool petsAllowed, string price)
+        {
+            decimal priceValue;
+            if (!decimal.TryParse(price.Replace(",", "."), System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out priceValue))
+            {
+                ModelState.AddModelError("", "Invalid price format.");
+
+                var accommodation = AccommodationService.GetAccommodationForEdit(accommodationId, CurrentUser.Username);
+                ViewBag.AccommodationId = accommodationId;
+                ViewBag.AccommodationName = accommodation?.Name ?? "Unknown";
+
+                return View();
+            }
+
+            if (!AccommodationUnitService.CreateUnit(CurrentUser.Username, accommodationId, maxGuests,
+                petsAllowed, priceValue, out string errorMessage))
+            {
+                ModelState.AddModelError("", errorMessage);
+
+                var accommodation = AccommodationService.GetAccommodationForEdit(accommodationId, CurrentUser.Username);
+                ViewBag.AccommodationId = accommodationId;
+                ViewBag.AccommodationName = accommodation?.Name ?? "Unknown";
+
+                return View();
+            }
+
+            TempData["Success"] = "Unit created successfully!";
+            return RedirectToAction("ManageUnits", new { accommodationId });
+        }
+
+        // GET: EditUnit
+        public ActionResult EditUnit(int id)
+        {
+            var unit = AccommodationUnitService.GetUnitForEdit(id, CurrentUser.Username);
+
+            if (unit == null)
+            {
+                TempData["Error"] = "Unit not found or you don't have permission to edit it.";
+                return RedirectToAction("Index");
+            }
+
+            var allGrouped = AccommodationUnitRepository.GetAllGrouped();
+            int accommodationId = -1;
+
+            foreach (var kvp in allGrouped)
+            {
+                if (kvp.Value.Any(u => u.Id == id))
+                {
+                    accommodationId = kvp.Key;
+                    break;
+                }
+            }
+
+            var accommodation = AccommodationRepository.GetById(accommodationId);
+            ViewBag.AccommodationName = accommodation?.Name ?? "Unknown";
+            ViewBag.AccommodationId = accommodationId;
+
+            return View(unit);
+        }
+
+        // POST: EditUnit
+        [HttpPost]
+        public ActionResult EditUnit(int id, int maxGuests, bool petsAllowed, string price)
+        {
+            decimal priceValue;
+            if (!decimal.TryParse(price.Replace(",", "."), System.Globalization.NumberStyles.Float,
+                System.Globalization.CultureInfo.InvariantCulture, out priceValue))
+            {
+                ModelState.AddModelError("", "Invalid price format.");
+
+                var unit = AccommodationUnitService.GetUnitForEdit(id, CurrentUser.Username);
+
+                var allGrouped = AccommodationUnitRepository.GetAllGrouped();
+                int accommodationId = -1;
+
+                foreach (var kvp in allGrouped)
+                {
+                    if (kvp.Value.Any(u => u.Id == id))
+                    {
+                        accommodationId = kvp.Key;
+                        break;
+                    }
+                }
+
+                var accommodation = AccommodationRepository.GetById(accommodationId);
+                ViewBag.AccommodationName = accommodation?.Name ?? "Unknown";
+                ViewBag.AccommodationId = accommodationId;
+
+                return View(unit);
+            }
+
+            if (!AccommodationUnitService.UpdateUnit(id, CurrentUser.Username, maxGuests, petsAllowed, priceValue, out string errorMessage))
+            {
+                ModelState.AddModelError("", errorMessage);
+
+                var unit = AccommodationUnitService.GetUnitForEdit(id, CurrentUser.Username);
+
+                var allGrouped = AccommodationUnitRepository.GetAllGrouped();
+                int accommodationId = -1;
+
+                foreach (var kvp in allGrouped)
+                {
+                    if (kvp.Value.Any(u => u.Id == id))
+                    {
+                        accommodationId = kvp.Key;
+                        break;
+                    }
+                }
+
+                var accommodation = AccommodationRepository.GetById(accommodationId);
+                ViewBag.AccommodationName = accommodation?.Name ?? "Unknown";
+                ViewBag.AccommodationId = accommodationId;
+
+                return View(unit);
+            }
+
+            TempData["Success"] = "Unit updated successfully!";
+
+            var allGrouped2 = AccommodationUnitRepository.GetAllGrouped();
+            int parentAccommodationId = -1;
+
+            foreach (var kvp in allGrouped2)
+            {
+                if (kvp.Value.Any(u => u.Id == id))
+                {
+                    parentAccommodationId = kvp.Key;
+                    break;
+                }
+            }
+
+            if (parentAccommodationId != -1)
+                return RedirectToAction("ManageUnits", new { accommodationId = parentAccommodationId });
+            else
+                return RedirectToAction("Index");
+        }
+
+        // POST: DeleteUnit
+        [HttpPost]
+        public ActionResult DeleteUnit(int id)
+        {
+            var allGrouped = AccommodationUnitRepository.GetAllGrouped();
+            int parentAccommodationId = -1;
+
+            foreach (var kvp in allGrouped)
+            {
+                if (kvp.Value.Any(u => u.Id == id))
+                {
+                    parentAccommodationId = kvp.Key;
+                    break;
+                }
+            }
+
+            if (!AccommodationUnitService.DeleteUnit(id, CurrentUser.Username, out string errorMessage))
+            {
+                TempData["Error"] = errorMessage;
+            }
+            else
+            {
+                TempData["Success"] = "Unit deleted successfully.";
+            }
+
+            if (parentAccommodationId != -1)
+                return RedirectToAction("ManageUnits", new { accommodationId = parentAccommodationId });
+            else
+                return RedirectToAction("Index");
+        }
+
+        // GET: ViewAllUnits
+        public ActionResult ViewAllUnits()
+        {
+            var units = AccommodationUnitService.GetByManager(CurrentUser.Username);
+
+            ViewBag.MyUnits = units;
+            ViewBag.TotalUnits = units.Count;
+            ViewBag.ActiveUnits = units.Count(u => !u.IsDeleted);
+            ViewBag.DeletedUnits = units.Count(u => u.IsDeleted);
+
+            return View();
+        }
     }
 }
