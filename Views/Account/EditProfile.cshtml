@@ -1,0 +1,42 @@
+﻿@model Veb_Projekat.Models.User
+@{
+    ViewBag.Title = "Edit Profile";
+}
+
+<h2>Edit Profile</h2>
+
+@if (TempData["Success"] != null)
+{
+    <p style="color: green;"><strong>Success:</strong> @TempData["Success"]</p>
+}
+
+@using (Html.BeginForm("EditProfile", "Account", FormMethod.Post))
+{
+    @Html.ValidationSummary(true)
+
+    <p><strong>Username:</strong> @Model.Username</p>
+    <p><strong>Role:</strong> @Model.UserRole</p>
+    <p><strong>Date of birth:</strong>@Model.DateOfBirth.ToString("dd/MM/yyyy")</p>
+
+    <div>
+        @Html.LabelFor(m => m.FirstName)
+        @Html.TextBoxFor(m => m.FirstName, new { required = "required" })
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.LastName)
+        @Html.TextBoxFor(m => m.LastName, new { required = "required" })
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.Email)
+        @Html.TextBoxFor(m => m.Email, new { type = "email", required = "required" })
+    </div>
+
+    <div>
+        @Html.LabelFor(m => m.Gender)
+        @Html.EnumDropDownListFor(m => m.Gender, new { required = "required" })
+    </div>
+
+    <button type="submit">Save Changes</button>
+}

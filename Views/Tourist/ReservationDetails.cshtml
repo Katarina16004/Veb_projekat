@@ -17,9 +17,8 @@
     </div>
 </div>
 
-<!-- Arrangement Information -->
 <div style="border:1px solid #dee2e6; padding:15px; margin-bottom:20px;">
-    <h4 style="color:#007bff; margin-bottom:15px;">📍 Arrangement Information</h4>
+    <h4 style="color:#007bff; margin-bottom:15px;">Arrangement Information</h4>
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
         <div><strong>Name:</strong> @Model.SelectedArrangement.Name</div>
         <div><strong>Location:</strong> @Model.SelectedArrangement.Location</div>
@@ -48,9 +47,8 @@
     }
 </div>
 
-<!-- Accommodation Unit Information -->
 <div style="border:1px solid #dee2e6; padding:15px; margin-bottom:20px;">
-    <h4 style="color:#28a745; margin-bottom:15px;">🏨 Your Accommodation Unit</h4>
+    <h4 style="color:#28a745; margin-bottom:15px;"> Your Accommodation Unit</h4>
     <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
         <div><strong>Unit ID:</strong> @Model.SelectedUnit.Id</div>
         <div><strong>Max Guests:</strong> @Model.SelectedUnit.MaxGuests</div>
@@ -76,32 +74,32 @@
     }
 </div>
 
-<!-- Status Information -->
 <div style="border:1px solid #dee2e6; padding:15px; margin-bottom:20px;">
-    <h4 style="color:#6f42c1; margin-bottom:15px;">📊 Status Information</h4>
+    <h4 style="color:#6f42c1; margin-bottom:15px;">Status Information</h4>
 
     @if (isPast)
     {
         <div style="background:#fff3cd; color:#856404; padding:10px; border-radius:5px; margin-bottom:10px;">
-            <strong>📅 Past Trip:</strong> This arrangement has already started or finished.
+            <strong>Past Trip:</strong> This arrangement has already started or finished.
         </div>
     }
     else
     {
         <div style="background:#d4edda; color:#155724; padding:10px; border-radius:5px; margin-bottom:10px;">
-            <strong>⏰ Upcoming Trip:</strong> This arrangement starts in @((Model.SelectedArrangement.StartDate - DateTime.Now).Days) days.
+            <strong>Upcoming Trip:</strong> This arrangement starts in @((Model.SelectedArrangement.StartDate - DateTime.Now).Days) days.
         </div>
     }
 
     @if (Model.Status == Veb_Projekat.Models.Enums.ReservationStatusEnum.Cancelled)
     {
         <div style="background:#f8d7da; color:#721c24; padding:10px; border-radius:5px;">
-            <strong>❌ Cancelled:</strong> This reservation has been cancelled.
+            <strong>Cancelled:</strong> This reservation has been cancelled.
         </div>
     }
 </div>
 
-<!-- Actions -->
+
+
 <div style="margin-top:30px;">
     @Html.ActionLink("← Back to My Reservations", "MyReservations", "Tourist", null, new { @style = "background:#6c757d; color:white; padding:8px 15px; text-decoration:none; border-radius:3px; margin-right:10px;" })
 

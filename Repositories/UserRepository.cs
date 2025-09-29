@@ -87,5 +87,30 @@ namespace Veb_Projekat.Repositories
             }
         }
 
+        public static void Update(User updatedUser)
+        {
+            if (updatedUser == null)
+                throw new ArgumentNullException(nameof(updatedUser));
+
+            if (!File.Exists(filePath))
+                throw new FileNotFoundException("User data file not found!");
+
+            var lines = File.ReadAllLines(filePath).ToList();
+
+            for (int i = 0; i < lines.Count; i++)
+            {
+                var parts = lines[i].Split(';');
+                if (parts.Length >= 7 && parts[0].Equals(updatedUser.Username, StringComparison.OrdinalIgnoreCase))
+                {
+                    lines[i] = $"{parts[0]};{updatedUser.Password};{updatedUser.FirstName};" +
+                       $"{updatedUser.LastName};{updatedUser.Gender};{updatedUser.Email};" +
+                       $"{parts[6]};{parts[7]}";
+                    break;
+                }
+            }
+
+            File.WriteAllLines(filePath, lines);
+        }
+
     }
 }

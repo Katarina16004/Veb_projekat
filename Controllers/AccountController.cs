@@ -121,17 +121,7 @@ namespace Veb_Projekat.Controllers
 
         private ActionResult RedirectBasedOnRole(RoleEnum role)
         {
-            switch (role)
-            {
-                case RoleEnum.Tourist:
-                    return RedirectToAction("MyReservations", "Tourist");
-                case RoleEnum.Manager:
-                    return RedirectToAction("Index", "Manager");
-                case RoleEnum.Administrator:
-                    return RedirectToAction("Index", "Admin");
-                default:
-                    return RedirectToAction("Index", "Home");
-            }
+            return RedirectToAction("Index", "Home");
         }
 
         // Logout
@@ -178,6 +168,53 @@ namespace Veb_Projekat.Controllers
             }
 
             return View(user);
+        }
+
+        // GET: Profile (Edit Profile)
+        public ActionResult EditProfile()
+        {
+            var currentUser = Session["CurrentUser"] as SessionUser;
+            if (currentUser == null) return RedirectToAction("Login", "Account");
+
+            var user = UserRepository.GetByUsername(currentUser.Username);
+            if (user == null) return HttpNotFound();
+
+            return View(user);
+        }
+
+        // POST: EditProfile
+        [HttpPost]
+        public ActionResult EditProfile(User updatedUser)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(updatedUser);
+            }
+
+            var currentUser = Session["CurrentUser"] as SessionUser;
+            if (currentUser == null) return RedirectToAction("Login", "Account");
+
+            var user = UserRepository.GetByUsername(currentUser.Username);
+            if (user == null)  
+                return HttpNotFound();
+
+            try
+            {
+                user.FirstName = updatedUser.FirstName;
+                user.LastName = updatedUser.LastName;
+                user.Email = updatedUser.Email;
+                user.Gender = updatedUser.Gender;
+
+                UserRepository.Update(user);
+
+                TempData["Success"] = "Profile updated successfully.";
+                return RedirectToAction("EditProfile");
+            }
+            catch (Exception ex)
+            {
+                ModelState.AddModelError("", "Error updating profile: " + ex.Message);
+                return View(updatedUser);
+            }
         }
     }
 }

@@ -38,6 +38,66 @@ else if (!isArrangementUpcoming)
 }
 
 <h3>Accommodations</h3>
+<h3>Filter & Sort Accommodations</h3>
+<form method="get" action="@Url.Action("Details", "Home")">
+    <input type="hidden" name="id" value="@Model.Id" />
+
+    <label>Name:</label>
+    <input type="text" name="accName" value="@Request.QueryString["accName"]" />
+
+    <label>Type:</label>
+    <select name="accType">
+        <option value="">Any</option>
+        @foreach (var type in Enum.GetValues(typeof(AccommodationTypeEnum)))
+        {
+            <option value="@type" @(Request.QueryString["accType"] == type.ToString() ? "selected" : "")>@type</option>
+        }
+    </select>
+
+    <label>Has Pool:</label>
+    <select name="hasPool">
+        <option value="">Any</option>
+        <option value="true" @(Request.QueryString["hasPool"] == "true" ? "selected" : "")>Yes</option>
+        <option value="false" @(Request.QueryString["hasPool"] == "false" ? "selected" : "")>No</option>
+    </select>
+
+    <label>Has Spa:</label>
+    <select name="hasSpa">
+        <option value="">Any</option>
+        <option value="true" @(Request.QueryString["hasSpa"] == "true" ? "selected" : "")>Yes</option>
+        <option value="false" @(Request.QueryString["hasSpa"] == "false" ? "selected" : "")>No</option>
+    </select>
+
+    <label>Accessible:</label>
+    <select name="accessible">
+        <option value="">Any</option>
+        <option value="true" @(Request.QueryString["accessible"] == "true" ? "selected" : "")>Yes</option>
+        <option value="false" @(Request.QueryString["accessible"] == "false" ? "selected" : "")>No</option>
+    </select>
+
+    <label>Has Wifi:</label>
+    <select name="hasWifi">
+        <option value="">Any</option>
+        <option value="true" @(Request.QueryString["hasWifi"] == "true" ? "selected" : "")>Yes</option>
+        <option value="false" @(Request.QueryString["hasWifi"] == "false" ? "selected" : "")>No</option>
+    </select>
+
+    <label>Sort by:</label>
+    <select name="accSortBy">
+        <option value="">None</option>
+        <option value="Name" @(Request.QueryString["accSortBy"] == "Name" ? "selected" : "")>Name</option>
+        <option value="TotalUnits" @(Request.QueryString["accSortBy"] == "TotalUnits" ? "selected" : "")>Total Units</option>
+        <option value="AvailableUnits" @(Request.QueryString["accSortBy"] == "AvailableUnits" ? "selected" : "")>Available Units</option>
+    </select>
+
+    <select name="accSortDir">
+        <option value="asc" @(Request.QueryString["accSortDir"] == "asc" ? "selected" : "")>Ascending</option>
+        <option value="desc" @(Request.QueryString["accSortDir"] == "desc" ? "selected" : "")>Descending</option>
+    </select>
+
+    <button type="submit">Apply Filters</button>
+    <a href="@Url.Action("Details", "Home", new { id = Model.Id })">Reset</a>
+</form>
 
 @if (Model.Accommodations != null && Model.Accommodations.Any())
 {
@@ -224,7 +284,7 @@ else if (!isArrangementUpcoming)
             }
             else
             {
-                <p style="color: #6c757d; font-style: italic;">No approved comments yet for this accommodation.</p>
+                <p style="color: #6c757d; font-style: italic;">No comments yet for this accommodation.</p>
             }
         </div>
     }
@@ -234,4 +294,4 @@ else
     <p>No accommodations for this arrangement.</p>
 }
 
-@Html.ActionLink("Back to Search", "Index", "Home")
+@Html.ActionLink("Back to Home", "Index", "Home")
