@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "Register New Manager";
+}
+
+<h2>Register New Manager</h2>
+
+<p><strong>Create Manager Account</strong></p>
+<p>Use this form to register a new manager who will be able to create and manage travel arrangements.</p>
+
+@using (Html.BeginForm("RegisterManager", "Admin", FormMethod.Post))
+{
+    @Html.ValidationSummary(true)
+
+    <table>
+        <tr>
+            <td><label><strong>Username:</strong></label></td>
+            <td>
+                <input type="text" name="username" required />
+                <small>Minimum 3 characters</small>
+            </td>
+        </tr>
+        <tr>
+            <td><label><strong>Password:</strong></label></td>
+            <td>
+                <input type="password" name="password" required />
+                <small>Minimum 4 characters</small>
+            </td>
+        </tr>
+        <tr>
+            <td><label><strong>First Name:</strong></label></td>
+            <td><input type="text" name="firstName" required /></td>
+        </tr>
+        <tr>
+            <td><label><strong>Last Name:</strong></label></td>
+            <td><input type="text" name="lastName" required /></td>
+        </tr>
+        <tr>
+            <td><label><strong>Email:</strong></label></td>
+            <td><input type="email" name="email" required /></td>
+        </tr>
+        <tr>
+            <td><label><strong>Gender:</strong></label></td>
+            <td>
+                <select name="gender" required>
+                    <option value="">Select gender...</option>
+                    @foreach (var g in Enum.GetValues(typeof(Veb_Projekat.Models.Enums.GenderEnum)))
+                    {
+                        <option value="@g">@g</option>
+                    }
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td><label><strong>Date of Birth:</strong></label></td>
+            <td>
+                <input type="date" name="dateOfBirth" required max="@DateTime.Now.AddYears(-18).ToString("yyyy-MM-dd")" />
+                <br /><small>Must be at least 18 years old</small>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2">
+                <input type="submit" value="Register Manager" />
+                @Html.ActionLink("Cancel", "ViewAllUsers")
+            </td>
+        </tr>
+    </table>
+}

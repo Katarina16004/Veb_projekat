@@ -121,6 +121,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManagerController.cs" />
@@ -155,6 +156,7 @@
     <Compile Include="Services\ArrangementService.cs" />
     <Compile Include="Services\CommentService.cs" />
     <Compile Include="Services\ReservationService.cs" />
+    <Compile Include="Services\UserService.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App_Data\Data\Accommodations.txt" />
@@ -237,6 +239,9 @@
     <Content Include="Views\Manager\ViewAllReservations.cshtml" />
     <Content Include="Views\Manager\ViewReservation.cshtml" />
     <Content Include="Views\Manager\ApproveComments.cshtml" />
+    <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\ViewAllUsers.cshtml" />
+    <Content Include="Views\Admin\RegisterManager.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Views\Base\" />
