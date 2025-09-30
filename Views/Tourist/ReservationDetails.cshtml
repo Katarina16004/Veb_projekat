@@ -6,12 +6,12 @@
     bool canComment = Model.Status == Veb_Projekat.Models.Enums.ReservationStatusEnum.Active && Model.SelectedArrangement.EndDate < DateTime.Now;
 }
 
-<h2>Reservation Details</h2>
+<h2 style="margin:20px">Reservation Details</h2>
 
 <div style="background:#f8f9fa; padding:20px; border:1px solid #dee2e6; margin-bottom:20px;">
     <div style="display:flex; justify-content:space-between;">
-        <h3>Reservation #@Model.Id.ToString().Substring(0, 8)...</h3>
-        <span style="padding:5px 10px; border-radius:5px; color:white; background:@(Model.Status == Veb_Projekat.Models.Enums.ReservationStatusEnum.Active ? "#28a745" : "#dc3545");">
+        <h3>Reservation #@Model.Id.ToString()</h3>
+        <span style="padding:5px 5px; border-radius:5px; color:white; background:@(Model.Status == Veb_Projekat.Models.Enums.ReservationStatusEnum.Active ? "#28a745" : "#dc3545");">
             @Model.Status
         </span>
     </div>
@@ -100,12 +100,12 @@
 
 
 
-<div style="margin-top:30px;">
-    @Html.ActionLink("← Back to My Reservations", "MyReservations", "Tourist", null, new { @style = "background:#6c757d; color:white; padding:8px 15px; text-decoration:none; border-radius:3px; margin-right:10px;" })
+<div style="margin:20px;">
+    @Html.ActionLink("← Back to My Reservations", "MyReservations", "Tourist", null, new { @style = "background:#6c757d; color:white; padding:8px 15px; text-decoration:none; border-radius:3px; margin-right:10px; margin-left:20px" })
 
     @if (canCancel)
     {
-        using (Html.BeginForm("CancelReservation", "Tourist", FormMethod.Post, new { @style = "display:inline;" }))
+        using (Html.BeginForm("CancelReservation", "Tourist", FormMethod.Post, new { @class = "button-form", @style = "display:inline;" }))
         {
             <input type="hidden" name="reservationId" value="@Model.Id" />
             <button type="submit" onclick="return confirm('Are you sure you want to cancel this reservation? This action cannot be undone.');"

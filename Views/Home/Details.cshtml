@@ -228,7 +228,8 @@
                                         <td>
                                             @if (userHasReserved)
                                             {
-                                                @Html.ActionLink("View My Reservation", "MyReservations", "Tourist")
+                                                var reservation = reservations.FirstOrDefault(r => r.Tourist.Username == sessionUser.Username);
+                                                @Html.ActionLink("View My Reservation", "ReservationDetails", "Tourist", new { reservationId = reservation.Id }, new { @style = "margin-right:5px;" })
                                             }
                                             else if (!isBooked && isLoggedIn && isTourist && isArrangementUpcoming)
                                             {

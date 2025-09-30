@@ -185,6 +185,7 @@
     <Content Include="Content\bootstrap.min.css" />
     <Content Include="Content\bootstrap.rtl.css" />
     <Content Include="Content\bootstrap.rtl.min.css" />
+    <Content Include="Content\EditProfile.css" />
     <Content Include="Content\LoginRegister.css" />
     <Content Include="Content\styles.css" />
     <Content Include="favicon.ico" />

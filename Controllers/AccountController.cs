@@ -202,6 +202,7 @@ namespace Veb_Projekat.Controllers
             {
                 user.FirstName = updatedUser.FirstName;
                 user.LastName = updatedUser.LastName;
+                user.Password= updatedUser.Password;
                 user.Email = updatedUser.Email;
                 user.Gender = updatedUser.Gender;
 
