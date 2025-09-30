@@ -4,9 +4,9 @@
     ViewBag.Title = "Edit Accommodation";
 }
 
-<h2>Edit Accommodation: @Model.Name</h2>
+<h2 style="margin:20px;">Edit Accommodation: @Model.Name</h2>
 
-@using (Html.BeginForm("EditAccommodation", "Manager", FormMethod.Post))
+@using (Html.BeginForm("EditAccommodation", "Manager", FormMethod.Post, new { @style = "margin:20px;" }))
 {
     <input type="hidden" name="id" value="@Model.Id" />
 
@@ -45,24 +45,28 @@
             <td style="padding: 5px;"><label>Features:</label></td>
             <td style="padding: 5px;">
                 <div>
+                    <label for="hasPool">Has Swimming Pool</label>
                     <input type="checkbox" name="hasPool" value="true" id="hasPool" @(Model.HasPool ? "checked" : "") />
                     <input type="hidden" name="hasPool" value="false" />
-                    <label for="hasPool">Has Swimming Pool</label>
+
                 </div>
                 <div>
+                    <label for="hasSpa">Has Spa & Wellness</label>
                     <input type="checkbox" name="hasSpa" value="true" id="hasSpa" @(Model.HasSpa ? "checked" : "") />
                     <input type="hidden" name="hasSpa" value="false" />
-                    <label for="hasSpa">Has Spa & Wellness</label>
+
                 </div>
                 <div>
+                    <label for="accessible">Wheelchair Accessible</label>
                     <input type="checkbox" name="accessible" value="true" id="accessible" @(Model.Accessible ? "checked" : "") />
                     <input type="hidden" name="accessible" value="false" />
-                    <label for="accessible">Wheelchair Accessible</label>
+
                 </div>
                 <div>
+                    <label for="hasWifi">Free WiFi</label>
                     <input type="checkbox" name="hasWifi" value="true" id="hasWifi" @(Model.HasWifi ? "checked" : "") />
                     <input type="hidden" name="hasWifi" value="false" />
-                    <label for="hasWifi">Free WiFi</label>
+
                 </div>
             </td>
         </tr>

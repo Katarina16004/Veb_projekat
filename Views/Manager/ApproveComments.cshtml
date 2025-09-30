@@ -5,7 +5,7 @@
     var comments = ViewBag.Comments as List<Comment>;
     string filter = ViewBag.Filter as string;
 }
-
+<div style="margin:20px;">
 <h2>Comment Management</h2>
 
 @if (TempData["Success"] != null)
@@ -96,14 +96,14 @@
                 <td style="padding: 10px;">
                     @if (comment.Status == CommentStatusEnum.Pending)
                     {
-                        using (Html.BeginForm("ApproveComment", "Manager", FormMethod.Post, new { style = "display:inline;" }))
+                        using (Html.BeginForm("ApproveComment", "Manager", FormMethod.Post, new { @class = "button-form", @style = "display:inline;" }))
                         {
                             <input type="hidden" name="commentId" value="@comment.Id" />
                             <input type="submit" value="✓ Approve"
                                    style="background-color: #28a745; color: white; border: none; padding: 4px 8px; margin-right: 3px; cursor: pointer;" />
                         }
 
-                        using (Html.BeginForm("RejectComment", "Manager", FormMethod.Post, new { style = "display:inline;" }))
+                        using (Html.BeginForm("RejectComment", "Manager", FormMethod.Post, new { @class = "button-form", @style = "display:inline;" }))
                         {
                             <input type="hidden" name="commentId" value="@comment.Id" />
                             <input type="submit" value="✗ Reject" onclick="return confirm('Are you sure you want to reject this comment?');"
@@ -133,7 +133,7 @@ else
         }
     </div>
 }
-
+</div>
 <style>
     .active-filter {
         font-weight: bold;

@@ -6,161 +6,183 @@
     int deletedCount = (int)ViewBag.DeletedCount;
 }
 
-<h2>All My Arrangements</h2>
+<h2 style="margin:20px;">All My Arrangements</h2>
 
-<h3>Filter & Sort Arrangements</h3>
 
-<form method="get" action="@Url.Action("ViewAllArrangements", "Manager")">
-    <label>Name:</label>
-    <input type="text" name="name" value="@ViewBag.SelectedName" placeholder="Arrangement name..." />
+<form class="filter-form" method="get" action="@Url.Action("ViewAllArrangements", "Manager")" style="margin:20px;">
+    <h3 class="filter-sort-title">Filter & Sort Arrangements</h3>
+    <br />
+    <div class="filters-row">
+        <div>
+            <label>Name:</label>
+            <input type="text" name="name" value="@ViewBag.SelectedName" placeholder="Arrangement name..." />
+        </div>
+        <div>
+            <label>Location:</label>
+            <input type="text" name="location" value="@ViewBag.SelectedLocation" placeholder="Location..." />
+        </div>
+        <div>
+            <label>Type:</label>
+            <select name="type">
+                <option value="">All types</option>
+                @foreach (var t in Enum.GetValues(typeof(Veb_Projekat.Models.Enums.ArrangementTypeEnum)))
+                {
+                    <option value="@t" @(ViewBag.SelectedType == t.ToString() ? "selected" : "")>@t</option>
+                }
+            </select>
+        </div>
+        <div>
+            <label>Transport:</label>
+            <select name="transport">
+                <option value="">All transport</option>
+                @foreach (var t in Enum.GetValues(typeof(Veb_Projekat.Models.Enums.TransportTypeEnum)))
+                {
+                    <option value="@t" @(ViewBag.SelectedTransport == t.ToString() ? "selected" : "")>@t</option>
+                }
+            </select>
+        </div>
+        <div>
+            <label>Start date from:</label>
+            <input type="date" name="startDateFrom" value="@ViewBag.SelectedStartFrom" />
+        </div>
+        <div>
+            <label>Start date to:</label>
+            <input type="date" name="startDateTo" value="@ViewBag.SelectedStartTo" />
+        </div>
+        <div>
+            <label>End date from:</label>
+            <input type="date" name="endDateFrom" value="@ViewBag.SelectedEndFrom" />
+        </div>
+        <div>
+            <label>End date to:</label>
+            <input type="date" name="endDateTo" value="@ViewBag.SelectedEndTo" />
+        </div>
+        <div>
+            <label>Sort by:</label>
+            <select name="sortBy">
+                <option value="">None</option>
+                <option value="Name" @(ViewBag.SortBy == "Name" ? "selected" : "")>Name</option>
+                <option value="StartDate" @(ViewBag.SortBy == "StartDate" ? "selected" : "")>Start Date</option>
+                <option value="EndDate" @(ViewBag.SortBy == "EndDate" ? "selected" : "")>End Date</option>
+            </select>
+        </div>
+        <div>
+            <label>Order:</label>
+            <select name="sortDir">
+                <option value="asc" @(ViewBag.SortDir == "asc" ? "selected" : "")>Ascending</option>
+                <option value="desc" @(ViewBag.SortDir == "desc" ? "selected" : "")>Descending</option>
+            </select>
+        </div>
+        <div>
+            <label>Include Deleted:</label>
+            <input type="checkbox" id="includeDeleted" name="includeDeleted" value="true" @(ViewBag.IncludeDeleted ? "checked" : "") />
+        </div>
+    </div>
 
-    <label>Location:</label>
-    <input type="text" name="location" value="@ViewBag.SelectedLocation" placeholder="Location..." />
-
-    <label>Type:</label>
-    <select name="type">
-        <option value="">All types</option>
-        @foreach (var t in Enum.GetValues(typeof(Veb_Projekat.Models.Enums.ArrangementTypeEnum)))
-        {
-            <option value="@t" @(ViewBag.SelectedType == t.ToString() ? "selected" : "")>@t</option>
-        }
-    </select>
-
-    <label>Transport:</label>
-    <select name="transport">
-        <option value="">All transport</option>
-        @foreach (var t in Enum.GetValues(typeof(Veb_Projekat.Models.Enums.TransportTypeEnum)))
-        {
-            <option value="@t" @(ViewBag.SelectedTransport == t.ToString() ? "selected" : "")>@t</option>
-        }
-    </select>
-
-    <label>Start date from:</label>
-    <input type="date" name="startDateFrom" value="@ViewBag.SelectedStartFrom" />
-
-    <label>Start date to:</label>
-    <input type="date" name="startDateTo" value="@ViewBag.SelectedStartTo" />
-
-    <label>End date from:</label>
-    <input type="date" name="endDateFrom" value="@ViewBag.SelectedEndFrom" />
-
-    <label>End date to:</label>
-    <input type="date" name="endDateTo" value="@ViewBag.SelectedEndTo" />
-
-    <label>Sort by:</label>
-    <select name="sortBy">
-        <option value="">None</option>
-        <option value="Name" @(ViewBag.SortBy == "Name" ? "selected" : "")>Name</option>
-        <option value="StartDate" @(ViewBag.SortBy == "StartDate" ? "selected" : "")>Start Date</option>
-        <option value="EndDate" @(ViewBag.SortBy == "EndDate" ? "selected" : "")>End Date</option>
-    </select>
-
-    <select name="sortDir">
-        <option value="asc" @(ViewBag.SortDir == "asc" ? "selected" : "")>Ascending</option>
-        <option value="desc" @(ViewBag.SortDir == "desc" ? "selected" : "")>Descending</option>
-    </select>
-
-    <label>Include Deleted:</label>
-    <input type="checkbox" name="includeDeleted" value="true" @(ViewBag.IncludeDeleted ? "checked" : "") />
-
-    <button type="submit">Apply</button>
-    <a href="@Url.Action("ViewAllArrangements", "Manager")">Reset</a>
+    <div class="btn-container">
+        <button type="submit">Apply</button>
+        <a href="@Url.Action("ViewAllArrangements", "Manager")">Reset</a>
+    </div>
 </form>
 
 
 
-
-<p>@Html.ActionLink("Back to Home", "Index","Home")</p>
-
-
-<p>@Html.ActionLink("Add new Arrangement", "CreateArrangement")</p>
+<h3 style="margin:20px;">Actions</h3>
+<p style="margin:20px;">
+    @Html.ActionLink("Back to Home", "Index", "Home") | 
+    @Html.ActionLink("Add new Arrangement", "CreateArrangement")
+</p>
 
 @if (arrangements != null && arrangements.Any())
 {
-    <table border="1" cellpadding="5">
-        <thead>
-            <tr>
-                <th>Name</th>
-                <th>Location</th>
-                <th>Type</th>
-                <th>Transport</th>
-                <th>Start Date</th>
-                <th>End Date</th>
-                <th>Status</th>
-                <th>State</th>
-                <th>Reservations</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var arrangement in arrangements)
-            {
-                bool isUpcoming = arrangement.StartDate > DateTime.Now;
+    <div style="margin:20px;">
 
-                var allReservations = Veb_Projekat.Repositories.ReservationRepository.GetAll();
-                var arrangementReservations = allReservations.Where(r => r.SelectedArrangement.Id == arrangement.Id).ToList();
-                var arrActiveCount = arrangementReservations.Count(r => r.Status == Veb_Projekat.Models.Enums.ReservationStatusEnum.Active);
-
-                <tr style="background:@(arrangement.IsDeleted ? "#f8d7da" : "#d4edda");">
-                    <td><strong>@arrangement.Name</strong></td>
-                    <td>@arrangement.Location</td>
-                    <td>@arrangement.Type</td>
-                    <td>@arrangement.Transport</td>
-                    <td>@arrangement.StartDate.ToString("dd/MM/yyyy")</td>
-                    <td>@arrangement.EndDate.ToString("dd/MM/yyyy")</td>
-                    <td>
-                        @if (isUpcoming)
-                        {
-                            <strong>Upcoming</strong>
-                        }
-                        else
-                        {
-                            <strong>Past</strong>
-                        }
-                    </td>
-                    <td>
-                        @if (arrangement.IsDeleted)
-                        {
-                            <strong>Deleted</strong>
-                        }
-                        else
-                        {
-                            <strong>Active</strong>
-                        }
-                    </td>
-                    <td>
-                        @if (arrangementReservations.Any())
-                        {
-                            <strong>@arrActiveCount active</strong><br />
-                            <small>@arrangementReservations.Count total</small>
-                        }
-                        else
-                        {
-                            <span>None</span>
-                        }
-                    </td>
-                    <td>
-                        @Html.ActionLink("Details", "Details", "Home", new { id = arrangement.Id }, null)
-                        @Html.Raw(" | ")
-                        @Html.ActionLink("Manage Accommodations", "ManageAccommodations", new { arrangementId = arrangement.Id })
-
-                        @if (!arrangement.IsDeleted && isUpcoming)
-                        {
-                            @Html.Raw(" | ")
-                            @Html.ActionLink("Edit", "EditArrangement", new { id = arrangement.Id })
-                            @Html.Raw(" | ")
-
-                            using (Html.BeginForm("DeleteArrangement", "Manager", FormMethod.Post, new { style = "display:inline;" }))
-                            {
-                                <input type="hidden" name="id" value="@arrangement.Id" />
-                                <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this arrangement?');" />
-                            }
-                        }
-                    </td>
+        <table border="1" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Location</th>
+                    <th>Type</th>
+                    <th>Transport</th>
+                    <th>Start Date</th>
+                    <th>End Date</th>
+                    <th>Status</th>
+                    <th>State</th>
+                    <th>Reservations</th>
+                    <th>Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
+            </thead>
+            <tbody>
+                @foreach (var arrangement in arrangements)
+                {
+                    bool isUpcoming = arrangement.StartDate > DateTime.Now;
+
+                    var allReservations = Veb_Projekat.Repositories.ReservationRepository.GetAll();
+                    var arrangementReservations = allReservations.Where(r => r.SelectedArrangement.Id == arrangement.Id).ToList();
+                    var arrActiveCount = arrangementReservations.Count(r => r.Status == Veb_Projekat.Models.Enums.ReservationStatusEnum.Active);
+
+                    <tr style="background:@(arrangement.IsDeleted ? "#f8d7da" : "#d4edda");">
+                        <td><strong>@arrangement.Name</strong></td>
+                        <td>@arrangement.Location</td>
+                        <td>@arrangement.Type</td>
+                        <td>@arrangement.Transport</td>
+                        <td>@arrangement.StartDate.ToString("dd/MM/yyyy")</td>
+                        <td>@arrangement.EndDate.ToString("dd/MM/yyyy")</td>
+                        <td>
+                            @if (isUpcoming)
+                            {
+                                <strong>Upcoming</strong>
+                            }
+                            else
+                            {
+                                <strong>Past</strong>
+                            }
+                        </td>
+                        <td>
+                            @if (arrangement.IsDeleted)
+                            {
+                                <strong>Deleted</strong>
+                            }
+                            else
+                            {
+                                <strong>Active</strong>
+                            }
+                        </td>
+                        <td>
+                            @if (arrangementReservations.Any())
+                            {
+                                <strong>@arrActiveCount active</strong><br />
+                                <small>@arrangementReservations.Count total</small>
+                            }
+                            else
+                            {
+                                <span>None</span>
+                            }
+                        </td>
+                        <td>
+                            @Html.ActionLink("Details", "Details", "Home", new { id = arrangement.Id }, null)
+                            @Html.Raw(" | ")
+                            @Html.ActionLink("Manage Accommodations", "ManageAccommodations", new { arrangementId = arrangement.Id })
+
+                            @if (!arrangement.IsDeleted && isUpcoming)
+                            {
+                                @Html.Raw(" | ")
+                                @Html.ActionLink("Edit", "EditArrangement", new { id = arrangement.Id })
+                                @Html.Raw(" | ")
+
+                                using (Html.BeginForm("DeleteArrangement", "Manager", FormMethod.Post, new { @class = "button-form", @style = "display:inline;" }))
+                                {
+                                    <input type="hidden" name="id" value="@arrangement.Id" />
+                                    <input type="submit" value="Delete" onclick="return confirm('Are you sure you want to delete this arrangement?');" />
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
 }
 else
 {

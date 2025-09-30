@@ -5,8 +5,10 @@
     int accommodationId = (int)ViewBag.AccommodationId;
 }
 
-<h2>@Model.Id</h2>
-<h3>In Accommodation: @accommodationName</h3>
+<div style="margin:20px;">
+    <h2>@Model.Id</h2>
+    <h3>In Accommodation: @accommodationName</h3>
+</div>
 
 @using (Html.BeginForm("EditUnit", "Manager", FormMethod.Post))
 {

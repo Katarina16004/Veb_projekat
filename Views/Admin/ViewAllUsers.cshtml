@@ -4,102 +4,104 @@
     var users = ViewBag.AllUsers as List<User>;
 }
 
-<h2>All System Users</h2>
+<div style="margin:20px;">
+    <h2>All System Users</h2>
 
-@if (TempData["Success"] != null)
-{
-    <p style="color: green;"><strong>Success:</strong> @TempData["Success"]</p>
-}
+    @if (TempData["Success"] != null)
+    {
+        <p style="color: green;"><strong>Success:</strong> @TempData["Success"]</p>
+    }
 
-@if (TempData["Error"] != null)
-{
-    <p style="color: red;"><strong>Error:</strong> @TempData["Error"]</p>
-}
+    @if (TempData["Error"] != null)
+    {
+        <p style="color: red;"><strong>Error:</strong> @TempData["Error"]</p>
+    }
 
-<h3>Statistics</h3>
-<ul>
-    <li>Total Users: @((int)ViewBag.TotalUsers)</li>
-    <li>Tourists: @((int)ViewBag.TotalTourists)</li>
-    <li>Managers: @((int)ViewBag.TotalManagers)</li>
-    <li>Administrators: @((int)ViewBag.TotalAdmins)</li>
-</ul>
+    <h3>Statistics</h3>
+    <ul>
+        <li>Total Users: @((int)ViewBag.TotalUsers)</li>
+        <li>Tourists: @((int)ViewBag.TotalTourists)</li>
+        <li>Managers: @((int)ViewBag.TotalManagers)</li>
+        <li>Administrators: @((int)ViewBag.TotalAdmins)</li>
+    </ul>
 
-<h3>Filter & Search Users</h3>
+    <h3>Filter & Search Users</h3>
 
-<form method="get" action="@Url.Action("ViewAllUsers", "Admin")">
-    <label>First Name:</label>
-    <input type="text" name="searchName" value="@ViewBag.SearchName" placeholder="Search by first name..." />
+    <form method="get" action="@Url.Action("ViewAllUsers", "Admin")">
+        <label>First Name:</label>
+        <input type="text" name="searchName" value="@ViewBag.SearchName" placeholder="Search by first name..." />
 
-    <label>Last Name:</label>
-    <input type="text" name="searchLastName" value="@ViewBag.SearchLastName" placeholder="Search by last name..." />
+        <label>Last Name:</label>
+        <input type="text" name="searchLastName" value="@ViewBag.SearchLastName" placeholder="Search by last name..." />
 
-    <label>Role:</label>
-    <select name="roleFilter">
-        <option value="">All roles</option>
-        @foreach (var r in Enum.GetValues(typeof(Veb_Projekat.Models.Enums.RoleEnum)))
-        {
-            <option value="@r" @(ViewBag.RoleFilter == r.ToString() ? "selected" : "")>@r</option>
-        }
-    </select>
-
-    <button type="submit">Apply Filters</button>
-    <a href="@Url.Action("ViewAllUsers", "Admin")">Reset</a>
-</form>
-
-<p>
-    @Html.ActionLink("Back to Home", "Index","Home")
-</p>
-
-@if (users != null && users.Any())
-{
-    <table border="1" cellpadding="5">
-        <thead>
-            <tr>
-                <th>Username</th>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Gender</th>
-                <th>Date of Birth</th>
-                <th>Age</th>
-                <th>Role</th>
-                <th>Activity</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var user in users)
+        <label>Role:</label>
+        <select name="roleFilter">
+            <option value="">All roles</option>
+            @foreach (var r in Enum.GetValues(typeof(Veb_Projekat.Models.Enums.RoleEnum)))
             {
-                var age = (DateTime.Now - user.DateOfBirth).Days / 365;
-
-                <tr>
-                    <td><strong>@user.Username</strong></td>
-                    <td>@user.FirstName @user.LastName</td>
-                    <td>@user.Email</td>
-                    <td>@user.Gender</td>
-                    <td>@user.DateOfBirth.ToString("dd/MM/yyyy")</td>
-                    <td>@age years</td>
-                    <td><strong>@user.UserRole</strong></td>
-                    <td>
-                        @if (user.UserRole == Veb_Projekat.Models.Enums.RoleEnum.Tourist)
-                        {
-                            var reservations = Veb_Projekat.Repositories.ReservationRepository.GetByTouristUsername(user.Username);
-                            <span>@reservations.Count reservations</span>
-                        }
-                        else if (user.UserRole == Veb_Projekat.Models.Enums.RoleEnum.Manager)
-                        {
-                            var arrangements = Veb_Projekat.Repositories.ArrangementRepository.GetAllByManagerUsername(user.Username);
-                            <span>@arrangements.Count arrangements</span>
-                        }
-                        else
-                        {
-                            <span>System admin</span>
-                        }
-                    </td>
-                </tr>
+                <option value="@r" @(ViewBag.RoleFilter == r.ToString() ? "selected" : "")>@r</option>
             }
-        </tbody>
-    </table>
-}
-else
-{
-    <p><strong>No users found</strong> - No users match your current search criteria.</p>
-}
+        </select>
+
+        <button type="submit">Apply Filters</button>
+        <a href="@Url.Action("ViewAllUsers", "Admin")">Reset</a>
+    </form>
+
+    <p>
+        @Html.ActionLink("Back to Home", "Index", "Home")
+    </p>
+
+    @if (users != null && users.Any())
+    {
+        <table border="1" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Gender</th>
+                    <th>Date of Birth</th>
+                    <th>Age</th>
+                    <th>Role</th>
+                    <th>Activity</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var user in users)
+                {
+                    var age = (DateTime.Now - user.DateOfBirth).Days / 365;
+
+                    <tr>
+                        <td><strong>@user.Username</strong></td>
+                        <td>@user.FirstName @user.LastName</td>
+                        <td>@user.Email</td>
+                        <td>@user.Gender</td>
+                        <td>@user.DateOfBirth.ToString("dd/MM/yyyy")</td>
+                        <td>@age years</td>
+                        <td><strong>@user.UserRole</strong></td>
+                        <td>
+                            @if (user.UserRole == Veb_Projekat.Models.Enums.RoleEnum.Tourist)
+                            {
+                                var reservations = Veb_Projekat.Repositories.ReservationRepository.GetByTouristUsername(user.Username);
+                                <span>@reservations.Count reservations</span>
+                            }
+                            else if (user.UserRole == Veb_Projekat.Models.Enums.RoleEnum.Manager)
+                            {
+                                var arrangements = Veb_Projekat.Repositories.ArrangementRepository.GetAllByManagerUsername(user.Username);
+                                <span>@arrangements.Count arrangements</span>
+                            }
+                            else
+                            {
+                                <span>System admin</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p><strong>No users found</strong> - No users match your current search criteria.</p>
+    }
+</div>

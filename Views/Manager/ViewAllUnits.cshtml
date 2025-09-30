@@ -4,7 +4,7 @@
     var units = ViewBag.MyUnits as List<AccommodationUnit>;
 }
 
-<h2>All My Units</h2>
+<h2 style="margin:20px;">All My Units</h2>
 
 @if (TempData["Success"] != null)
 {
@@ -16,148 +16,158 @@
     <p style="color: red;"><strong>Error:</strong> @TempData["Error"]</p>
 }
 
-<h3>Statistics</h3>
-<ul>
-    <li>Total Units: @((int)ViewBag.TotalUnits)</li>
-    <li>Active: @((int)ViewBag.ActiveUnits)</li>
-    <li>Deleted: @((int)ViewBag.DeletedUnits)</li>
-</ul>
+<div style="margin:20px;">
 
-<h3>Filter & Sort Units</h3>
+    <h3>Statistics</h3>
+    <ul>
+        <li>Total Units: @((int)ViewBag.TotalUnits)</li>
+        <li>Active: @((int)ViewBag.ActiveUnits)</li>
+        <li>Deleted: @((int)ViewBag.DeletedUnits)</li>
+    </ul>
 
-<form method="get" action="@Url.Action("ViewAllUnits", "Manager")">
-    <label>Min guests:</label>
-    <input type="number" name="minGuests" value="@ViewBag.MinGuests" />
+</div>
 
-    <label>Max guests:</label>
-    <input type="number" name="maxGuests" value="@ViewBag.MaxGuests" />
+<div style="margin:20px;">
+    <h3>Filter & Sort Units</h3>
 
-    <label>Pets allowed:</label>
-    <select name="petsAllowed">
-        <option value="">Any</option>
-        <option value="true" @(ViewBag.PetsAllowed == true ? "selected" : "")>Yes</option>
-        <option value="false" @(ViewBag.PetsAllowed == false ? "selected" : "")>No</option>
-    </select>
+    <form method="get" action="@Url.Action("ViewAllUnits", "Manager")">
+        <label>Min guests:</label>
+        <input type="number" name="minGuests" value="@ViewBag.MinGuests" />
 
-    <label>Max price:</label>
-    <input type="number" step="0.01" name="maxPrice" value="@ViewBag.MaxPrice" />
+        <label>Max guests:</label>
+        <input type="number" name="maxGuests" value="@ViewBag.MaxGuests" />
 
-    <label>Sort by:</label>
-    <select name="unitSortBy">
-        <option value="">None</option>
-        <option value="MaxGuests" @(ViewBag.SortBy == "MaxGuests" ? "selected" : "")>Max Guests</option>
-        <option value="Price" @(ViewBag.SortBy == "Price" ? "selected" : "")>Price</option>
-    </select>
+        <label>Pets allowed:</label>
+        <select name="petsAllowed">
+            <option value="">Any</option>
+            <option value="true" @(ViewBag.PetsAllowed == true ? "selected" : "")>Yes</option>
+            <option value="false" @(ViewBag.PetsAllowed == false ? "selected" : "")>No</option>
+        </select>
 
-    <select name="unitSortDir">
-        <option value="asc" @(ViewBag.SortDir == "asc" ? "selected" : "")>Ascending</option>
-        <option value="desc" @(ViewBag.SortDir == "desc" ? "selected" : "")>Descending</option>
-    </select>
+        <label>Max price:</label>
+        <input type="number" step="0.01" name="maxPrice" value="@ViewBag.MaxPrice" />
 
-    <button type="submit">Apply</button>
-    <a href="@Url.Action("ViewAllUnits", "Manager")">Reset</a>
-</form>
+        <label>Sort by:</label>
+        <select name="unitSortBy">
+            <option value="">None</option>
+            <option value="MaxGuests" @(ViewBag.SortBy == "MaxGuests" ? "selected" : "")>Max Guests</option>
+            <option value="Price" @(ViewBag.SortBy == "Price" ? "selected" : "")>Price</option>
+        </select>
 
-<p>
+        <select name="unitSortDir">
+            <option value="asc" @(ViewBag.SortDir == "asc" ? "selected" : "")>Ascending</option>
+            <option value="desc" @(ViewBag.SortDir == "desc" ? "selected" : "")>Descending</option>
+        </select>
+
+        <button type="submit">Apply</button>
+        <a href="@Url.Action("ViewAllUnits", "Manager")">Reset</a>
+    </form>
+</div>
+
+<p style="margin:20px;">
     @Html.ActionLink("Back to Home", "Index","Home")
 </p>
 
-@if (units != null && units.Any())
-{
-    <table border="1" cellpadding="5">
-        <thead>
-            <tr>
-                <th>Unit ID</th>
-                <th>Max guests</th>
-                <th>Pets allowed</th>
-                <th>Price</th>
-                <th>Status</th>
-                <th>Reservations</th>
-                <th>Parent Accommodation</th>
-                <th>Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var unit in units)
-            {
-                var allGrouped = Veb_Projekat.Repositories.AccommodationUnitRepository.GetAllGrouped();
-                int accommodationId = -1;
+<div style="margin:20px;">
 
-                foreach (var kvp in allGrouped)
-                {
-                    if (kvp.Value.Any(u => u.Id == unit.Id))
-                    {
-                        accommodationId = kvp.Key;
-                        break;
-                    }
-                }
-
-                var parentAccommodation = Veb_Projekat.Repositories.AccommodationRepository.GetById(accommodationId);
-
-                var reservations = Veb_Projekat.Repositories.ReservationRepository.GetAll()
-                    .Where(r => r.SelectedUnit.Id == unit.Id &&
-                               r.Status == Veb_Projekat.Models.Enums.ReservationStatusEnum.Active)
-                    .ToList();
-
-                var futureReservations = reservations
-                    .Where(r => r.SelectedArrangement.StartDate > DateTime.Now)
-                    .ToList();
-
-                bool isBooked = reservations.Any();
-
-                <tr style="background:@(unit.IsDeleted ? "#f8d7da" : (isBooked ? "#fff3cd" : "#d4edda"));">
-                    <td>@unit.Id</td>
-                    <td>@unit.MaxGuests</td>
-                    <td>@(unit.PetsAllowed ? "Yes" : "No")</td>
-                    <td>@unit.Price.ToString("C")</td>
-                    <td>
-                        @if (unit.IsDeleted)
-                        {
-                            <strong>Deleted</strong>
-                        }
-                        else
-                        {
-                            <strong>Active</strong>
-                        }
-                    </td>
-                    <td>
-                        @if (reservations.Any())
-                        {
-                            <strong>@reservations.Count active</strong>
-                            if (futureReservations.Any())
-                            {
-                                <br /><small>@futureReservations.Count future</small>
-                            }
-                        }
-                        else
-                        {
-                            <strong>Available</strong>
-                        }
-                    </td>
-                    <td>
-                        @if (parentAccommodation != null)
-                        {
-                            <p>@parentAccommodation.Name</p>
-                            <br /><small>@parentAccommodation.Type</small>
-                        }
-                        else
-                        {
-                            <span>Unknown</span>
-                        }
-                    </td>
-                    <td>
-
-                        @if (!unit.IsDeleted && parentAccommodation != null)
-                        {
-                            @Html.ActionLink("Manage", "ManageUnits", new { accommodationId = parentAccommodation.Id })
-                        }
-                    </td>
+    @if (units != null && units.Any())
+    {
+        <table border="1" cellpadding="5">
+            <thead>
+                <tr>
+                    <th>Unit ID</th>
+                    <th>Max guests</th>
+                    <th>Pets allowed</th>
+                    <th>Price</th>
+                    <th>Status</th>
+                    <th>Reservations</th>
+                    <th>Parent Accommodation</th>
+                    <th>Actions</th>
                 </tr>
-            }
-        </tbody>
-    </table>
-}
-else
-{
-    <p>No units found. Start by @Html.ActionLink("creating some accommodations", "ViewAllAccommodations") first!</p>
-}
+            </thead>
+            <tbody>
+                @foreach (var unit in units)
+                {
+                    var allGrouped = Veb_Projekat.Repositories.AccommodationUnitRepository.GetAllGrouped();
+                    int accommodationId = -1;
+
+                    foreach (var kvp in allGrouped)
+                    {
+                        if (kvp.Value.Any(u => u.Id == unit.Id))
+                        {
+                            accommodationId = kvp.Key;
+                            break;
+                        }
+                    }
+
+                    var parentAccommodation = Veb_Projekat.Repositories.AccommodationRepository.GetById(accommodationId);
+
+                    var reservations = Veb_Projekat.Repositories.ReservationRepository.GetAll()
+                        .Where(r => r.SelectedUnit.Id == unit.Id &&
+                                   r.Status == Veb_Projekat.Models.Enums.ReservationStatusEnum.Active)
+                        .ToList();
+
+                    var futureReservations = reservations
+                        .Where(r => r.SelectedArrangement.StartDate > DateTime.Now)
+                        .ToList();
+
+                    bool isBooked = reservations.Any();
+
+                    <tr style="background:@(unit.IsDeleted ? "#f8d7da" : (isBooked ? "#fff3cd" : "#d4edda"));">
+                        <td>@unit.Id</td>
+                        <td>@unit.MaxGuests</td>
+                        <td>@(unit.PetsAllowed ? "Yes" : "No")</td>
+                        <td>@unit.Price.ToString("C")</td>
+                        <td>
+                            @if (unit.IsDeleted)
+                            {
+                                <strong>Deleted</strong>
+                            }
+                            else
+                            {
+                                <strong>Active</strong>
+                            }
+                        </td>
+                        <td>
+                            @if (reservations.Any())
+                            {
+                                <strong>@reservations.Count active</strong>
+                                if (futureReservations.Any())
+                                {
+                                    <br /><small>@futureReservations.Count future</small>
+                                }
+                            }
+                            else
+                            {
+                                <strong>Available</strong>
+                            }
+                        </td>
+                        <td>
+                            @if (parentAccommodation != null)
+                            {
+                                <p>@parentAccommodation.Name</p>
+                                <br /><small>@parentAccommodation.Type</small>
+                            }
+                            else
+                            {
+                                <span>Unknown</span>
+                            }
+                        </td>
+                        <td>
+
+                            @if (!unit.IsDeleted && parentAccommodation != null)
+                            {
+                                @Html.ActionLink("Manage", "ManageUnits", new { accommodationId = parentAccommodation.Id })
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>No units found. Start by @Html.ActionLink("creating some accommodations", "ViewAllAccommodations") first!</p>
+    }
+
+</div>

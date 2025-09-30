@@ -3,9 +3,9 @@
     ViewBag.Title = "Create New Arrangement";
 }
 
-<h2>Create New Arrangement</h2>
+<h2 style="margin:20px;">Create New Arrangement</h2>
 
-@using (Html.BeginForm("CreateArrangement", "Manager", FormMethod.Post))
+@using (Html.BeginForm("CreateArrangement", "Manager", FormMethod.Post, new { @style = "margin:20px;" }))
 {
     @Html.ValidationSummary(true)
 

@@ -4,9 +4,9 @@
     ViewBag.Title = "Edit Arrangement";
 }
 
-<h2>Edit Arrangement: @Model.Name</h2>
+<h2 style="margin:20px;">Edit Arrangement: @Model.Name</h2>
 
-@using (Html.BeginForm("EditArrangement", "Manager", FormMethod.Post))
+@using (Html.BeginForm("EditArrangement", "Manager", FormMethod.Post, new { @style = "margin:20px;" }))
 {
     <input type="hidden" name="id" value="@Model.Id" />
 
@@ -72,7 +72,7 @@
         <tr>
             <td colspan="2">
                 <input type="submit" value="Update Arrangement" />
-                @Html.ActionLink("Cancel", "Index")
+                @Html.ActionLink("Cancel", "Index","Home")
             </td>
         </tr>
     </table>

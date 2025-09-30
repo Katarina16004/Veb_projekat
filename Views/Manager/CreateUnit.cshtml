@@ -4,8 +4,10 @@
     string accommodationName = ViewBag.AccommodationName as string;
 }
 
-<h2>Create New Unit</h2>
-<h3>For Accommodation: @accommodationName</h3>
+<div style="margin:20px;">
+    <h2>Create New Unit</h2>
+    <h3>For Accommodation: @accommodationName</h3>
+</div>
 
 @using (Html.BeginForm("CreateUnit", "Manager", FormMethod.Post))
 {
@@ -24,9 +26,10 @@
         <tr>
             <td style="padding: 5px;"><label>Pets Allowed:</label></td>
             <td style="padding: 5px;">
+                <label for="petsAllowed">Allow pets in this unit</label>
                 <input type="checkbox" name="petsAllowed" value="true" id="petsAllowed" />
                 <input type="hidden" name="petsAllowed" value="false" />
-                <label for="petsAllowed">Allow pets in this unit</label>
+
             </td>
         </tr>
         <tr>
