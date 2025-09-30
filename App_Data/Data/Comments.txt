@@ -3,5 +3,3 @@ d1234567-1234-1234-1234-123456789012;tourist1;1;Amazing experience, loved the po
 d1234567-1234-1234-1234-123456789013;tourist2;2;Cozy and quiet, great for hiking.;4;Approved;2025-09-24 15:45:00
 d1234567-1234-1234-1234-123456789014;tourist3;3;Perfect for family vacation, very comfortable.;5;Pending;2025-09-23 12:20:00
 d1234567-1234-1234-1234-123456789015;tourist1;5;Super! Amazing!;5;Rejected;2025-09-22 18:15:00
-5e093494-377f-457d-bb0f-a510baa433cf;tourist1;6;super je bilo;4;Approved;2025-09-28 15:38:18
-db458f19-9f01-4187-967f-085a088fec64;tourist1;6;nije nesto dobar;1;Rejected;2025-09-29 10:43:32

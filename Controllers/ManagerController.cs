@@ -55,7 +55,7 @@ namespace Veb_Projekat.Controllers
             }
 
             TempData["Success"] = $"Arrangement '{name}' created successfully!";
-            return RedirectToAction("Index");
+            return RedirectToAction("Index","Home");
         }
 
         // GET: EditArrangement
@@ -66,13 +66,13 @@ namespace Veb_Projekat.Controllers
             if (arrangement == null)
             {
                 TempData["Error"] = "Arrangement not found or you don't have permission to edit it.";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
 
             if (!ArrangementService.CanEditArrangement(id, CurrentUser.Username, out string errorMessage))
             {
                 TempData["Error"] = errorMessage;
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
 
             ViewBag.ArrangementTypes = Enum.GetValues(typeof(ArrangementTypeEnum));
@@ -100,7 +100,7 @@ namespace Veb_Projekat.Controllers
             }
 
             TempData["Success"] = $"Arrangement '{name}' updated successfully!";
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         // POST: DeleteArrangement
@@ -116,7 +116,7 @@ namespace Veb_Projekat.Controllers
                 TempData["Success"] = "Arrangement deleted successfully.";
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", "Home");
         }
 
         // GET: ViewAllArrangements
@@ -187,7 +187,7 @@ namespace Veb_Projekat.Controllers
             if (arrangement == null)
             {
                 TempData["Error"] = "Arrangement not found or you don't have permission to manage it.";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
 
             ViewBag.Arrangement = arrangement;
@@ -204,7 +204,7 @@ namespace Veb_Projekat.Controllers
             if (arrangement == null)
             {
                 TempData["Error"] = "Arrangement not found or you don't have permission to add accommodations.";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
 
             ViewBag.ArrangementId = arrangementId;
@@ -244,7 +244,7 @@ namespace Veb_Projekat.Controllers
             if (accommodation == null)
             {
                 TempData["Error"] = "Accommodation not found or you don't have permission to edit it.";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
 
             ViewBag.AccommodationTypes = Enum.GetValues(typeof(AccommodationTypeEnum));
@@ -276,7 +276,7 @@ namespace Veb_Projekat.Controllers
             if (parentArrangement != null)
                 return RedirectToAction("ManageAccommodations", new { arrangementId = parentArrangement.Id });
             else
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
         }
 
         // POST: DeleteAccommodation
@@ -299,7 +299,7 @@ namespace Veb_Projekat.Controllers
             if (parentArrangement != null)
                 return RedirectToAction("ManageAccommodations", new { arrangementId = parentArrangement.Id });
             else
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
         }
 
         // GET: ViewAllAccommodations
@@ -353,7 +353,7 @@ namespace Veb_Projekat.Controllers
             if (accommodation == null)
             {
                 TempData["Error"] = "Accommodation not found or you don't have permission to manage it.";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
 
             ViewBag.Accommodation = accommodation;
@@ -370,7 +370,7 @@ namespace Veb_Projekat.Controllers
             if (accommodation == null)
             {
                 TempData["Error"] = "Accommodation not found or you don't have permission to add units.";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
 
             ViewBag.AccommodationId = accommodationId;
@@ -420,7 +420,7 @@ namespace Veb_Projekat.Controllers
             if (unit == null)
             {
                 TempData["Error"] = "Unit not found or you don't have permission to edit it.";
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
             }
 
             var allGrouped = AccommodationUnitRepository.GetAllGrouped();
@@ -513,7 +513,7 @@ namespace Veb_Projekat.Controllers
             if (parentAccommodationId != -1)
                 return RedirectToAction("ManageUnits", new { accommodationId = parentAccommodationId });
             else
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
         }
 
         // POST: DeleteUnit
@@ -544,7 +544,7 @@ namespace Veb_Projekat.Controllers
             if (parentAccommodationId != -1)
                 return RedirectToAction("ManageUnits", new { accommodationId = parentAccommodationId });
             else
-                return RedirectToAction("Index");
+                return RedirectToAction("Index", "Home");
         }
 
         // GET: ViewAllUnits

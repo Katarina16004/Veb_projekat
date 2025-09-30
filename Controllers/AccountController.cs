@@ -31,7 +31,6 @@ namespace Veb_Projekat.Controllers
             user.UserRole = RoleEnum.Tourist;
             UserRepository.Add(user);
 
-            TempData["Success"] = "Registration successful! You can now log in";
             return RedirectToAction("Login");
         }
 
@@ -91,7 +90,6 @@ namespace Veb_Projekat.Controllers
                     }
                 }
 
-                TempData["Success"] = $"Welcome {user.FirstName}!";
                 return RedirectBasedOnRole(user.UserRole);
             }
             else
@@ -109,7 +107,6 @@ namespace Veb_Projekat.Controllers
                         sessionUser.Login(rememberedUser);
                         Session["CurrentUser"] = sessionUser;
 
-                        TempData["Success"] = $"Welcome back {rememberedUser.FirstName}!";
                         return RedirectBasedOnRole(rememberedUser.UserRole);
                     }
                 }
@@ -148,7 +145,6 @@ namespace Veb_Projekat.Controllers
             Response.Cache.SetExpires(DateTime.Now);
             Response.Cache.SetValidUntilExpires(true);
 
-            TempData["Success"] = "You have been logged out successfully.";
             return RedirectToAction("Login");
         }
 
@@ -163,7 +159,6 @@ namespace Veb_Projekat.Controllers
             var user = UserRepository.GetByUsername(sessionUser.Username);
             if (user == null)
             {
-                TempData["Error"] = "User not found.";
                 return RedirectToAction("Login");
             }
 
@@ -208,7 +203,6 @@ namespace Veb_Projekat.Controllers
 
                 UserRepository.Update(user);
 
-                TempData["Success"] = "Profile updated successfully.";
                 return RedirectToAction("EditProfile");
             }
             catch (Exception ex)

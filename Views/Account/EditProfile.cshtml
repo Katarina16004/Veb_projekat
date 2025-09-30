@@ -13,11 +13,6 @@
 <div class="profile-edit-container">
     <h2>Edit Profile</h2>
 
-    @if (TempData["Success"] != null)
-    {
-        <p style="color: green;"><strong>Success:</strong> @TempData["Success"]</p>
-    }
-
     @using (Html.BeginForm("EditProfile", "Account", FormMethod.Post))
     {
         @Html.ValidationSummary(true)

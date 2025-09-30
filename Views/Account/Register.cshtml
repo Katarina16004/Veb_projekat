@@ -1,60 +1,53 @@
-﻿
-<head>
+﻿<head>
     <title>Register</title>
     <link rel="stylesheet" href="~/Content/LoginRegister.css" />
 </head>
 
-@model Veb_Projekat.Models.User
-
 <div class="register-container">
     <h2>Register</h2>
 
-    @using (Html.BeginForm("Register", "Account", FormMethod.Post))
-    {
-        @Html.ValidationSummary(true)
+    <form method="post" action="/Account/Register">
+        <div class="form-group">
+            <label for="Username">Username</label>
+            <input type="text" id="Username" name="Username" placeholder="Username" required>
+        </div>
 
-<div class="form-group">
-    @Html.LabelFor(m => m.Username)
-    @Html.TextBoxFor(m => m.Username, new { placeholder = "Username" })
+        <div class="form-group">
+            <label for="Password">Password</label>
+            <input type="password" id="Password" name="Password" placeholder="Password" required>
+        </div>
 
-</div>
+        <div class="form-group">
+            <label for="FirstName">First Name</label>
+            <input type="text" id="FirstName" name="FirstName" placeholder="First Name" required>
+        </div>
 
-<div class="form-group">
-    @Html.LabelFor(m => m.Password)
-    @Html.PasswordFor(m => m.Password, new { placeholder = "Password" })
+        <div class="form-group">
+            <label for="LastName">Last Name</label>
+            <input type="text" id="LastName" name="LastName" placeholder="Last Name" required>
+        </div>
 
-</div>
+        <div class="form-group">
+            <label for="Email">Email</label>
+            <input type="email" id="Email" name="Email" placeholder="Email" required>
+        </div>
 
-<div class="form-group">
-    @Html.LabelFor(m => m.FirstName)
-    @Html.TextBoxFor(m => m.FirstName, new { placeholder = "First Name" })
+        <div class="form-group">
+            <label for="Gender">Gender</label>
+            <select id="Gender" name="Gender" required>
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
 
-</div>
-
-<div class="form-group">
-    @Html.LabelFor(m => m.LastName)
-    @Html.TextBoxFor(m => m.LastName, new { placeholder = "Last Name" })
-
-</div>
-
-<div class="form-group">
-    @Html.LabelFor(m => m.Email)
-    @Html.TextBoxFor(m => m.Email, new { placeholder = "Email" })
-
-</div>
-
-<div class="form-group">
-    @Html.LabelFor(m => m.Gender)
-    @Html.EnumDropDownListFor(m => m.Gender)
-
-</div>
-
-<div class="form-group">
-    @Html.LabelFor(m => m.DateOfBirth)
-    @Html.TextBoxFor(m => m.DateOfBirth, "{0:yyyy-MM-dd}", new { type = "date" })
-
-</div>
+        <div class="form-group">
+            <label for="DateOfBirth">Date of Birth</label>
+            <input type="date" id="dateOfBirth" name="dateOfBirth" required max="@DateTime.Now.AddYears(-18).ToString("yyyy-MM-dd")" />
+            <small>Must be at least 18 years old</small>
+        </div>
 
         <button type="submit">Register</button>
-    }
+    </form>
 </div>
