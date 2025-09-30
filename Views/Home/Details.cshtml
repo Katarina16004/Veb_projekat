@@ -1,297 +1,312 @@
-﻿@model Veb_Projekat.Models.Arrangement
-@using Veb_Projekat.Repositories
-@using Veb_Projekat.Models.Enums
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Details</title>
+</head>
+<body>
+    <div class="container">
+        @model Veb_Projekat.Models.Arrangement
+        @using Veb_Projekat.Repositories
+        @using Veb_Projekat.Models.Enums
 
-<h2>@Model.Name</h2>
+        <h2 class="arrangement-title">@Model.Name</h2>
 
-<p><strong>Arrangement type:</strong> @Model.Type</p>
-<p><strong>Transport:</strong> @Model.Transport</p>
-<p><strong>Location:</strong> @Model.Location</p>
-<p><strong>Start date:</strong> @Model.StartDate.ToString("dd/MM/yyyy")</p>
-<p><strong>End date:</strong> @Model.EndDate.ToString("dd/MM/yyyy")</p>
-<p><strong>Max passengers:</strong> @Model.MaxNumOfPassengers</p>
-<p><strong>Description:</strong> @Model.Description</p>
-<p><strong>Program:</strong> @Model.TravelProgram</p>
+        <div class="section arrangement">
+            <p><strong>Arrangement type:</strong> @Model.Type</p>
+            <p><strong>Transport:</strong> @Model.Transport</p>
+            <p><strong>Location:</strong> @Model.Location</p>
+            <p><strong>Start date:</strong> @Model.StartDate.ToString("dd/MM/yyyy")</p>
+            <p><strong>End date:</strong> @Model.EndDate.ToString("dd/MM/yyyy")</p>
+            <p><strong>Max passengers:</strong> @Model.MaxNumOfPassengers</p>
+            <p><strong>Description:</strong> @Model.Description</p>
+            <p><strong>Program:</strong> @Model.TravelProgram</p>
+        </div>
 
-@{
-    var sessionUser = Session["CurrentUser"] as Veb_Projekat.Models.SessionUser;
-    bool isLoggedIn = sessionUser?.IsLoggedIn == true;
-    bool isTourist = sessionUser?.IsTourist == true;
-    bool isArrangementUpcoming = Model.StartDate > DateTime.Now;
-}
-
-@if (isLoggedIn && isTourist && isArrangementUpcoming)
-{
-    <p><strong>Ready to book? You can reserve any available accommodation unit below!</strong></p>
-}
-else if (!isLoggedIn)
-{
-    <p>
-        <strong>Want to make a reservation?</strong>
-        @Html.ActionLink("Login", "Login", "Account") or
-        @Html.ActionLink("Register", "Register", "Account") to reserve your spot!
-    </p>
-}
-else if (!isArrangementUpcoming)
-{
-    <p><strong>Past Arrangement:</strong> This arrangement has already started and is no longer available for booking.</p>
-}
-
-<h3>Accommodations</h3>
-<h3>Filter & Sort Accommodations</h3>
-<form method="get" action="@Url.Action("Details", "Home")">
-    <input type="hidden" name="id" value="@Model.Id" />
-
-    <label>Name:</label>
-    <input type="text" name="accName" value="@Request.QueryString["accName"]" />
-
-    <label>Type:</label>
-    <select name="accType">
-        <option value="">Any</option>
-        @foreach (var type in Enum.GetValues(typeof(AccommodationTypeEnum)))
-        {
-            <option value="@type" @(Request.QueryString["accType"] == type.ToString() ? "selected" : "")>@type</option>
+        @{
+            var sessionUser = Session["CurrentUser"] as Veb_Projekat.Models.SessionUser;
+            bool isLoggedIn = sessionUser?.IsLoggedIn == true;
+            bool isTourist = sessionUser?.IsTourist == true;
+            bool isArrangementUpcoming = Model.StartDate > DateTime.Now;
         }
-    </select>
 
-    <label>Has Pool:</label>
-    <select name="hasPool">
-        <option value="">Any</option>
-        <option value="true" @(Request.QueryString["hasPool"] == "true" ? "selected" : "")>Yes</option>
-        <option value="false" @(Request.QueryString["hasPool"] == "false" ? "selected" : "")>No</option>
-    </select>
-
-    <label>Has Spa:</label>
-    <select name="hasSpa">
-        <option value="">Any</option>
-        <option value="true" @(Request.QueryString["hasSpa"] == "true" ? "selected" : "")>Yes</option>
-        <option value="false" @(Request.QueryString["hasSpa"] == "false" ? "selected" : "")>No</option>
-    </select>
-
-    <label>Accessible:</label>
-    <select name="accessible">
-        <option value="">Any</option>
-        <option value="true" @(Request.QueryString["accessible"] == "true" ? "selected" : "")>Yes</option>
-        <option value="false" @(Request.QueryString["accessible"] == "false" ? "selected" : "")>No</option>
-    </select>
-
-    <label>Has Wifi:</label>
-    <select name="hasWifi">
-        <option value="">Any</option>
-        <option value="true" @(Request.QueryString["hasWifi"] == "true" ? "selected" : "")>Yes</option>
-        <option value="false" @(Request.QueryString["hasWifi"] == "false" ? "selected" : "")>No</option>
-    </select>
-
-    <label>Sort by:</label>
-    <select name="accSortBy">
-        <option value="">None</option>
-        <option value="Name" @(Request.QueryString["accSortBy"] == "Name" ? "selected" : "")>Name</option>
-        <option value="TotalUnits" @(Request.QueryString["accSortBy"] == "TotalUnits" ? "selected" : "")>Total Units</option>
-        <option value="AvailableUnits" @(Request.QueryString["accSortBy"] == "AvailableUnits" ? "selected" : "")>Available Units</option>
-    </select>
-
-    <select name="accSortDir">
-        <option value="asc" @(Request.QueryString["accSortDir"] == "asc" ? "selected" : "")>Ascending</option>
-        <option value="desc" @(Request.QueryString["accSortDir"] == "desc" ? "selected" : "")>Descending</option>
-    </select>
-
-    <button type="submit">Apply Filters</button>
-    <a href="@Url.Action("Details", "Home", new { id = Model.Id })">Reset</a>
-</form>
-
-@if (Model.Accommodations != null && Model.Accommodations.Any())
-{
-    foreach (var acc in Model.Accommodations)
-    {
-        <div border="1" cellpadding="10">
-            <h4>@acc.Name (@acc.Type)</h4>
-            <p><strong>Stars:</strong> @acc.Stars</p>
-            <p><strong>Pool:</strong> @(acc.HasPool ? "Yes" : "No")</p>
-            <p><strong>Spa:</strong> @(acc.HasSpa ? "Yes" : "No")</p>
-            <p><strong>Accessible:</strong> @(acc.Accessible ? "Yes" : "No")</p>
-            <p><strong>Wifi:</strong> @(acc.HasWifi ? "Yes" : "No")</p>
-
-            <h5>Filter & Sort Units</h5>
-
-            @{
-                string qMinGuests = Request.QueryString["minGuests_" + acc.Id];
-                string qMaxGuests = Request.QueryString["maxGuests_" + acc.Id];
-                string qPetsAllowed = Request.QueryString["petsAllowed_" + acc.Id];
-                string qMaxPrice = Request.QueryString["maxPrice_" + acc.Id];
-                string qUnitSortBy = Request.QueryString["unitSortBy_" + acc.Id];
-                string qUnitSortDir = Request.QueryString["unitSortDir_" + acc.Id];
-            }
-
-            <form method="get" action="@Url.Action("Details", "Home")">
-                <input type="hidden" name="id" value="@Model.Id" />
-                <input type="hidden" name="unitAccommodationId" value="@acc.Id" />
-
-                <input type="hidden" name="accName" value="@Request.QueryString["accName"]" />
-                <input type="hidden" name="accType" value="@Request.QueryString["accType"]" />
-                <input type="hidden" name="hasPool" value="@Request.QueryString["hasPool"]" />
-                <input type="hidden" name="hasSpa" value="@Request.QueryString["hasSpa"]" />
-                <input type="hidden" name="accessible" value="@Request.QueryString["accessible"]" />
-                <input type="hidden" name="hasWifi" value="@Request.QueryString["hasWifi"]" />
-                <input type="hidden" name="accSortBy" value="@Request.QueryString["accSortBy"]" />
-                <input type="hidden" name="accSortDir" value="@Request.QueryString["accSortDir"]" />
-
-                <label>Min guests:</label>
-                <input type="number" name="minGuests_@acc.Id" value="@qMinGuests" />
-
-                <label>Max guests:</label>
-                <input type="number" name="maxGuests_@acc.Id" value="@qMaxGuests" />
-
-                <label>Pets allowed:</label>
-                <select name="petsAllowed_@acc.Id">
-                    <option value="">Any</option>
-                    <option value="true" @(qPetsAllowed == "true" ? "selected" : "")>Yes</option>
-                    <option value="false" @(qPetsAllowed == "false" ? "selected" : "")>No</option>
-                </select>
-
-                <label>Max price:</label>
-                <input type="number" step="0.01" name="maxPrice_@acc.Id" value="@qMaxPrice" />
-
-                <label>Sort by:</label>
-                <select name="unitSortBy_@acc.Id">
-                    <option value="">None</option>
-                    <option value="MaxGuests" @(qUnitSortBy == "MaxGuests" ? "selected" : "")>Max Guests</option>
-                    <option value="Price" @(qUnitSortBy == "Price" ? "selected" : "")>Price</option>
-                </select>
-
-                <select name="unitSortDir_@acc.Id">
-                    <option value="asc" @(qUnitSortDir == "asc" ? "selected" : "")>Ascending</option>
-                    <option value="desc" @(qUnitSortDir == "desc" ? "selected" : "")>Descending</option>
-                </select>
-
-                <button type="submit">Apply</button>
-                <a href="@Url.Action("Details", "Home", new { id = Model.Id })">Reset</a>
-            </form>
-
-            <h5>Units</h5>
-            @if (acc.Units != null && acc.Units.Any())
+        <div class="section">
+            @if (isLoggedIn && isTourist && isArrangementUpcoming)
             {
-                <table border="1" cellpadding="5">
-                    <thead>
-                        <tr>
-                            <th>Unit ID</th>
-                            <th>Max guests</th>
-                            <th>Pets allowed</th>
-                            <th>Price</th>
-                            <th>Status</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach (var unit in acc.Units)
-                        {
-                            var reservations = ReservationRepository.GetAll()
-                                .Where(r => r.SelectedUnit.Id == unit.Id && r.Status == ReservationStatusEnum.Active)
-                                .ToList();
-
-                            bool isBooked = reservations.Any();
-
-                            bool userHasReserved = false;
-                            if (isLoggedIn)
-                            {
-                                userHasReserved = reservations.Any(r => r.Tourist.Username == sessionUser.Username);
-                            }
-
-                            <tr style="background:@(isBooked ? "#f8d7da" : "#d4edda");">
-                                <td>@unit.Id</td>
-                                <td>@unit.MaxGuests</td>
-                                <td>@(unit.PetsAllowed ? "Yes" : "No")</td>
-                                <td>@unit.Price.ToString("C")</td>
-                                <td>
-                                    @if (userHasReserved)
-                                    {
-                                        <strong>YOUR BOOKING</strong>
-                                    }
-                                    else if (isBooked)
-                                    {
-                                        <strong>Booked</strong>
-                                    }
-                                    else
-                                    {
-                                        <strong>Available</strong>
-                                    }
-                                </td>
-                                <td>
-                                    @if (userHasReserved)
-                                    {
-                                        @Html.ActionLink("View My Reservation", "MyReservations", "Tourist")
-                                    }
-                                    else if (!isBooked && isLoggedIn && isTourist && isArrangementUpcoming)
-                                    {
-                                        using (Html.BeginForm("Reserve", "Tourist", FormMethod.Post))
-                                        {
-                                            <input type="hidden" name="arrangementId" value="@Model.Id" />
-                                            <input type="hidden" name="unitId" value="@unit.Id" />
-                                            <button type="submit" onclick="return confirm('Reserve this unit for @unit.Price.ToString("C")?');">
-                                                Reserve Now
-                                            </button>
-                                        }
-                                    }
-                                    else if (isBooked)
-                                    {
-                                        <span>Unavailable</span>
-                                    }
-                                    else if (!isLoggedIn)
-                                    {
-                                        @Html.ActionLink("Login to Reserve", "Login", "Account")
-                                    }
-                                    else if (!isArrangementUpcoming)
-                                    {
-                                        <span>Past arrangement</span>
-                                    }
-                                </td>
-                            </tr>
-                        }
-                    </tbody>
-                </table>
+                <p class="highlight-info"><strong>Ready to book? You can reserve any available accommodation unit below!</strong></p>
             }
-            else
+            else if (!isLoggedIn)
             {
-                <p>No units available.</p>
+                <p class="highlight-warning">
+                    <strong>Want to make a reservation?</strong>
+                    @Html.ActionLink("Login", "Login", "Account") or
+                    @Html.ActionLink("Register", "Register", "Account") to reserve your spot!
+                </p>
             }
-
-            <h5>Comments</h5>
-            @{
-                var comments = CommentRepository.GetApprovedOnly()  // samo prihvacene
-                    .Where(c => c.Accommodation != null && c.Accommodation.Id == acc.Id)
-                    .ToList();
-            }
-            @if (comments.Any())
+            else if (!isArrangementUpcoming)
             {
-                <ul>
-                    @foreach (var comment in comments.OrderByDescending(c => c.CreatedAt))
-                    {
-                        <li style="margin-bottom: 15px; padding: 10px; border: 1px solid #dee2e6; border-radius: 5px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <strong>@comment.Tourist.Username</strong>
-                                <div style="color: #ffc107; font-size: 16px;">
-                                    @for (int i = 0; i < comment.Rating; i++)
-                                    {
-                                        @Html.Raw("★")
-                                    }
-                                    <small>(@comment.Rating/5)</small>
-                                </div>
-                            </div>
-                            <p style="margin-top: 8px; margin-bottom: 5px;">@comment.Text</p>
-                            <small style="color: #6c757d;">@comment.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
-                        </li>
-                    }
-                </ul>
-            }
-            else
-            {
-                <p style="color: #6c757d; font-style: italic;">No comments yet for this accommodation.</p>
+                <p class="highlight-danger"><strong>Past Arrangement:</strong> This arrangement has already started and is no longer available for booking.</p>
             }
         </div>
-    }
-}
-else
-{
-    <p>No accommodations for this arrangement.</p>
-}
 
-@Html.ActionLink("Back to Home", "Index", "Home")
+        <form class="filter-form" method="get" action="@Url.Action("Details", "Home")">
+
+            <h3 class="filter-sort-title">Filter & Sort Accommodations</h3>
+            <br />
+            <input type="hidden" name="id" value="@Model.Id" />
+            <div class="filters-row">
+
+                <div>
+                    <label>Name:</label>
+                    <input type="text" name="accName" value="@Request.QueryString["accName"]" />
+                </div>
+                <div>
+                    <label>Type:</label>
+                    <select name="accType">
+                        <option value="">Any</option>
+                        @foreach (var type in Enum.GetValues(typeof(AccommodationTypeEnum)))
+                        {
+                            <option value="@type" @(Request.QueryString["accType"] == type.ToString() ? "selected" : "")>@type</option>
+                        }
+                    </select>
+                </div>
+                <div>
+                    <label>Has Pool:</label>
+                    <select name="hasPool">
+                        <option value="">Any</option>
+                        <option value="true" @(Request.QueryString["hasPool"] == "true" ? "selected" : "")>Yes</option>
+                        <option value="false" @(Request.QueryString["hasPool"] == "false" ? "selected" : "")>No</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Has Spa:</label>
+                    <select name="hasSpa">
+                        <option value="">Any</option>
+                        <option value="true" @(Request.QueryString["hasSpa"] == "true" ? "selected" : "")>Yes</option>
+                        <option value="false" @(Request.QueryString["hasSpa"] == "false" ? "selected" : "")>No</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Accessible:</label>
+                    <select name="accessible">
+                        <option value="">Any</option>
+                        <option value="true" @(Request.QueryString["accessible"] == "true" ? "selected" : "")>Yes</option>
+                        <option value="false" @(Request.QueryString["accessible"] == "false" ? "selected" : "")>No</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Has Wifi:</label>
+                    <select name="hasWifi">
+                        <option value="">Any</option>
+                        <option value="true" @(Request.QueryString["hasWifi"] == "true" ? "selected" : "")>Yes</option>
+                        <option value="false" @(Request.QueryString["hasWifi"] == "false" ? "selected" : "")>No</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Sort by:</label>
+                    <select name="accSortBy">
+                        <option value="">None</option>
+                        <option value="Name" @(Request.QueryString["accSortBy"] == "Name" ? "selected" : "")>Name</option>
+                        <option value="TotalUnits" @(Request.QueryString["accSortBy"] == "TotalUnits" ? "selected" : "")>Total Units</option>
+                        <option value="AvailableUnits" @(Request.QueryString["accSortBy"] == "AvailableUnits" ? "selected" : "")>Available Units</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Order:</label>
+                    <select name="accSortDir">
+                        <option value="asc" @(Request.QueryString["accSortDir"] == "asc" ? "selected" : "")>Ascending</option>
+                        <option value="desc" @(Request.QueryString["accSortDir"] == "desc" ? "selected" : "")>Descending</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="btn-container">
+                <button type="submit">Apply</button>
+                <a href="@Url.Action("Details", "Home", new { id = Model.Id })" >Reset</a>
+            </div>
+        </form>
+
+        <h3 class="accommodation-title">Accommodations</h3>
+
+        @if (Model.Accommodations != null && Model.Accommodations.Any())
+        {
+            foreach (var acc in Model.Accommodations)
+            {
+                <div class="section unit">
+                    <h4 class="unit-title">@acc.Name (@acc.Type)</h4>
+                    <p><strong>Stars:</strong> @acc.Stars</p>
+                    <p><strong>Pool:</strong> @(acc.HasPool ? "Yes" : "No")</p>
+                    <p><strong>Spa:</strong> @(acc.HasSpa ? "Yes" : "No")</p>
+                    <p><strong>Accessible:</strong> @(acc.Accessible ? "Yes" : "No")</p>
+                    <p><strong>Wifi:</strong> @(acc.HasWifi ? "Yes" : "No")</p>
+
+                    <h5 class="filter-sort-title">Filter & Sort Units</h5>
+
+                    <form class="filter-form" method="get" action="@Url.Action("Details", "Home")">
+                        <input type="hidden" name="id" value="@Model.Id" />
+                        <input type="hidden" name="unitAccommodationId" value="@acc.Id" />
+
+                        <label>Min guests:</label>
+                        <input type="number" name="minGuests_@acc.Id" value="@Request.QueryString["minGuests_" + acc.Id]" />
+
+                        <label>Max guests:</label>
+                        <input type="number" name="maxGuests_@acc.Id" value="@Request.QueryString["maxGuests_" + acc.Id]" />
+
+                        <label>Pets allowed:</label>
+                        <select name="petsAllowed_@acc.Id">
+                            <option value="">Any</option>
+                            <option value="true" @(Request.QueryString["petsAllowed_" + acc.Id] == "true" ? "selected" : "")>Yes</option>
+                            <option value="false" @(Request.QueryString["petsAllowed_" + acc.Id] == "false" ? "selected" : "")>No</option>
+                        </select>
+
+                        <label>Max price:</label>
+                        <input type="number" step="0.01" name="maxPrice_@acc.Id" value="@Request.QueryString["maxPrice_" + acc.Id]" />
+
+                        <label>Sort by:</label>
+                        <select name="unitSortBy_@acc.Id">
+                            <option value="">None</option>
+                            <option value="MaxGuests" @(Request.QueryString["unitSortBy_" + acc.Id] == "MaxGuests" ? "selected" : "")>Max Guests</option>
+                            <option value="Price" @(Request.QueryString["unitSortBy_" + acc.Id] == "Price" ? "selected" : "")>Price</option>
+                        </select>
+
+                        <select name="unitSortDir_@acc.Id">
+                            <option value="asc" @(Request.QueryString["unitSortDir_" + acc.Id] == "asc" ? "selected" : "")>Ascending</option>
+                            <option value="desc" @(Request.QueryString["unitSortDir_" + acc.Id] == "desc" ? "selected" : "")>Descending</option>
+                        </select>
+
+                        <button type="submit">Apply</button>
+                        <a href="@Url.Action("Details", "Home", new { id = Model.Id })">Reset</a>
+                    </form>
+
+                    <h5>Units</h5>
+                    @if (acc.Units != null && acc.Units.Any())
+                    {
+                        <table class="units-table" border="1" cellpadding="5">
+                            <thead>
+                                <tr>
+                                    <th>Unit ID</th>
+                                    <th>Max guests</th>
+                                    <th>Pets allowed</th>
+                                    <th>Price</th>
+                                    <th>Status</th>
+                                    <th>Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var unit in acc.Units)
+                                {
+                                    var reservations = ReservationRepository.GetAll()
+                                        .Where(r => r.SelectedUnit.Id == unit.Id && r.Status == ReservationStatusEnum.Active)
+                                        .ToList();
+
+                                    bool isBooked = reservations.Any();
+
+                                    bool userHasReserved = false;
+                                    if (isLoggedIn)
+                                    {
+                                        userHasReserved = reservations.Any(r => r.Tourist.Username == sessionUser.Username);
+                                    }
+
+                                    <tr class="@(isBooked ? "booked" : "available")">
+                                        <td>@unit.Id</td>
+                                        <td>@unit.MaxGuests</td>
+                                        <td>@(unit.PetsAllowed ? "Yes" : "No")</td>
+                                        <td>@unit.Price.ToString("C")</td>
+                                        <td>
+                                            @if (userHasReserved)
+                                            {
+                                                <strong>YOUR BOOKING</strong>
+                                            }
+                                            else if (isBooked)
+                                            {
+                                                <strong>Booked</strong>
+                                            }
+                                            else
+                                            {
+                                                <strong>Available</strong>
+                                            }
+                                        </td>
+                                        <td>
+                                            @if (userHasReserved)
+                                            {
+                                                @Html.ActionLink("View My Reservation", "MyReservations", "Tourist")
+                                            }
+                                            else if (!isBooked && isLoggedIn && isTourist && isArrangementUpcoming)
+                                            {
+                                                using (Html.BeginForm("Reserve", "Tourist", FormMethod.Post, new { @class = "button-form" }))
+                                                {
+                                                    <input type="hidden" name="arrangementId" value="@Model.Id" />
+                                                    <input type="hidden" name="unitId" value="@unit.Id" />
+                                                    <div class="btn-center">
+                                                        <button type="submit" onclick="return confirm('Reserve this unit for @unit.Price.ToString("C")?');">
+                                                            Reserve Now
+                                                        </button>
+                                                    </div>
+                                                }
+                                            }
+                                            else if (isBooked)
+                                            {
+                                                <span>Unavailable</span>
+                                            }
+                                            else if (!isLoggedIn)
+                                            {
+                                                @Html.ActionLink("Login to Reserve", "Login", "Account")
+                                            }
+                                            else if (!isArrangementUpcoming)
+                                            {
+                                                <span>Past arrangement</span>
+                                            }
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    }
+                    else
+                    {
+                        <p>No units available.</p>
+                    }
+
+                    <h5 class="comments-title">Comments</h5>
+                    @{
+                        var comments = CommentRepository.GetApprovedOnly()  // samo prihvacene
+                            .Where(c => c.Accommodation != null && c.Accommodation.Id == acc.Id)
+                            .ToList();
+                    }
+                    @if (comments.Any())
+                    {
+                        <ul class="comments-list">
+                            @foreach (var comment in comments.OrderByDescending(c => c.CreatedAt))
+                            {
+                                <li class="comment-item">
+                                    <div class="comment-header">
+                                        <strong>@comment.Tourist.Username</strong>
+                                        <div class="comment-rating">
+                                            @for (int i = 0; i < comment.Rating; i++)
+                                            {
+                                                @Html.Raw("★")
+                                            }
+                                            <small>(@comment.Rating/5)</small>
+                                        </div>
+                                    </div>
+                                    <p class="comment-text">@comment.Text</p>
+                                    <small class="comment-date">@comment.CreatedAt.ToString("dd/MM/yyyy HH:mm")</small>
+                                </li>
+                            }
+                        </ul>
+                    }
+                    else
+                    {
+                        <p class="no-comments">No comments yet for this accommodation.</p>
+                    }
+                </div>
+            }
+        }
+        else
+        {
+            <p class="no-accommodations">No accommodations for this arrangement.</p>
+        }
+
+        @Html.ActionLink("Back to Home", "Index", "Home", null, new { @class = "back-home-link" })
+    </div>
+</body>
+</html>

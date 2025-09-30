@@ -3,6 +3,8 @@
 <head>
     <meta charset="utf-8" />
     <title>@ViewBag.Title - Tourist Agency</title>
+
+    <link rel="stylesheet" href="~/Content/styles.css" />
 </head>
 <body>
     @{
@@ -14,7 +16,6 @@
 
         @if (currentUser != null && currentUser.IsLoggedIn)
         {
-            @: | Welcome, <strong>@currentUser.FirstName</strong> (@currentUser.UserRole)
 
             if (currentUser.IsTourist)
             {
@@ -26,7 +27,6 @@
                 @: | @Html.ActionLink("Accommodations", "ViewAllAccommodations", "Manager")
                 @: | @Html.ActionLink("Accommodation Units", "ViewAllUnits", "Manager")
                 @: | @Html.ActionLink("Reservations", "ViewAllReservations", "Manager")
-                //@: | @Html.ActionLink("Create Arrangement", "CreateArrangement", "Manager")
                 @: | @Html.ActionLink("Comments", "ApproveComments", "Manager")
             }
             else if (currentUser.IsAdmin)
@@ -47,13 +47,13 @@
 
     @if (TempData["Success"] != null)
     {
-        <div style="background:#d4edda; color:#155724; padding:10px; margin:10px 0;">
+        <div class="alert-success">
             @TempData["Success"]
         </div>
     }
     @if (TempData["Error"] != null)
     {
-        <div style="background:#f8d7da; color:#721c24; padding:10px; margin:10px 0;">
+        <div class="alert-error">
             @TempData["Error"]
         </div>
     }
