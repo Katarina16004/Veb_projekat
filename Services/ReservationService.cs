@@ -13,7 +13,6 @@ namespace Veb_Projekat.Services
         {
             var reservations = ReservationRepository.GetByTouristUsername(username);
 
-            // Pretraga
             if (!string.IsNullOrEmpty(search))
             {
                 reservations = reservations.Where(r =>
@@ -22,7 +21,6 @@ namespace Veb_Projekat.Services
                     .ToList();
             }
 
-            // Filter po statusu
             if (!string.IsNullOrEmpty(status))
             {
                 if (Enum.TryParse(status, out ReservationStatusEnum statusEnum))
@@ -30,7 +28,6 @@ namespace Veb_Projekat.Services
                     reservations = reservations.Where(r => r.Status == statusEnum).ToList();
                 }
             }
-            // Sortiranje
             if (sortBy == "ArrangementName")
             {
                 reservations = sortDir == "asc"

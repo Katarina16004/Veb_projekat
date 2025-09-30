@@ -13,8 +13,6 @@ namespace Veb_Projekat.Controllers
     [AuthorizeSession(RoleEnum.Manager)]
     public class ManagerController : BaseController
     {
-        #region Dashboard and Overview
-
         public ActionResult Index()
         {
             var myArrangements = ArrangementService.GetByManager(CurrentUser.Username);
@@ -27,7 +25,6 @@ namespace Veb_Projekat.Controllers
             return View();
         }
 
-        #endregion
 
         #region Arrangement Management
 
