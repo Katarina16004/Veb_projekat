@@ -5,3 +5,4 @@ ID;Name;Type;Stars;HasPool;HasSpa;Accessible;HasWifi;ArragementID;IsDeleted
 4;Sunny Villa;Villa;3;true;true;false;true;1;false
 5;Tuscan Wellness Hotel;Hotel;4;true;true;true;true;4;true
 6;noviacccc;Hotel;2;false;false;false;false;7;false
+7;nekinovi;Hotel;2;true;false;false;false;1;false

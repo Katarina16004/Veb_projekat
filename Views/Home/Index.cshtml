@@ -80,6 +80,7 @@
     <table border="1" cellpadding="5">
         <thead>
             <tr>
+                <th>Poster</th>
                 <th>Name</th>
                 <th>Location</th>
                 <th>Type</th>
@@ -93,6 +94,27 @@
             @foreach (var a in arrangements)
             {
                 <tr>
+                    <td>
+                        @{
+                            if (!string.IsNullOrEmpty(a.Poster))
+                            {
+                                var serverPath = Server.MapPath("~/App_Data/Images/" + a.Poster);
+                                if (System.IO.File.Exists(serverPath))
+                                {
+                                    <img src="@Url.Action("GetImage", "Home", new { fileName = a.Poster })"
+                                         alt="Poster" style="width:100px; height:auto;" />
+                                }
+                                else
+                                {
+                                    <span>Not found</span>
+                                }
+                            }
+                            else
+                            {
+                                <span>Not found</span>
+                            }
+                        }
+                    </td>
                     <td>@a.Name</td>
                     <td>@a.Location</td>
                     <td>@a.Type</td>

@@ -103,5 +103,17 @@ namespace Veb_Projekat.Controllers
             arrangement.Accommodations = filteredAccommodations;
             return View(arrangement);
         }
+
+        public ActionResult GetImage(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+                return HttpNotFound();
+
+            var path = Server.MapPath("~/App_Data/Images/" + fileName);
+            if (!System.IO.File.Exists(path))
+                return HttpNotFound();
+
+            return File(path, "image/png");
+        }
     }
 }

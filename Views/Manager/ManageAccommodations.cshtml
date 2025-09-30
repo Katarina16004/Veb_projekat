@@ -26,8 +26,9 @@
 
 <h3>Actions</h3>
 <p>
-    @Html.ActionLink("Add New Accommodation", "CreateAccommodation", new { arrangementId = arrangement.Id }, new { @class = "btn" }) |
-    @Html.ActionLink("Back to Dashboard", "Index")
+    @Html.ActionLink("Back to Home", "Index", "Home") |
+    @Html.ActionLink("Add New Accommodation", "CreateAccommodation", new { arrangementId = arrangement.Id }, new { @class = "btn" })
+
 </p>
 
 <h3>Accommodations (@(accommodations?.Count ?? 0))</h3>

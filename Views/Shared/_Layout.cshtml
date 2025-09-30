@@ -22,13 +22,16 @@
             }
             else if (currentUser.IsManager)
             {
-                @: | @Html.ActionLink("My Arrangements", "Index", "Manager")
-                @: | @Html.ActionLink("Create Arrangement", "CreateArrangement", "Manager")
-                @: | @Html.ActionLink("Manage Comments", "ApproveComments", "Manager")
+                @: | @Html.ActionLink("Arrangements", "ViewAllArrangements", "Manager")
+                @: | @Html.ActionLink("Accommodations", "ViewAllAccommodations", "Manager")
+                @: | @Html.ActionLink("Accommodation Units", "ViewAllUnits", "Manager")
+                @: | @Html.ActionLink("Reservations", "ViewAllReservations", "Manager")
+                //@: | @Html.ActionLink("Create Arrangement", "CreateArrangement", "Manager")
+                @: | @Html.ActionLink("Comments", "ApproveComments", "Manager")
             }
             else if (currentUser.IsAdmin)
             {
-                @: | @Html.ActionLink("Users", "Index", "Admin")
+                @: | @Html.ActionLink("Users", "ViewAllUsers", "Admin")
                 @: | @Html.ActionLink("Create Manager", "RegisterManager", "Admin")
             }
 
