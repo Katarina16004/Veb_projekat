@@ -5,35 +5,35 @@
 
 <div class="register-container">
     <h2>Register</h2>
-
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <form method="post" action="/Account/Register">
         <div class="form-group">
-            <label for="Username">Username</label>
+            <label for="Username">Username:</label>
             <input type="text" id="Username" name="Username" placeholder="Username" required>
         </div>
 
         <div class="form-group">
-            <label for="Password">Password</label>
+            <label for="Password">Password:</label>
             <input type="password" id="Password" name="Password" placeholder="Password" required>
         </div>
 
         <div class="form-group">
-            <label for="FirstName">First Name</label>
+            <label for="FirstName">First Name:</label>
             <input type="text" id="FirstName" name="FirstName" placeholder="First Name" required>
         </div>
 
         <div class="form-group">
-            <label for="LastName">Last Name</label>
+            <label for="LastName">Last Name:</label>
             <input type="text" id="LastName" name="LastName" placeholder="Last Name" required>
         </div>
 
         <div class="form-group">
-            <label for="Email">Email</label>
+            <label for="Email">Email:</label>
             <input type="email" id="Email" name="Email" placeholder="Email" required>
         </div>
 
         <div class="form-group">
-            <label for="Gender">Gender</label>
+            <label for="Gender">Gender:</label>
             <select id="Gender" name="Gender" required>
                 <option value="">Select Gender</option>
                 <option value="Male">Male</option>
@@ -43,7 +43,7 @@
         </div>
 
         <div class="form-group">
-            <label for="DateOfBirth">Date of Birth</label>
+            <label for="DateOfBirth">Date of Birth:</label>
             <input type="date" id="dateOfBirth" name="dateOfBirth" required max="@DateTime.Now.AddYears(-18).ToString("yyyy-MM-dd")" />
             <small>Must be at least 18 years old</small>
         </div>

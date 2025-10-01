@@ -4,6 +4,7 @@
 </head>
 <div class="login-container">
     <h2>Login</h2>
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
     <form method="post" action="/Account/Login">
         <div class="form-group">
             <label for="username">Username:</label>

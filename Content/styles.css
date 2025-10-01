@@ -1,5 +1,4 @@
-﻿
-body {
+﻿body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     line-height: 1.7;
     margin: 0;
@@ -9,11 +8,10 @@ body {
 }
 
 .container {
-    max-width: 98%; 
+    max-width: 98%;
     margin: 0 auto;
     padding: 20px;
 }
-
 
 h2, h3, h4, h5 {
     margin-top: 20px;
@@ -26,9 +24,8 @@ h2, h3, h4, h5 {
 
 p {
     margin: 10px 0;
-    color: #333; 
+    color: #333;
 }
-
 
 a {
     color: #0056b3;
@@ -41,8 +38,6 @@ a {
         text-decoration: underline;
     }
 
-
-
 button, input[type="submit"] {
     background-color: #0056b3;
     color: #fff;
@@ -54,10 +49,9 @@ button, input[type="submit"] {
     font-weight: bold;
 }
 
-button:hover, input[type="submit"]:hover {
-    background-color: #003f88;
-}
-
+    button:hover, input[type="submit"]:hover {
+        background-color: #003f88;
+    }
 
 .button-form {
     margin: 0;
@@ -66,12 +60,11 @@ button:hover, input[type="submit"]:hover {
     background: none;
 }
 
-.button-form .btn-center {
-    background-color: transparent;
-    box-shadow: none;
-    padding: 0;
-}
-
+    .button-form .btn-center {
+        background-color: transparent;
+        box-shadow: none;
+        padding: 0;
+    }
 
 form {
     margin: 25px auto;
@@ -79,49 +72,52 @@ form {
     background: #e9f0f8;
     border: 1px solid #d1e7fd;
     border-radius: 8px;
-    max-width: 100%;
+    max-width: 70%;
     box-shadow: none;
 }
 
-
-form label {
-    display: block;
-    margin: 10px 0 5px;
-    font-weight: bold;
-    color: #333;
-}
-
-form input[type="text"], form input[type="date"], form input[type="number"], form select {
-    width: calc(100% - 20px);
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    background-color: #f8f9fa;
-}
-
-    form input:focus, form select:focus {
-        border-color: #0056b3;
-        outline: none;
-        background-color: #e8f0fc;
+    form label {
+        display: block;
+        margin: 10px 0 5px;
+        font-weight: bold;
+        color: #333;
     }
 
-form .filters-row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-    form .filters-row > * {
-        flex: 1 1 calc(33% - 20px);
-        /*trecina sirine minus razmak*/
+    form input[type="text"],
+    form input[type="date"],
+    form input[type="number"],
+    form input[type="email"],
+    form input[type="password"],
+    form select {
+        width: calc(100% - 24px);
+        padding: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        background-color: #f8f9fa;
     }
 
-form .btn-container {
-    text-align: right;
-    margin-top: 15px;
-}
+        form input:focus, form select:focus {
+            border-color: #0056b3;
+            outline: none;
+            background-color: #e8f0fc;
+        }
 
+    form .filters-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+        form .filters-row > * {
+            flex: 1 1 calc(30% - 10px);
+            min-width: 150px;
+        }
+
+    form .btn-container {
+        text-align: right;
+        margin-top: 15px;
+    }
 
 .section {
     margin: 20px auto;
@@ -129,22 +125,20 @@ form .btn-container {
     border: 1px solid #d1e7fd;
     border-radius: 8px;
     background-color: #ffffff;
-    max-width: 100%; 
+    max-width: 100%;
 }
 
-.section.unit {
-    border-left: 5px solid #28a745;
-}
+    .section.unit {
+        border-left: 5px solid #28a745;
+    }
 
-.section.accommodation {
-    border-left: 5px solid #ffc107;
-}
+    .section.accommodation {
+        border-left: 5px solid #ffc107;
+    }
 
-.section.arrangement {
-    border-left: 5px solid #17a2b8;
-}
-
-
+    .section.arrangement {
+        border-left: 5px solid #17a2b8;
+    }
 
 table {
     width: 100%;
@@ -193,7 +187,6 @@ table {
         font-size: 16px;
     }
 
-
 .no-comments, .no-accommodations, .no-units {
     color: #555;
     font-style: italic;
@@ -235,16 +228,16 @@ nav {
     margin-bottom: 20px;
 }
 
-nav a {
-    color: #fff;
-    margin-right: 15px;
-    font-weight: bold;
-}
+    nav a {
+        color: #fff;
+        margin-right: 15px;
+        font-weight: bold;
+    }
 
-nav a:hover {
-    text-decoration: underline;
-    color: #d1e7fd;
-}
+        nav a:hover {
+            text-decoration: underline;
+            color: #d1e7fd;
+        }
 
 .alert-success {
     background-color: #d4edda;
@@ -263,7 +256,7 @@ nav a:hover {
     margin: 10px 0;
     border-radius: 6px;
 }
+
 .welcome-text {
     color: #ffffff;
 }
-

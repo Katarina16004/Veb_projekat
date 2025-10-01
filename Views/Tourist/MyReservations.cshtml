@@ -7,14 +7,14 @@
 
 <h2 style="margin-left:10px;">My Reservations</h2>
 
-<form method="get" action="@Url.Action("MyReservations", "Tourist")" style="margin:20px;" >
-    
-        <div >
+<form class="filter-form" method="get" action="@Url.Action("MyReservations", "Tourist")" style="margin:20px auto;" >
+    <div class="filters-row">
+        <div>
             <label>Search (ID or Arrangement):</label>
-            <input type="text" name="search" value="@ViewBag.Search" placeholder="Enter reservation ID or arrangement name" />
+            <input type="text" name="search" value="@ViewBag.Search" />
         </div>
 
-        <div >
+        <div>
             <label>Status:</label>
             <select name="status">
                 <option value="">All statuses</option>
@@ -23,22 +23,29 @@
             </select>
         </div>
 
-        <div >
+        <div>
             <label>Sort by:</label>
             <select name="sortBy">
                 <option value="">None</option>
                 <option value="ArrangementName" @(ViewBag.SortBy == "ArrangementName" ? "selected" : "")>Arrangement Name</option>
             </select>
-
+        </div>
+        <div>
+            <label>Order:</label>
             <select name="sortDir">
                 <option value="asc" @(ViewBag.SortDir == "asc" ? "selected" : "")>Ascending</option>
                 <option value="desc" @(ViewBag.SortDir == "desc" ? "selected" : "")>Descending</option>
             </select>
         </div>
 
-        <button type="submit">Apply Filters</button>
-        <a href="@Url.Action("MyReservations", "Tourist")" style="margin-left:10px;">Clear Filters</a>
-    
+        <div>
+        </div>
+        <div class="btn-container">
+            <button type="submit">Apply Filters</button>
+            <a href="@Url.Action("MyReservations", "Tourist")" style="margin-left:10px;">Clear Filters</a>
+        </div>
+        
+    </div>
 </form>
 
 @if (reservations != null && reservations.Any())

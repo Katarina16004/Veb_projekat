@@ -29,62 +29,82 @@
 <div style="margin:20px;">
     <h3>Filter & Sort Accommodations</h3>
 
-    <form method="get" action="@Url.Action("ViewAllAccommodations", "Manager")">
-        <label>Name:</label>
-        <input type="text" name="accName" value="@ViewBag.SelectedName" placeholder="Accommodation name..." />
+    <form class="filter-form" method="get" action="@Url.Action("ViewAllAccommodations", "Manager")">
+        <div class="filters-row">
+            <div>
+                <label>Name:</label>
+                <input type="text" name="accName" value="@ViewBag.SelectedName" />
+            </div>
+            <div>
+                <label>Type:</label>
+                <select name="accType">
+                    <option value="">All types</option>
+                    @foreach (var t in Enum.GetValues(typeof(Veb_Projekat.Models.Enums.AccommodationTypeEnum)))
+                    {
+                        <option value="@t" @(ViewBag.SelectedType == t.ToString() ? "selected" : "")>@t</option>
+                    }
+                </select>
+            </div>
 
-        <label>Type:</label>
-        <select name="accType">
-            <option value="">All types</option>
-            @foreach (var t in Enum.GetValues(typeof(Veb_Projekat.Models.Enums.AccommodationTypeEnum)))
-            {
-                <option value="@t" @(ViewBag.SelectedType == t.ToString() ? "selected" : "")>@t</option>
-            }
-        </select>
+            <div>
+                <label>Pool:</label>
+                <select name="hasPool">
+                    <option value="">Any</option>
+                    <option value="true" @(ViewBag.HasPool == true ? "selected" : "")>Yes</option>
+                    <option value="false" @(ViewBag.HasPool == false ? "selected" : "")>No</option>
+                </select>
+            </div>
 
-        <label>Pool:</label>
-        <select name="hasPool">
-            <option value="">Any</option>
-            <option value="true" @(ViewBag.HasPool == true ? "selected" : "")>Yes</option>
-            <option value="false" @(ViewBag.HasPool == false ? "selected" : "")>No</option>
-        </select>
+            <div>
+                <label>Spa:</label>
+                <select name="hasSpa">
+                    <option value="">Any</option>
+                    <option value="true" @(ViewBag.HasSpa == true ? "selected" : "")>Yes</option>
+                    <option value="false" @(ViewBag.HasSpa == false ? "selected" : "")>No</option>
+                </select>
+            </div>
 
-        <label>Spa:</label>
-        <select name="hasSpa">
-            <option value="">Any</option>
-            <option value="true" @(ViewBag.HasSpa == true ? "selected" : "")>Yes</option>
-            <option value="false" @(ViewBag.HasSpa == false ? "selected" : "")>No</option>
-        </select>
+            <div>
+                <label>Accessible:</label>
+                <select name="accessible">
+                    <option value="">Any</option>
+                    <option value="true" @(ViewBag.Accessible == true ? "selected" : "")>Yes</option>
+                    <option value="false" @(ViewBag.Accessible == false ? "selected" : "")>No</option>
+                </select>
+            </div>
 
-        <label>Accessible:</label>
-        <select name="accessible">
-            <option value="">Any</option>
-            <option value="true" @(ViewBag.Accessible == true ? "selected" : "")>Yes</option>
-            <option value="false" @(ViewBag.Accessible == false ? "selected" : "")>No</option>
-        </select>
+            <div>
+                <label>WiFi:</label>
+                <select name="hasWifi">
+                    <option value="">Any</option>
+                    <option value="true" @(ViewBag.HasWifi == true ? "selected" : "")>Yes</option>
+                    <option value="false" @(ViewBag.HasWifi == false ? "selected" : "")>No</option>
+                </select>
+            </div>
 
-        <label>WiFi:</label>
-        <select name="hasWifi">
-            <option value="">Any</option>
-            <option value="true" @(ViewBag.HasWifi == true ? "selected" : "")>Yes</option>
-            <option value="false" @(ViewBag.HasWifi == false ? "selected" : "")>No</option>
-        </select>
+            <div>
+                <label>Sort by:</label>
+                <select name="accSortBy">
+                    <option value="">None</option>
+                    <option value="Name" @(ViewBag.SortBy == "Name" ? "selected" : "")>Name</option>
+                    <option value="TotalUnits" @(ViewBag.SortBy == "TotalUnits" ? "selected" : "")>Total Units</option>
+                    <option value="AvailableUnits" @(ViewBag.SortBy == "AvailableUnits" ? "selected" : "")>Available Units</option>
+                </select>
+            </div>
 
-        <label>Sort by:</label>
-        <select name="accSortBy">
-            <option value="">None</option>
-            <option value="Name" @(ViewBag.SortBy == "Name" ? "selected" : "")>Name</option>
-            <option value="TotalUnits" @(ViewBag.SortBy == "TotalUnits" ? "selected" : "")>Total Units</option>
-            <option value="AvailableUnits" @(ViewBag.SortBy == "AvailableUnits" ? "selected" : "")>Available Units</option>
-        </select>
+            <div>
+                <label>Order:</label>
+                <select name="accSortDir">
+                    <option value="asc" @(ViewBag.SortDir == "asc" ? "selected" : "")>Ascending</option>
+                    <option value="desc" @(ViewBag.SortDir == "desc" ? "selected" : "")>Descending</option>
+                </select>
+            </div>
 
-        <select name="accSortDir">
-            <option value="asc" @(ViewBag.SortDir == "asc" ? "selected" : "")>Ascending</option>
-            <option value="desc" @(ViewBag.SortDir == "desc" ? "selected" : "")>Descending</option>
-        </select>
-
-        <button type="submit">Apply</button>
-        <a href="@Url.Action("ViewAllAccommodations", "Manager")">Reset</a>
+            <div class="btn-container">
+                <button type="submit">Apply</button>
+                <a href="@Url.Action("ViewAllAccommodations", "Manager")">Reset</a>
+            </div>
+        </div>
     </form>
 </div>
 

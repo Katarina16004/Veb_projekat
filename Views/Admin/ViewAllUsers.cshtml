@@ -27,24 +27,34 @@
 
     <h3>Filter & Search Users</h3>
 
-    <form method="get" action="@Url.Action("ViewAllUsers", "Admin")">
-        <label>First Name:</label>
-        <input type="text" name="searchName" value="@ViewBag.SearchName" placeholder="Search by first name..." />
+    <form class="filter-from" method="get" action="@Url.Action("ViewAllUsers", "Admin")">
+        <div class="filters-row">
+            <div>
+                <label>First Name:</label>
+                <input type="text" name="searchName" value="@ViewBag.SearchName" />
+            </div>
 
-        <label>Last Name:</label>
-        <input type="text" name="searchLastName" value="@ViewBag.SearchLastName" placeholder="Search by last name..." />
+            <div>
+                <label>Last Name:</label>
+                <input type="text" name="searchLastName" value="@ViewBag.SearchLastName" />
+            </div>
 
-        <label>Role:</label>
-        <select name="roleFilter">
-            <option value="">All roles</option>
-            @foreach (var r in Enum.GetValues(typeof(Veb_Projekat.Models.Enums.RoleEnum)))
-            {
-                <option value="@r" @(ViewBag.RoleFilter == r.ToString() ? "selected" : "")>@r</option>
-            }
-        </select>
+            <div>
+                <label>Role:</label>
+                <select name="roleFilter">
+                    <option value="">All roles</option>
+                    @foreach (var r in Enum.GetValues(typeof(Veb_Projekat.Models.Enums.RoleEnum)))
+                    {
+                        <option value="@r" @(ViewBag.RoleFilter == r.ToString() ? "selected" : "")>@r</option>
+                    }
+                </select>
+            </div>
 
-        <button type="submit">Apply Filters</button>
-        <a href="@Url.Action("ViewAllUsers", "Admin")">Reset</a>
+            <div class="btn-container">
+                <button type="submit">Apply Filters</button>
+                <a href="@Url.Action("ViewAllUsers", "Admin")">Reset</a>
+            </div>
+        </div>
     </form>
 
     <p>

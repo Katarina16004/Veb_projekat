@@ -62,6 +62,9 @@
                         <option value="StartDate" @(ViewBag.SortBy == "StartDate" ? "selected" : "")>Start Date</option>
                         <option value="EndDate" @(ViewBag.SortBy == "EndDate" ? "selected" : "")>End Date</option>
                     </select>
+                </div>
+                <div>
+                    <label>Order:</label>
                     <select name="sortDir">
                         <option value="asc" @(ViewBag.SortDir == "asc" ? "selected" : "")>Ascending</option>
                         <option value="desc" @(ViewBag.SortDir == "desc" ? "selected" : "")>Descending</option>

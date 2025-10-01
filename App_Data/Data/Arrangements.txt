@@ -1,5 +1,5 @@
 ID;Name;Type;Transport;Location;StartDate;EndDate;MaxNumOfPassengers;Description;TravelProgram;Poster;ManagerUsername;IsDeleted
-1;Beach Holiday;AllInclusive;Plane;Maldives;01/10/2025;10/10/2025;20;Relax on white sandy beaches;Day 1: Arrival, Day 2: Beach, Day 3: Excursion;beach_holiday.png;manager1;false
+1;Beach Holiday;AllInclusive;Plane;Maldives;21/10/2025;28/10/2025;20;Relax on white sandy beaches;Day 1: Arrival, Day 2: Beach, Day 3: Excursion;beach_holiday.png;manager1;false
 2;Mountain Adventure;HalfBoard;Bus_Plane;Swiss Alps;15/08/2025;22/08/2025;15;Hike and explore the mountains;Day 1: Arrival, Day 2: Hiking, Day 3: Skiing;mountain_adventure.png;manager1;false
 3;City Tour;Bed_Breakfast;Bus_Plane;Paris;05/09/2025;12/09/2025;25;Discover the city sights;Day 1: Louvre, Day 2: Eiffel Tower, Day 3: Seine Cruise;city_tour.png;manager1;false
 4;Spa Retreat;AllInclusive;Bus;Tuscany;15/03/2025;22/03/2025;12;Completed spa and wellness trip;Day 1: Arrival, Day 2: Spa treatments, Day 3: Wine tasting;spa_retreat.png;manager1;true5;Novi;AllInclusive;Bus_Plane;Maldives;29.09.2025;02.10.2025;4;mnogo dbro;bla bla;novi.png;manager1;False

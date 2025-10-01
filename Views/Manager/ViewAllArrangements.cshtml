@@ -9,17 +9,17 @@
 <h2 style="margin:20px;">All My Arrangements</h2>
 
 
-<form class="filter-form" method="get" action="@Url.Action("ViewAllArrangements", "Manager")" style="margin:20px;">
+<form class="filter-form" method="get" action="@Url.Action("ViewAllArrangements", "Manager")" style="margin:20px auto;">
     <h3 class="filter-sort-title">Filter & Sort Arrangements</h3>
     <br />
     <div class="filters-row">
         <div>
             <label>Name:</label>
-            <input type="text" name="name" value="@ViewBag.SelectedName" placeholder="Arrangement name..." />
+            <input type="text" name="name" value="@ViewBag.SelectedName" />
         </div>
         <div>
             <label>Location:</label>
-            <input type="text" name="location" value="@ViewBag.SelectedLocation" placeholder="Location..." />
+            <input type="text" name="location" value="@ViewBag.SelectedLocation"/>
         </div>
         <div>
             <label>Type:</label>

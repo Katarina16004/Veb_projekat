@@ -30,37 +30,53 @@
 <div style="margin:20px;">
     <h3>Filter & Sort Units</h3>
 
-    <form method="get" action="@Url.Action("ViewAllUnits", "Manager")">
-        <label>Min guests:</label>
-        <input type="number" name="minGuests" value="@ViewBag.MinGuests" />
+    <form class="filter-from" method="get" action="@Url.Action("ViewAllUnits", "Manager")">
+        <div class="filters-row">
+            <div>
+                <label>Min guests:</label>
+                <input type="number" name="minGuests" value="@ViewBag.MinGuests" />
+            </div>
 
-        <label>Max guests:</label>
-        <input type="number" name="maxGuests" value="@ViewBag.MaxGuests" />
+            <div>
+                <label>Max guests:</label>
+                <input type="number" name="maxGuests" value="@ViewBag.MaxGuests" />
+            </div>
 
-        <label>Pets allowed:</label>
-        <select name="petsAllowed">
-            <option value="">Any</option>
-            <option value="true" @(ViewBag.PetsAllowed == true ? "selected" : "")>Yes</option>
-            <option value="false" @(ViewBag.PetsAllowed == false ? "selected" : "")>No</option>
-        </select>
+            <div>
+                <label>Pets allowed:</label>
+                <select name="petsAllowed">
+                    <option value="">Any</option>
+                    <option value="true" @(ViewBag.PetsAllowed == true ? "selected" : "")>Yes</option>
+                    <option value="false" @(ViewBag.PetsAllowed == false ? "selected" : "")>No</option>
+                </select>
+            </div>
 
-        <label>Max price:</label>
-        <input type="number" step="0.01" name="maxPrice" value="@ViewBag.MaxPrice" />
+            <div>
+                <label>Max price:</label>
+                <input type="number" step="0.01" name="maxPrice" value="@ViewBag.MaxPrice" />
+            </div>
 
-        <label>Sort by:</label>
-        <select name="unitSortBy">
-            <option value="">None</option>
-            <option value="MaxGuests" @(ViewBag.SortBy == "MaxGuests" ? "selected" : "")>Max Guests</option>
-            <option value="Price" @(ViewBag.SortBy == "Price" ? "selected" : "")>Price</option>
-        </select>
+            <div>
+                <label>Sort by:</label>
+                <select name="unitSortBy">
+                    <option value="">None</option>
+                    <option value="MaxGuests" @(ViewBag.SortBy == "MaxGuests" ? "selected" : "")>Max Guests</option>
+                    <option value="Price" @(ViewBag.SortBy == "Price" ? "selected" : "")>Price</option>
+                </select>
+            </div>
+            <div>
+                <label>Order:</label>
+                <select name="unitSortDir">
+                    <option value="asc" @(ViewBag.SortDir == "asc" ? "selected" : "")>Ascending</option>
+                    <option value="desc" @(ViewBag.SortDir == "desc" ? "selected" : "")>Descending</option>
+                </select>
+            </div>
 
-        <select name="unitSortDir">
-            <option value="asc" @(ViewBag.SortDir == "asc" ? "selected" : "")>Ascending</option>
-            <option value="desc" @(ViewBag.SortDir == "desc" ? "selected" : "")>Descending</option>
-        </select>
-
-        <button type="submit">Apply</button>
-        <a href="@Url.Action("ViewAllUnits", "Manager")">Reset</a>
+            <div class="btn-container">
+                <button type="submit">Apply</button>
+                <a href="@Url.Action("ViewAllUnits", "Manager")">Reset</a>
+            </div>
+        </div>
     </form>
 </div>
 

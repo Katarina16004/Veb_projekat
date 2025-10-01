@@ -142,39 +142,53 @@
                     <h5 class="filter-sort-title">Filter & Sort Units</h5>
 
                     <form class="filter-form" method="get" action="@Url.Action("Details", "Home")">
-                        <input type="hidden" name="id" value="@Model.Id" />
-                        <input type="hidden" name="unitAccommodationId" value="@acc.Id" />
+                        <div class="filters-row">
 
-                        <label>Min guests:</label>
-                        <input type="number" name="minGuests_@acc.Id" value="@Request.QueryString["minGuests_" + acc.Id]" />
+                            <div>
+                                <label>Min guests:</label>
+                                <input type="number" name="minGuests_@acc.Id" value="@Request.QueryString["minGuests_" + acc.Id]" />
+                            </div>
+                            <div>
+                                <label>Max guests:</label>
+                                <input type="number" name="maxGuests_@acc.Id" value="@Request.QueryString["maxGuests_" + acc.Id]" />
+                            </div>
 
-                        <label>Max guests:</label>
-                        <input type="number" name="maxGuests_@acc.Id" value="@Request.QueryString["maxGuests_" + acc.Id]" />
+                            <div>
+                                <label>Pets allowed:</label>
+                                <select name="petsAllowed_@acc.Id">
+                                    <option value="">Any</option>
+                                    <option value="true" @(Request.QueryString["petsAllowed_" + acc.Id] == "true" ? "selected" : "")>Yes</option>
+                                    <option value="false" @(Request.QueryString["petsAllowed_" + acc.Id] == "false" ? "selected" : "")>No</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label>Max price:</label>
+                                <input type="number" step="0.01" name="maxPrice_@acc.Id" value="@Request.QueryString["maxPrice_" + acc.Id]" />
 
-                        <label>Pets allowed:</label>
-                        <select name="petsAllowed_@acc.Id">
-                            <option value="">Any</option>
-                            <option value="true" @(Request.QueryString["petsAllowed_" + acc.Id] == "true" ? "selected" : "")>Yes</option>
-                            <option value="false" @(Request.QueryString["petsAllowed_" + acc.Id] == "false" ? "selected" : "")>No</option>
-                        </select>
+                            </div>
 
-                        <label>Max price:</label>
-                        <input type="number" step="0.01" name="maxPrice_@acc.Id" value="@Request.QueryString["maxPrice_" + acc.Id]" />
+                            <div>
+                                <label>Sort by:</label>
+                                <select name="unitSortBy_@acc.Id">
+                                    <option value="">None</option>
+                                    <option value="MaxGuests" @(Request.QueryString["unitSortBy_" + acc.Id] == "MaxGuests" ? "selected" : "")>Max Guests</option>
+                                    <option value="Price" @(Request.QueryString["unitSortBy_" + acc.Id] == "Price" ? "selected" : "")>Price</option>
+                                </select>
+                            </div>
 
-                        <label>Sort by:</label>
-                        <select name="unitSortBy_@acc.Id">
-                            <option value="">None</option>
-                            <option value="MaxGuests" @(Request.QueryString["unitSortBy_" + acc.Id] == "MaxGuests" ? "selected" : "")>Max Guests</option>
-                            <option value="Price" @(Request.QueryString["unitSortBy_" + acc.Id] == "Price" ? "selected" : "")>Price</option>
-                        </select>
+                            <div>
+                                <label>Order:</label>
+                                <select name="unitSortDir_@acc.Id">
+                                    <option value="asc" @(Request.QueryString["unitSortDir_" + acc.Id] == "asc" ? "selected" : "")>Ascending</option>
+                                    <option value="desc" @(Request.QueryString["unitSortDir_" + acc.Id] == "desc" ? "selected" : "")>Descending</option>
+                                </select>
+                            </div>
 
-                        <select name="unitSortDir_@acc.Id">
-                            <option value="asc" @(Request.QueryString["unitSortDir_" + acc.Id] == "asc" ? "selected" : "")>Ascending</option>
-                            <option value="desc" @(Request.QueryString["unitSortDir_" + acc.Id] == "desc" ? "selected" : "")>Descending</option>
-                        </select>
-
-                        <button type="submit">Apply</button>
-                        <a href="@Url.Action("Details", "Home", new { id = Model.Id })">Reset</a>
+                            <div class="btn-container">
+                                <button type="submit">Apply</button>
+                                <a href="@Url.Action("Details", "Home", new { id = Model.Id })">Reset</a>
+                            </div>
+                        </div>
                     </form>
 
                     <h5>Units</h5>
